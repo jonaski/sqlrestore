@@ -96,7 +96,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
     WORD buf_size = 2000;
     WORD cb_buf_out;
     WCHAR *pszBuf = buf;
-    if (SQLGetInstalledDrivers(buf, buf_size, &cb_buf_out)) {
+    if (SQLGetInstalledDriversW(buf, buf_size, &cb_buf_out)) {
       do {
         QString driver = QString::fromStdWString(pszBuf);
         if (driver.toUpper().contains("SQL"))
@@ -106,7 +106,7 @@ SettingsDialog::SettingsDialog(QWidget *parent)
       while (pszBuf[1] != '\0');
     }
     else {
-      qLog(Error) << "SQLGetInstalledDrivers failed";
+      qLog(Error) << "SQLGetInstalledDriversW failed";
     }
   }
 #endif
