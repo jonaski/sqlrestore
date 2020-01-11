@@ -377,7 +377,7 @@ BakFileItem *BakFileBackend::ScanFile(const magic_t magic, const QString &filena
     }
   }
 
-  if (compressed || !magic_check) { // Read info from ZIP comment.
+  if (compressed || !magic_check) {
     QuaZip archive(local_filename);
     if (archive.open(QuaZip::mdUnzip)) {
       compressed = true;
