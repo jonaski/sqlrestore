@@ -1,0 +1,26 @@
+sqlrestore ICON "${CMAKE_CURRENT_SOURCE_DIR}/../dist/windows/sqlrestore.ico"
+1 VERSIONINFO
+FILEVERSION     ${SQLRESTORE_VERSION_MAJOR},${SQLRESTORE_VERSION_MINOR},${SQLRESTORE_VERSION_PATCH}
+PRODUCTVERSION  ${SQLRESTORE_VERSION_MAJOR},${SQLRESTORE_VERSION_MINOR},${SQLRESTORE_VERSION_PATCH}
+
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "080904E4"
+    BEGIN
+      VALUE "CompanyName", "Jonas Kvinge"
+      VALUE "FileDescription", "SQLRestore"
+      VALUE "FileVersion", "${SQLRESTORE_VERSION_DISPLAY}"
+      VALUE "InternalName", "sqlrestore"
+      VALUE "OriginalFilename", "sqlrestore.exe"
+      VALUE "ProductName", "SQLRestore"
+      VALUE "ProductVersion", "${SQLRESTORE_VERSION_DISPLAY}"
+      VALUE "LegalCopyright", "Jonas Kvinge"
+    END
+  END
+
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x0809, 1252
+  END
+END

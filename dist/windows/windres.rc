@@ -1,0 +1,26 @@
+sqlrestore ICON "sqlrestore.ico"
+1 VERSIONINFO
+FILEVERSION     0,0,1
+PRODUCTVERSION  0,0,1
+
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "080904E4"
+    BEGIN
+      VALUE "CompanyName", "Jonas Kvinge"
+      VALUE "FileDescription", "SQLRestore"
+      VALUE "FileVersion", "0.0.1"
+      VALUE "InternalName", "sqlrestore"
+      VALUE "OriginalFilename", "sqlrestore.exe"
+      VALUE "ProductName", "SQLRestore"
+      VALUE "ProductVersion", "0.0.1"
+      VALUE "LegalCopyright", "Jonas Kvinge"
+    END
+  END
+
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x0809, 1252
+  END
+END

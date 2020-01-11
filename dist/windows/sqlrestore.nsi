@@ -1,0 +1,338 @@
+!if "" == x86
+  !define arch_x86
+!endif
+
+!if "" == i686-w64-mingw32.shared
+  !define arch_x86
+!endif
+
+!if "" == x86_64
+  !define arch_x64
+!endif
+
+!if "" == x86_64-w64-mingw32.shared
+  !define arch_x64
+!endif
+
+!if "" == Debug
+  !define debug
+!endif
+
+!ifdef debug
+  !define PRODUCT_NAME "SQLRestore Debug"
+  !define PRODUCT_NAME_SHORT "SQLRestore"
+  !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME_SHORT}Debug"
+  !ifdef arch_x86
+    !define PRODUCT_INSTALL_DIR "$PROGRAMFILES\SQLRestore Debug"
+  !endif
+  !ifdef arch_x64
+    !define PRODUCT_INSTALL_DIR "$PROGRAMFILES64\SQLRestore Debug"
+  !endif
+!else
+  !define PRODUCT_NAME "SQLRestore"
+  !define PRODUCT_NAME_SHORT "SQLRestore"
+  !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME_SHORT}"
+  !ifdef arch_x86
+    !define PRODUCT_INSTALL_DIR "$PROGRAMFILES\SQLRestore"
+  !endif
+  !ifdef arch_x64
+    !define PRODUCT_INSTALL_DIR "$PROGRAMFILES64\SQLRestore"
+  !endif
+!endif
+
+!define PRODUCT_VERSION_MAJOR 0
+!define PRODUCT_VERSION_MINOR 0
+!define PRODUCT_VERSION_PATCH 1
+!define PRODUCT_DISPLAY_VERSION "0.0.1"
+!define PRODUCT_DISPLAY_VERSION_SHORT "0.0.1"
+
+!define PRODUCT_PUBLISHER "Jonas Kvinge"
+!define PRODUCT_WEB_SITE "https://www.jkvinge.net/"
+
+!define PRODUCT_UNINST_ROOT_KEY "HKLM"
+
+; Set Application Capabilities info
+!define CAPABILITIES_NAME "SQLRestore"
+!define CAPABILITIES_LOCAL_NAME "SQLRestore"
+!define CAPABILITIES_PROGID "SQLRestore"
+!define CAPABILITIES_PATH "Software\Clients\Media\SQLRestore"
+!define CAPABILITIES_DESCRIPTION "SQLRestore"
+!define CAPABILITIES_ICON "$INSTDIR\sqlrestore.ico"
+!define CAPABILITIES_REINSTALL "Command to reinstall"
+!define CAPABILITIES_HIDE_ICONS "Command to hide icons"
+!define CAPABILITIES_SHOW_ICONS "Command to show icons"
+
+SetCompressor /SOLID lzma
+
+!addplugindir nsisplugins
+!include "MUI2.nsh"
+!include LogicLib.nsh
+!include x64.nsh
+!include "Capabilities.nsh"
+
+!define MUI_ICON "sqlrestore.ico"
+
+!define MUI_COMPONENTSPAGE_SMALLDESC
+
+; Installer pages
+!insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_INSTFILES
+!insertmacro MUI_PAGE_FINISH
+
+; Uninstaller pages
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
+!insertmacro MUI_UNPAGE_FINISH
+
+!insertmacro MUI_LANGUAGE "English" ;first language is the default language
+
+Name "${PRODUCT_NAME}"
+!ifdef arch_x86
+  !ifdef debug
+    OutFile "${PRODUCT_NAME_SHORT}Setup-${PRODUCT_DISPLAY_VERSION}-Debug-x86.exe"
+  !else
+    OutFile "${PRODUCT_NAME_SHORT}Setup-${PRODUCT_DISPLAY_VERSION}-x86.exe"
+  !endif
+!endif
+
+!ifdef arch_x64
+  !ifdef debug
+    OutFile "${PRODUCT_NAME_SHORT}Setup-${PRODUCT_DISPLAY_VERSION}-Debug-x64.exe"
+  !else
+    OutFile "${PRODUCT_NAME_SHORT}Setup-${PRODUCT_DISPLAY_VERSION}-x64.exe"
+  !endif
+!endif
+
+InstallDir "${PRODUCT_INSTALL_DIR}"
+
+; Get the path where SQLRestore was installed previously and set it as default path
+InstallDirRegKey ${PRODUCT_UNINST_ROOT_KEY} ${PRODUCT_UNINST_KEY} "UninstallString"
+
+ShowInstDetails show
+ShowUnInstDetails show
+RequestExecutionLevel admin
+;RequestExecutionLevel user
+
+; Check for previous installation, and call the uninstaller if any
+Function CheckPreviousInstall
+
+  ReadRegStr $R0 ${PRODUCT_UNINST_ROOT_KEY} ${PRODUCT_UNINST_KEY} "UninstallString"
+  StrCmp $R0 "" done
+
+  MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION \
+  "${PRODUCT_NAME} is already installed. $\n$\nClick `OK` to remove the \
+  previous version or `Cancel` to cancel this upgrade." \
+  IDOK uninst
+  Abort
+; Run the uninstaller
+uninst:
+  ClearErrors
+  ExecWait '$R0' ; Do not copy the uninstaller to a temp file
+
+done:
+
+FunctionEnd
+
+Function .onInit
+
+  !insertmacro MUI_LANGDLL_DISPLAY
+
+  Call CheckPreviousInstall
+
+FunctionEnd
+
+Section "Delete old files" oldfiles
+SectionEnd
+
+Section "SQLRestore" SQLRestore
+  SetOutPath "$INSTDIR"
+
+  nsExec::Exec '"$INSTDIR\killproc.exe" sqlrestore.exe'
+
+  File "sqlrestore.exe"
+  File "sqlrestore.ico"
+
+  File "libstdc++-6.dll"
+  File "libwinpthread-1.dll"
+  File "libpcre-1.dll"
+  File "libpcre2-16-0.dll"
+  File "libharfbuzz-0.dll"
+  File "libfreetype-6.dll"
+  File "libiconv-2.dll"
+  File "libintl-8.dll"
+  File "libglib-2.0-0.dll"
+  File "libgnurx-0.dll"
+  File "libbz2.dll"
+  File "libzstd.dll"
+  File "liblzma-5.dll"
+  File "libpng16-16.dll"
+  File "zlib1.dll"
+  File "libjasper.dll"
+  File "libwebp-7.dll"
+  File "libtiff-5.dll"
+  File "libjpeg-9.dll"
+  File "libmagic-1.dll"
+  File "Qt5Core.dll"
+  File "Qt5Gui.dll"
+  File "Qt5Network.dll"
+  File "Qt5Sql.dll"
+  File "Qt5Widgets.dll"
+  File "libsingleapplication.dll"
+  File "libsinglecoreapplication.dll"
+  File "libquazip5.dll"
+  File "magic"
+  File "magic.mgc"
+
+!ifdef arch_x86
+  File "libgcc_s_sjlj-1.dll"
+  File "libcrypto-1_1.dll"
+  File "libssl-1_1.dll"
+!endif
+
+!ifdef arch_x64
+  File "libgcc_s_seh-1.dll"
+  File "libcrypto-1_1-x64.dll"
+  File "libssl-1_1-x64.dll"
+!endif
+
+  File "killproc.exe"
+
+  ; Register SQLRestore with Default Programs
+  Var /GLOBAL AppIcon
+  Var /GLOBAL AppExe
+  StrCpy $AppExe "$INSTDIR\sqlrestore.exe"
+  StrCpy $AppIcon "$INSTDIR\sqlrestore.ico"
+
+  ${RegisterCapabilities}
+
+SectionEnd
+
+Section "Qt Platforms" platforms
+  SetOutPath "$INSTDIR\platforms"
+  File "/oname=qwindows.dll" "platforms\qwindows.dll"
+SectionEnd
+
+Section "Qt SQL Drivers" sqldrivers
+  SetOutPath "$INSTDIR\sqldrivers"
+  File "/oname=qsqlodbc.dll" "sqldrivers\qsqlodbc.dll"
+SectionEnd
+
+Section "Qt image format plugins" imageformats
+  SetOutPath "$INSTDIR\imageformats"
+  File "/oname=qgif.dll" "imageformats\qgif.dll"
+  File "/oname=qico.dll" "imageformats\qico.dll"
+  File "/oname=qjpeg.dll" "imageformats\qjpeg.dll"
+  File "/oname=qjp2.dll" "imageformats\qjp2.dll"
+  File "/oname=qtiff.dll" "imageformats\qtiff.dll"
+SectionEnd
+
+Section "Start menu items" startmenu
+  ; Create Start Menu folders and shortcuts.
+  SetShellVarContext all
+
+  CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\sqlrestore.exe"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
+
+SectionEnd
+
+Section "Uninstaller"
+  ; Create uninstaller
+  WriteUninstaller "$INSTDIR\Uninstall.exe"
+
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName" "${PRODUCT_NAME}"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\Uninstall.exe"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\sqlrestore.ico"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_DISPLAY_VERSION}"
+  WriteRegDWORD ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "VersionMajor" "${PRODUCT_VERSION_MAJOR}"
+  WriteRegDWORD ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "VersionMinor" "${PRODUCT_VERSION_MINOR}"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}"
+
+SectionEnd
+
+Section "Uninstall"
+
+  nsExec::Exec '"$INSTDIR\killproc.exe" sqlrestore.exe'
+
+  ; Delete all the files
+
+  Delete "$INSTDIR\sqlrestore.ico"
+  Delete "$INSTDIR\sqlrestore.exe"
+
+  Delete "$INSTDIR\libstdc++-6.dll"
+  Delete "$INSTDIR\libwinpthread-1.dll"
+  Delete "$INSTDIR\libpcre-1.dll"
+  Delete "$INSTDIR\libpcre2-16-0.dll"
+  Delete "$INSTDIR\libharfbuzz-0.dll"
+  Delete "$INSTDIR\libfreetype-6.dll"
+  Delete "$INSTDIR\libiconv-2.dll"
+  Delete "$INSTDIR\libintl-8.dll"
+  Delete "$INSTDIR\libglib-2.0-0.dll"
+  Delete "$INSTDIR\libgnurx-0.dll"
+  Delete "$INSTDIR\libbz2.dll"
+  Delete "$INSTDIR\libzstd.dll"
+  Delete "$INSTDIR\liblzma-5.dll"
+  Delete "$INSTDIR\libpng16-16.dll"
+  Delete "$INSTDIR\zlib1.dll"
+  Delete "$INSTDIR\libjasper.dll"
+  Delete "$INSTDIR\libwebp-7.dll"
+  Delete "$INSTDIR\libtiff-5.dll"
+  Delete "$INSTDIR\libjpeg-9.dll"
+  Delete "$INSTDIR\libmagic-1.dll"
+  Delete "$INSTDIR\Qt5Core.dll"
+  Delete "$INSTDIR\Qt5Gui.dll"
+  Delete "$INSTDIR\Qt5Network.dll"
+  Delete "$INSTDIR\Qt5Sql.dll"
+  Delete "$INSTDIR\Qt5Widgets.dll"
+  Delete "$INSTDIR\libsingleapplication.dll"
+  Delete "$INSTDIR\libsinglecoreapplication.dll"
+  Delete "$INSTDIR\libquazip5.dll"
+  Delete "$INSTDIR\magic"
+  Delete "$INSTDIR\magic.mgc"
+
+!ifdef arch_x86
+  Delete "$INSTDIR\libgcc_s_sjlj-1.dll"
+  Delete "$INSTDIR\libcrypto-1_1.dll"
+  Delete "$INSTDIR\libssl-1_1.dll"
+!endif
+
+!ifdef arch_x64
+  Delete "$INSTDIR\libgcc_s_seh-1.dll"
+  Delete "$INSTDIR\libcrypto-1_1-x64.dll"
+  Delete "$INSTDIR\libssl-1_1-x64.dll"
+!endif
+
+  Delete "$INSTDIR\platforms\qwindows.dll"
+  Delete "$INSTDIR\sqldrivers\qsqlodbc.dll"
+
+  Delete "$INSTDIR\imageformats\qjpeg.dll"
+  Delete "$INSTDIR\imageformats\qgif.dll"
+  Delete "$INSTDIR\imageformats\qico.dll"
+  Delete "$INSTDIR\imageformats\qjp2.dll"
+  Delete "$INSTDIR\imageformats\qtiff.dll"
+
+  Delete "$INSTDIR\killproc.exe"
+  Delete "$INSTDIR\Uninstall.exe"
+
+  ; Remove the installation folders.
+  RMDir "$INSTDIR\platforms"
+  RMDir "$INSTDIR\sqldrivers"
+  RMDir "$INSTDIR\imageformats"
+  RMDir "$INSTDIR"
+
+  ; Remove the Shortcuts
+  SetShellVarContext all
+
+  Delete "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk"
+  Delete "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk"
+  RMDir /r "$SMPROGRAMS\${PRODUCT_NAME}"
+
+  ; Remove the entry from 'installed programs list'
+  DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"
+
+  ; Unregister from Default Programs
+  ${UnRegisterCapabilities}
+
+SectionEnd

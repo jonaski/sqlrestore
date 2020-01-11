@@ -1,0 +1,71 @@
+<RCC>
+  <qresource prefix="/">
+
+    <file>icons/32x32/sqlrestore.png</file>
+    <file>icons/48x48/sqlrestore.png</file>
+    <file>icons/64x64/sqlrestore.png</file>
+    <file>icons/128x128/sqlrestore.png</file>
+    <file>icons/22x22/sqlrestore.png</file>
+
+    <file>icons/32x32/dialog-ok-apply.png</file>
+    <file>icons/48x48/dialog-ok-apply.png</file>
+    <file>icons/64x64/dialog-ok-apply.png</file>
+    <file>icons/128x128/dialog-ok-apply.png</file>
+    <file>icons/22x22/dialog-ok-apply.png</file>
+    
+    <file>icons/32x32/dialog-error.png</file>
+    <file>icons/48x48/dialog-error.png</file>
+    <file>icons/64x64/dialog-error.png</file>
+    <file>icons/128x128/dialog-error.png</file>
+    <file>icons/22x22/dialog-error.png</file>
+
+    <file>icons/32x32/edit-clear-locationbar-ltr.png</file>
+    <file>icons/48x48/edit-clear-locationbar-ltr.png</file>
+    <file>icons/64x64/edit-clear-locationbar-ltr.png</file>
+    <file>icons/128x128/edit-clear-locationbar-ltr.png</file>
+    <file>icons/22x22/edit-clear-locationbar-ltr.png</file>
+
+    <file>icons/32x32/configure.png</file>
+    <file>icons/48x48/configure.png</file>
+    <file>icons/64x64/configure.png</file>
+    <file>icons/128x128/configure.png</file>
+    <file>icons/22x22/configure.png</file>
+
+    <file>icons/32x32/go-next.png</file>
+    <file>icons/48x48/go-next.png</file>
+    <file>icons/64x64/go-next.png</file>
+    <file>icons/128x128/go-next.png</file>
+    <file>icons/22x22/go-next.png</file>
+
+    <file>icons/32x32/go-previous.png</file>
+    <file>icons/48x48/go-previous.png</file>
+    <file>icons/64x64/go-previous.png</file>
+    <file>icons/128x128/go-previous.png</file>
+    <file>icons/22x22/go-previous.png</file>
+
+    <file>icons/32x32/application-exit.png</file>
+    <file>icons/48x48/application-exit.png</file>
+    <file>icons/64x64/application-exit.png</file>
+    <file>icons/128x128/application-exit.png</file>
+    <file>icons/22x22/application-exit.png</file>
+
+    <file>icons/22x22/refresh.png</file>
+    <file>icons/32x32/refresh.png</file>
+    <file>icons/48x48/refresh.png</file>
+    <file>icons/64x64/refresh.png</file>
+    <file>icons/128x128/refresh.png</file>
+
+    <file>icons/22x22/button-cancel.png</file>
+    <file>icons/32x32/button-cancel.png</file>
+    <file>icons/48x48/button-cancel.png</file>
+    <file>icons/64x64/button-cancel.png</file>
+    <file>icons/128x128/button-cancel.png</file>
+    
+    <file>icons/22x22/document-open-folder.png</file>
+    <file>icons/32x32/document-open-folder.png</file>
+    <file>icons/48x48/document-open-folder.png</file>
+    <file>icons/64x64/document-open-folder.png</file>
+    <file>icons/128x128/document-open-folder.png</file>
+
+  </qresource>
+</RCC>

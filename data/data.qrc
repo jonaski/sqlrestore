@@ -1,0 +1,9 @@
+<RCC>
+  <qresource prefix="/">
+    <file>magic</file>
+    <file>magic.mgc</file>
+    <file>icons/512x512/sqlrestore.png</file>
+    <file>pictures/unimicro-logo.png</file>
+    <file>pictures/spinner.gif</file>
+  </qresource>
+</RCC>
