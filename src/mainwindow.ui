@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../data/icons.qrc">
-    <normaloff>:/icons/64x64/sqlrestore.png</normaloff>:/icons/64x64/sqlrestore.png</iconset>
+    <normaloff>:/icons/64x64/backup.png</normaloff>:/icons/64x64/backup.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -281,7 +281,7 @@
   <action name="action_about">
    <property name="icon">
     <iconset resource="../data/icons.qrc">
-     <normaloff>:/icons/64x64/sqlrestore.png</normaloff>:/icons/64x64/sqlrestore.png</iconset>
+     <normaloff>:/icons/64x64/backup.png</normaloff>:/icons/64x64/backup.png</iconset>
    </property>
    <property name="text">
     <string>&amp;About SQLRestore</string>

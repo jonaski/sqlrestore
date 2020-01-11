@@ -30,7 +30,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../data/icons.qrc">
-    <normaloff>:/icons/64x64/sqlrestore.png</normaloff>:/icons/64x64/sqlrestore.png</iconset>
+    <normaloff>:/icons/64x64/backup.png</normaloff>:/icons/64x64/backup.png</iconset>
   </property>
   <property name="styleSheet">
    <string notr="true">#line {
@@ -49,7 +49,7 @@
        <item>
         <widget class="QLabel" name="label_icon">
          <property name="pixmap">
-          <pixmap resource="../data/icons.qrc">:/icons/64x64/sqlrestore.png</pixmap>
+          <pixmap resource="../data/icons.qrc">:/icons/64x64/backup.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>false</bool>
