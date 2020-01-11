@@ -63,6 +63,7 @@ MainWindow::MainWindow(Application *app, const CommandlineOptions &options, QWid
   backup_backend_(app->backup_backend()),
   statusbar_label_(new QLabel(this)),
   initialized_(false),
+  file_scan_in_progress_(false),
   files_loaded_(false),
   connected_(false) {
 
@@ -98,11 +99,13 @@ MainWindow::MainWindow(Application *app, const CommandlineOptions &options, QWid
   connect(app_->db_connector(), SIGNAL(ConnectionSuccess(QString, QString)), SLOT(ConnectionSuccess(QString, QString)));
   connect(app_->db_connector(), SIGNAL(ConnectionFailure(QString)), SLOT(ConnectionFailure(QString)));
 
+  connect(app_->bakfile_backend(), SIGNAL(ScanInProgress()), SLOT(ScanInProgress()));
+  connect(app_->bakfile_backend(), SIGNAL(LoadProgress(int)), SLOT(FileLoadProgress(int)));
+  connect(app_->bakfile_backend(), SIGNAL(LoadError(QString)), SLOT(FileLoadError(QString)));
+
   connect(app_->bakfile_backend(), SIGNAL(AddedFiles(BakFileItemList)), bak_file_model_, SLOT(AddedFiles(BakFileItemList)));
   connect(app_->bakfile_backend(), SIGNAL(UpdatedFiles(BakFileItemList)), bak_file_model_, SLOT(UpdatedFiles(BakFileItemList)));
   connect(app_->bakfile_backend(), SIGNAL(DeletedFiles(BakFileItemList)), bak_file_model_, SLOT(DeletedFiles(BakFileItemList)));
-  connect(app_->bakfile_backend(), SIGNAL(LoadProgress(int)), SLOT(FileLoadProgress(int)));
-  connect(app_->bakfile_backend(), SIGNAL(LoadError(QString)), SLOT(FileLoadError(QString)));
 
   connect(this, SIGNAL(QueueRestores(BakFileItemList)), app_->backup_backend(), SLOT(QueueRestores(BakFileItemList)));
 
@@ -228,6 +231,9 @@ void MainWindow::Reset() {
   else {
     statusbar_label_->setText(file_load_error_);
   }
+  if (!ui_->widget_watcher->isHidden()) {
+    DisableFileLoading();
+  }
 
 }
 
@@ -261,10 +267,25 @@ void MainWindow::DisableFileLoading() {
 
 }
 
+void MainWindow::ScanInProgress() {
+
+  file_scan_in_progress_ = true;
+  file_load_error_.clear();
+  if (ui_->stackedWidget->currentWidget() == ui_->select_file) {
+    statusbar_label_->clear();
+    if (ui_->widget_watcher->isHidden()) {
+      EnableFileLoading();
+    }
+  }
+
+}
+
 void MainWindow::FileLoadProgress(const int value) {
 
   if (value == 100) {
-    DisableFileLoading();
+    if (!ui_->widget_watcher->isHidden()) {
+      DisableFileLoading();
+    }
     files_loaded_ = true;
     statusbar_label_->setText(connection_status_);
     if (ui_->stackedWidget->currentWidget() == ui_->select_file) {
@@ -275,7 +296,9 @@ void MainWindow::FileLoadProgress(const int value) {
     }
   }
   else if (ui_->stackedWidget->currentWidget() == ui_->select_file) {
-    EnableFileLoading();
+    if (ui_->widget_watcher->isHidden()) {
+      EnableFileLoading();
+    }
     ui_->progress_watcher->setValue(value);
   }
 
@@ -283,15 +306,12 @@ void MainWindow::FileLoadProgress(const int value) {
 
 void MainWindow::FileLoadError(const QString &error) {
 
-  ui_->label_watcher_text->clear();
-  ui_->label_watcher_text->adjustSize();
-  ui_->progress_watcher->hide();
-  ui_->label_watcher_spinner->hide();
-  if (spinner_->state() == QMovie::Running) spinner_->stop();
   file_load_error_ = error;
+  if (!ui_->widget_watcher->isHidden()) {
+    DisableFileLoading();
+  }
 
   if (ui_->stackedWidget->currentWidget() == ui_->select_file) {
-    if (!ui_->widget_watcher->isVisible()) ui_->widget_watcher->show();
     statusbar_label_->setText(file_load_error_);
   }
 
@@ -316,6 +336,10 @@ void MainWindow::Connecting(const QString&, const QString &server) {
   connection_status_ = tr("Connecting to %1").arg(server);
   if (file_load_error_.isEmpty()) {
     statusbar_label_->setText(connection_status_);
+  }
+
+  if (ui_->stackedWidget->currentWidget() == ui_->select_file) {
+    ui_->button_next->setEnabled(false);
   }
 
 }
@@ -386,7 +410,9 @@ void MainWindow::Next() {
     if (!files_.empty()) {
       ui_->stackedWidget->setCurrentWidget(ui_->progress);
       statusbar_label_->setText(connection_status_);
-      DisableFileLoading();
+      if (!ui_->widget_watcher->isHidden()) {
+        DisableFileLoading();
+      }
       ui_->button_next->hide();
       ui_->button_exit->hide();
       ui_->button_cancel->show();

@@ -57,11 +57,12 @@ class BakFileBackend : public QObject {
   void Scan();
 
  signals:
+  void ScanInProgress();
+  void LoadProgress(const int);
+  void LoadError(const QString&);
   void AddedFiles(BakFileItemList);
   void UpdatedFiles(BakFileItemList);
   void DeletedFiles(BakFileItemList);
-  void LoadProgress(const int);
-  void LoadError(const QString&);
 
  private:
   QFileSystemWatcher *watcher_;

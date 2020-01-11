@@ -72,6 +72,7 @@ class MainWindow : public QMainWindow {
   void CommandlineOptionsReceived(const quint32 instance_id, const QByteArray &string_options);
   void ReloadSettings();
 
+  void ScanInProgress();
   void FileLoadProgress(const int value);
   void FileLoadError(const QString &error);
   void FileSelectionChanged(const QItemSelection&, const QItemSelection&);
@@ -109,6 +110,7 @@ class MainWindow : public QMainWindow {
   QLabel *statusbar_label_;
   BakFileItemList files_;
   bool initialized_;
+  bool file_scan_in_progress_;
   bool files_loaded_;
   bool connected_;
   QString file_load_error_;

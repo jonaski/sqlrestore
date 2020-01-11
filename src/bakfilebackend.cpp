@@ -256,6 +256,7 @@ void BakFileBackend::ScanDelayed() {
 void BakFileBackend::Scan() {
 
   qLog(Debug) << "Scan" << QThread::currentThread();
+  emit ScanInProgress();
 
   QString error;
   QStringList dir_files;
