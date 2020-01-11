@@ -124,7 +124,7 @@ void BakFileBackend::LoadMagic() {
   }
 
 }
-  
+
 QString BakFileBackend::LoadMagicToTemp() {
     
   // Open source magic file
@@ -143,7 +143,7 @@ QString BakFileBackend::LoadMagicToTemp() {
 #ifdef Q_OS_LINUX
   QString magic_dir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
 #else
-  QString magic_dir = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QDir::separator() + "magic.mgc";
+  QString magic_dir = QStandardPaths::writableLocation(QStandardPaths::TempLocation);
 #endif
 
   if (!QDir(magic_dir).exists() && !QDir().mkpath(magic_dir)) {
