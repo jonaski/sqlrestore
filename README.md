@@ -7,6 +7,7 @@ It's using features in modern C++11, Boost and Qt.
 ### :heavy_check_mark: Features:
 
 * Fully compatible with both SQL backups and zipped SQL backups.
+* File view with search, sorting and FS listener with live updating.
 * Uses threads.
 * Uses libmagic to recognize files.
 * SQL settings tester that runs in a concurrent thread.
