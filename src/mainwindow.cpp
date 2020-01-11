@@ -74,7 +74,7 @@ MainWindow::MainWindow(Application *app, const CommandlineOptions &options, QWid
   CommandlineOptionsReceived(options);
 
   ui_->action_about_qt->setIcon(QIcon(":/qt-project.org/qmessagebox/images/qtlogo-64.png"));
-  ui_->action_about->setIcon(IconLoader::Load("sqlrestore"));
+  ui_->action_about->setIcon(IconLoader::Load("backup"));
   ui_->action_exit->setIcon(IconLoader::Load("application-exit"));
   ui_->action_settings->setIcon(IconLoader::Load("configure"));
 
