@@ -408,7 +408,6 @@ void MainWindow::Next() {
       files_ << fileitem;
     }
     if (!files_.empty()) {
-      ui_->stackedWidget->setCurrentWidget(ui_->progress);
       statusbar_label_->setText(connection_status_);
       if (!ui_->widget_watcher->isHidden()) {
         DisableFileLoading();
@@ -418,6 +417,15 @@ void MainWindow::Next() {
       ui_->button_cancel->show();
       ui_->button_select_all->hide();
       ui_->button_unselect_all->hide();
+      if (files_.count() > 1) {
+        ui_->header_all->show();
+        ui_->progressbar_all->show();
+      }
+      else {
+        ui_->header_all->hide();
+        ui_->progressbar_all->hide();
+      }
+      ui_->stackedWidget->setCurrentWidget(ui_->progress);
       emit QueueRestores(files_);
     }
   }
@@ -476,4 +484,3 @@ void MainWindow::RestoreComplete() {
   ui_->progressbar_current->setValue(0);
 
 }
-

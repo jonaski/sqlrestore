@@ -158,17 +158,21 @@ QSqlDatabase BackupBackend::Connect(ScopedResult *r) {
 
 void BackupBackend::QueueRestores(BakFileItemList files) {
 
-  jobs_total_ = files.count();
+  jobs_total_ = 0;
   jobs_complete_ = 0;
   jobs_current_ = 0;
   queue_.clear();
 
-  emit RestoreProgressAllMax(jobs_total_);
-
   for (BakFileItemPtr bakfile : files) {
     if (!bakfile->is_valid()) continue;
+    ++jobs_total_;
     queue_.enqueue(bakfile);
   }
+
+  if (jobs_total_ > 1) {
+    emit RestoreProgressAllMax(jobs_total_);
+  }
+
   FlushQueue();
 
 }
@@ -753,7 +757,9 @@ void BackupBackend::RestoreStarted() {
   ++jobs_remaining_;
   ++jobs_current_;
 
-  emit RestoreHeaderAll(tr("Restoring backup %1 of %2.").arg(jobs_current_).arg(jobs_total_));
+  if (jobs_total_ > 1) {
+    emit RestoreHeaderAll(tr("Restoring backup %1 of %2.").arg(jobs_current_).arg(jobs_total_));
+  }
 
 }
 
@@ -762,7 +768,9 @@ void BackupBackend::RestoreFinished(const bool) {
   --jobs_remaining_;
   ++jobs_complete_;
 
-  emit RestoreProgressAll(jobs_complete_);
+  if (jobs_total_ > 1) {
+    emit RestoreProgressAll(jobs_complete_);
+  }
 
   if (jobs_remaining_ == 0 && queue_.isEmpty()) {
     in_progress_ = false;
