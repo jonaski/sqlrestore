@@ -212,7 +212,7 @@
       <item>
        <widget class="QPushButton" name="button_next">
         <property name="text">
-         <string>Next</string>
+         <string>Restore</string>
         </property>
        </widget>
       </item>
