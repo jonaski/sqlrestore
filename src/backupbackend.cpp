@@ -205,7 +205,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
   UpdateRestoreStatus(header);
 
   emit RestoreProgressCurrentMax(100);
-  emit RestoreProgressCurrent(0);
+  emit RestoreProgressCurrentValue(0);
 
   if (RestoreCheckCancel(&r)) return;
 
@@ -395,7 +395,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
       }
 
       emit RestoreProgressCurrentMax(100);
-      emit RestoreProgressCurrent(0);
+      emit RestoreProgressCurrentValue(0);
 
       qint64 total_size_written = 0;
       QuaCrc32 checksum;
@@ -424,7 +424,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
           return;
         }
         total_size_written += written;
-        emit RestoreProgressCurrent((int)((float)total_size_written / (float)zfile.size() * 100.0));
+        emit RestoreProgressCurrentValue((int)((float)total_size_written / (float)zfile.size() * 100.0));
       }
       dst_file.flush();
       dst_file.close();
@@ -451,7 +451,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
   }
 
   emit RestoreProgressCurrentMax(100);
-  emit RestoreProgressCurrent(0);
+  emit RestoreProgressCurrentValue(0);
 
   if (RestoreCheckCancel(&r)) return;
 
@@ -574,7 +574,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
   if (RestoreCheckCancel(&r)) return;
 
   emit RestoreProgressCurrentMax(dbnames.count());
-  emit RestoreProgressCurrent(0);
+  emit RestoreProgressCurrentValue(0);
 
   if (RestoreCheckCancel(&r)) return;
 
@@ -740,12 +740,12 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
       }
     }
 
-    emit RestoreProgressCurrent(filenr);
+    emit RestoreProgressCurrentValue(filenr);
   }
 
   UpdateRestoreStatus(tr("Success"));
   emit RestoreProgressCurrentMax(100);
-  emit RestoreProgressCurrent(100);
+  emit RestoreProgressCurrentValue(100);
 
   r.success();
 
@@ -769,7 +769,7 @@ void BackupBackend::RestoreFinished(const bool) {
   ++jobs_complete_;
 
   if (jobs_total_ > 1) {
-    emit RestoreProgressAll(jobs_complete_);
+    emit RestoreProgressAllValue(jobs_complete_);
   }
 
   if (jobs_remaining_ == 0 && queue_.isEmpty()) {

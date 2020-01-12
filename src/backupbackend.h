@@ -63,9 +63,9 @@ class BackupBackend : public QObject {
   void RestoreHeaderAll(const QString &message);
   void RestoreHeaderCurrent(const QString &message);
   void RestoreStatusCurrent(const QString &message);
-  void RestoreProgressAll(const int);
+  void RestoreProgressAllValue(const int);
   void RestoreProgressAllMax(const int);
-  void RestoreProgressCurrent(const int);
+  void RestoreProgressCurrentValue(const int);
   void RestoreProgressCurrentMax(const int);
   void RestoreSuccess();
   void RestoreFailure(const QStringList &errors);

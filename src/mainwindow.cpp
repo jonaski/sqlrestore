@@ -114,10 +114,10 @@ MainWindow::MainWindow(Application *app, const CommandlineOptions &options, QWid
   connect(app_->backup_backend(), SIGNAL(RestoreHeaderCurrent(QString)), ui_->header_current, SLOT(setText(QString)));
   connect(app_->backup_backend(), SIGNAL(RestoreStatusCurrent(QString)), ui_->status_current, SLOT(setText(QString)));
 
-  connect(app_->backup_backend(), SIGNAL(RestoreProgressAll(int)), ui_->progressbar_all, SLOT(setValue(int)));
+  connect(app_->backup_backend(), SIGNAL(RestoreProgressAllValue(int)), ui_->progressbar_all, SLOT(setValue(int)));
   connect(app_->backup_backend(), SIGNAL(RestoreProgressAllMax(int)), ui_->progressbar_all, SLOT(setMaximum(int)));
 
-  connect(app_->backup_backend(), SIGNAL(RestoreProgressCurrent(int)), ui_->progressbar_current, SLOT(setValue(int)));
+  connect(app_->backup_backend(), SIGNAL(RestoreProgressCurrentValue(int)), ui_->progressbar_current, SLOT(setValue(int)));
   connect(app_->backup_backend(), SIGNAL(RestoreProgressCurrentMax(int)), ui_->progressbar_current, SLOT(setMaximum(int)));
 
   connect(app_->backup_backend(), SIGNAL(RestoreSuccess()), this, SLOT(RestoreSuccess()));
