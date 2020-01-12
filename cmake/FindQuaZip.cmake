@@ -17,7 +17,7 @@ if(NOT QUAZIP_LIBRARIES)
   else(APPLE)
     set(QUAZIPLIB "quazip5")
   endif(APPLE)
-  find_library(QUAZIP_LIBRARY NAMES ${QUAZIPLIB} quazip5.dll HINTS /usr/lib /usr/local/lib /usr/lib64 /usr/local/lib64 /usr/lib/x86_64-linux-gnu)
+  find_library(QUAZIP_LIBRARY NAMES ${QUAZIPLIB} quazip5.dll libquazip.a HINTS /usr/lib /usr/local/lib /usr/lib64 /usr/local/lib64 /usr/lib/x86_64-linux-gnu)
   set(QUAZIP_LIBRARIES ${QUAZIP_LIBRARY})
 endif(NOT QUAZIP_LIBRARIES)
 
