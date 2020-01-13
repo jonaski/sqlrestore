@@ -135,11 +135,11 @@ MainWindow::MainWindow(Application *app, const CommandlineOptions &options, QWid
   ui_->label_watcher_spinner->setMovie(spinner_.get());
   DisableFileLoading();
 
-  ui_->button_next->setIcon(IconLoader::Load("go-next"));
+  ui_->button_restore->setIcon(IconLoader::Load("go-next"));
   ui_->button_exit->setIcon(IconLoader::Load("application-exit"));
   ui_->button_cancel->setIcon(IconLoader::Load("button-cancel"));
 
-  connect(ui_->button_next, SIGNAL(clicked()), SLOT(Next()));
+  connect(ui_->button_restore, SIGNAL(clicked()), SLOT(Next()));
   connect(ui_->button_back, SIGNAL(clicked()), SLOT(Reset()));
   connect(ui_->button_cancel, SIGNAL(clicked()), SLOT(Cancel()));
   connect(ui_->button_exit, SIGNAL(clicked()), SLOT(MaybeExit()));
@@ -218,8 +218,8 @@ void MainWindow::Reset() {
   ui_->stackedWidget->setCurrentWidget(ui_->select_file);
   ui_->button_cancel->hide();
   ui_->button_exit->show();
-  ui_->button_next->show();
-  ui_->button_next->setEnabled(connected_ && !ui_->file_view_container->view()->selectionModel()->selectedRows().isEmpty());
+  ui_->button_restore->show();
+  ui_->button_restore->setEnabled(connected_ && !ui_->file_view_container->view()->selectionModel()->selectedRows().isEmpty());
   ui_->button_back->hide();
   ui_->button_select_all->show();
   ui_->button_unselect_all->show();
@@ -289,8 +289,8 @@ void MainWindow::FileLoadProgress(const int value) {
     files_loaded_ = true;
     statusbar_label_->setText(connection_status_);
     if (ui_->stackedWidget->currentWidget() == ui_->select_file) {
-      ui_->button_next->show();
-      ui_->button_next->setEnabled(connected_ && !ui_->file_view_container->view()->selectionModel()->selectedRows().isEmpty());
+      ui_->button_restore->show();
+      ui_->button_restore->setEnabled(connected_ && !ui_->file_view_container->view()->selectionModel()->selectedRows().isEmpty());
       ui_->button_select_all->setEnabled(ui_->file_view_container->view()->selectionModel()->selectedRows().count() < bakfile_sort_model_->rowCount());
       ui_->button_unselect_all->setEnabled(!ui_->file_view_container->view()->selectionModel()->selectedRows().isEmpty());
     }
@@ -322,7 +322,7 @@ void MainWindow::FileLoadError(const QString &error) {
 void MainWindow::FileSelectionChanged(const QItemSelection&, const QItemSelection&) {
 
   if (ui_->stackedWidget->currentWidget() == ui_->select_file) {
-    ui_->button_next->setEnabled(connected_ && !ui_->file_view_container->view()->selectionModel()->selectedRows().isEmpty());
+    ui_->button_restore->setEnabled(connected_ && !ui_->file_view_container->view()->selectionModel()->selectedRows().isEmpty());
     ui_->button_select_all->setEnabled(ui_->file_view_container->view()->selectionModel()->selectedRows().count() < bakfile_sort_model_->rowCount());
     ui_->button_unselect_all->setEnabled(!ui_->file_view_container->view()->selectionModel()->selectedRows().isEmpty());
   }
@@ -339,7 +339,7 @@ void MainWindow::Connecting(const QString&, const QString &server) {
   }
 
   if (ui_->stackedWidget->currentWidget() == ui_->select_file) {
-    ui_->button_next->setEnabled(false);
+    ui_->button_restore->setEnabled(false);
   }
 
 }
@@ -354,7 +354,7 @@ void MainWindow::ConnectionSuccess(const QString&, const QString &server) {
   }
 
   if (ui_->stackedWidget->currentWidget() == ui_->select_file) {
-    ui_->button_next->setEnabled(!ui_->file_view_container->view()->selectionModel()->selectedRows().isEmpty());
+    ui_->button_restore->setEnabled(!ui_->file_view_container->view()->selectionModel()->selectedRows().isEmpty());
   }
 
 }
@@ -369,7 +369,7 @@ void MainWindow::ConnectionFailure(const QString &error) {
   }
 
   if (ui_->stackedWidget->currentWidget() == ui_->select_file) {
-    ui_->button_next->setEnabled(false);
+    ui_->button_restore->setEnabled(false);
   }
 
 }
@@ -395,7 +395,7 @@ void MainWindow::Cancel() {
 
 }
 
-void MainWindow::Next() {
+void MainWindow::Restore() {
 
   if (ui_->stackedWidget->currentWidget() == ui_->select_file) {
     files_.clear();
@@ -412,7 +412,7 @@ void MainWindow::Next() {
       if (!ui_->widget_watcher->isHidden()) {
         DisableFileLoading();
       }
-      ui_->button_next->hide();
+      ui_->button_restore->hide();
       ui_->button_exit->hide();
       ui_->button_cancel->show();
       ui_->button_select_all->hide();

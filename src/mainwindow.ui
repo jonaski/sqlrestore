@@ -210,7 +210,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="button_next">
+       <widget class="QPushButton" name="button_restore">
         <property name="text">
          <string>Restore</string>
         </property>

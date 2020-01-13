@@ -83,7 +83,7 @@ class MainWindow : public QMainWindow {
   void Reset();
   void MaybeExit();
   void Cancel();
-  void Next();
+  void Restore();
 
   void RestoreSuccess();
   void RestoreFailure(const QStringList&);
