@@ -49,7 +49,6 @@ class SettingsDialog;
 class BakFileFilter;
 class Application;
 class BackupBackend;
-class Ui_UniClientViewContainer;
 
 class MainWindow : public QMainWindow {
   Q_OBJECT
