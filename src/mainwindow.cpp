@@ -139,7 +139,7 @@ MainWindow::MainWindow(Application *app, const CommandlineOptions &options, QWid
   ui_->button_exit->setIcon(IconLoader::Load("application-exit"));
   ui_->button_cancel->setIcon(IconLoader::Load("button-cancel"));
 
-  connect(ui_->button_restore, SIGNAL(clicked()), SLOT(Next()));
+  connect(ui_->button_restore, SIGNAL(clicked()), SLOT(Restore()));
   connect(ui_->button_back, SIGNAL(clicked()), SLOT(Reset()));
   connect(ui_->button_cancel, SIGNAL(clicked()), SLOT(Cancel()));
   connect(ui_->button_exit, SIGNAL(clicked()), SLOT(MaybeExit()));
