@@ -35,6 +35,7 @@ BakFileView::BakFileView(QWidget *parent) : QTreeView(parent), header_(new BakFi
   setSelectionMode(QAbstractItemView::ExtendedSelection);
   setMouseTracking(true);
   setSortingEnabled(true);
+  setRootIsDecorated(false);
 
 }
 
