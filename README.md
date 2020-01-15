@@ -57,9 +57,10 @@ Shared:
 
 ### :open_file_folder: Copy dependencies for shared build:
 
-    mkdir -p platforms imageformats sqldrivers
+    mkdir -p platforms imageformats sqldrivers styles
     cp $HOME/mxe/usr/x86_64-w64-mingw32.shared/qt5/plugins/platforms/qwindows.dll platforms/
     cp $HOME/mxe/usr/x86_64-w64-mingw32.shared/qt5/plugins/sqldrivers/qsqlodbc.dll sqldrivers/
+    cp $HOME/mxe/usr/x86_64-w64-mingw32.shared/qt5/plugins/styles/qwindowsvistastyle.dll styles/
     cp $HOME/mxe/usr/x86_64-w64-mingw32.shared/qt5/plugins/imageformats/{qgif.dll,qico.dll,qjp2.dll,qjpeg.dll,qsvg.dll,qtiff.dll} imageformats/
     cp $HOME/mxe/usr/x86_64-w64-mingw32.shared/bin/killproc.exe .
     $HOME/mxe/tools/copydlldeps.sh -c -F . -R $HOME/mxe/usr/x86_64-w64-mingw32.shared -d .
