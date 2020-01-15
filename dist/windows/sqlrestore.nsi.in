@@ -218,6 +218,11 @@ Section "Qt SQL Drivers" sqldrivers
   File "/oname=qsqlodbc.dll" "sqldrivers\qsqlodbc.dll"
 SectionEnd
 
+Section "Qt style plugins" styles
+  SetOutPath "$INSTDIR\styles"
+  File "/oname=qwindowsvistastyle.dll" "styles\qwindowsvistastyle.dll"
+SectionEnd
+
 Section "Qt image format plugins" imageformats
   SetOutPath "$INSTDIR\imageformats"
   File "/oname=qgif.dll" "imageformats\qgif.dll"
@@ -306,6 +311,7 @@ Section "Uninstall"
 
   Delete "$INSTDIR\platforms\qwindows.dll"
   Delete "$INSTDIR\sqldrivers\qsqlodbc.dll"
+  Delete "$INSTDIR\styles\qwindowsvistastyle.dll"
 
   Delete "$INSTDIR\imageformats\qjpeg.dll"
   Delete "$INSTDIR\imageformats\qgif.dll"
