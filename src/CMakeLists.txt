@@ -88,16 +88,15 @@ add_library(sqlrestore_lib STATIC
 target_link_libraries(sqlrestore_lib
   ${CMAKE_THREAD_LIBS_INIT}
   ${GLIB_LIBRARIES}
+  ${MAGIC_LIBRARIES}
   ${QT_LIBRARIES}
-  ${QUAZIP_LIBRARIES}
   ${SINGLEAPPLICATION_LIBRARIES}
   ${SINGLECOREAPPLICATION_LIBRARIES}
-  ${MAGIC_LIBRARIES}
+  ${QUAZIP_LIBRARIES}
 )
 
 if (WIN32)
-  #target_link_libraries(sqlrestore_lib odbc32 sqlite3 regex iphlpapi shlwapi)
-  target_link_libraries(sqlrestore_lib odbccp32)
+  target_link_libraries(sqlrestore_lib odbccp32 regex shlwapi)
 endif()
 
 if (NOT USE_SYSTEM_SINGLEAPPLICATION)

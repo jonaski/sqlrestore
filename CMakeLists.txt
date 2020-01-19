@@ -95,7 +95,6 @@ endif(USE_SYSTEM_SINGLEAPPLICATION)
 # QUAZIP
 find_package(QuaZip)
 
-
 if (WIN32)
   # RC compiler
   string(REPLACE "gcc" "windres" CMAKE_RC_COMPILER_INIT ${CMAKE_C_COMPILER})
