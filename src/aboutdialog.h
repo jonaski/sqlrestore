@@ -22,9 +22,16 @@
 
 #include "config.h"
 
+#include <memory>
+
 #include <QDialog>
+#include <QMovie>
 
 #include "ui_aboutdialog.h"
+
+class QShowEvent;
+class QCloseEvent;
+class QMouseEvent;
 
 class AboutDialog : public QDialog {
   Q_OBJECT
@@ -32,8 +39,22 @@ class AboutDialog : public QDialog {
  public:
   explicit AboutDialog(QWidget *parent = nullptr);
 
+ protected:
+  void showEvent(QShowEvent*);
+  void closeEvent(QCloseEvent*);
+  void mouseDoubleClickEvent(QMouseEvent *e);
+
+ private:
+  void SetPosition();
+  void HideDopeFish();
+
+ private slots:
+  void Close();
+
  private:
   Ui::AboutDialog ui_;
+  QWidget *mainwindow_;
+  std::unique_ptr<QMovie> dopefish_;
 };
 
 #endif  // ABOUTDIALOG_H

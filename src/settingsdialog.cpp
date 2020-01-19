@@ -60,6 +60,7 @@ const char *SettingsDialog::kSettingsGroup = "Settings";
 
 SettingsDialog::SettingsDialog(QWidget *parent)
     : QDialog(parent),
+      mainwindow_(parent),
       ui_(new Ui_SettingsDialog),
       testserver_(new TestServerDialog(this)),
       db_connector_(new DBConnector(this)),
@@ -67,7 +68,6 @@ SettingsDialog::SettingsDialog(QWidget *parent)
       connection_open_(false) {
 
   ui_->setupUi(this);
-  LoadGeometry();
 
   //db_connector_->moveToThread(db_connector->thread());
 
@@ -125,6 +125,8 @@ SettingsDialog::SettingsDialog(QWidget *parent)
     ui_->odbc_drivers->addItem(driver, driver);
   }
 
+  LoadGeometry();
+
 }
 
 SettingsDialog::~SettingsDialog() {
@@ -137,6 +139,7 @@ SettingsDialog::~SettingsDialog() {
 }
 
 void SettingsDialog::showEvent(QShowEvent*) {
+  LoadGeometry();
   Load();
 }
 
@@ -153,6 +156,8 @@ void SettingsDialog::LoadGeometry() {
   }
   s.endGroup();
 
+  SetPosition();
+
 }
 
 void SettingsDialog::SaveGeometry() {
@@ -162,6 +167,11 @@ void SettingsDialog::SaveGeometry() {
   s.setValue("geometry", saveGeometry());
   s.endGroup();
 
+}
+
+void SettingsDialog::SetPosition() {
+  adjustSize();
+  move(QPoint(mainwindow_->pos().x() + (mainwindow_->width() / 2) - (width() / 2), mainwindow_->pos().y() + (mainwindow_->height() / 2) - (height() / 2)));
 }
 
 void SettingsDialog::Clicked(QAbstractButton *button) {
@@ -178,10 +188,6 @@ void SettingsDialog::Load() {
 
   QSettings s;
   s.beginGroup(kSettingsGroup);
-
-  if (s.contains("geometry")) {
-    restoreGeometry(s.value("geometry").toByteArray());
-  }
 
   ComboBoxLoadFromSettings(s, ui_->drivers, "driver", ui_->drivers->count() > 0 ? ui_->drivers->itemData(0).toString() : "");
   ComboBoxLoadFromSettings(s, ui_->odbc_drivers, "odbc_driver", ui_->odbc_drivers->count() > 0 ? ui_->odbc_drivers->itemData(0).toString() : "");
@@ -339,7 +345,9 @@ void SettingsDialog::SelectLocalPath() {
     return;
   }
   if (!info.isWritable()) {
-    QMessageBox(QMessageBox::Critical, tr("Path not writable."), tr("%1 is not writable.").arg(path), QMessageBox::Close).exec();
+    QMessageBox box(QMessageBox::Critical, tr("Path not writable."), tr("%1 is not writable.").arg(path), QMessageBox::Close);
+    box.setWindowFlags(box.windowFlags() | Qt::WindowStaysOnTopHint);
+    box.exec();
     return;
   }
 
@@ -372,7 +380,9 @@ void SettingsDialog::SelectLocalPath() {
   } BOOST_SCOPE_EXIT_END
   if (!test_file.open(QIODevice::WriteOnly)) {
     tmpfile_local.clear();
-    QMessageBox(QMessageBox::Critical, tr("Path is not writable."), tr("%1 is not writable.").arg(path), QMessageBox::Close).exec();
+    QMessageBox box(QMessageBox::Critical, tr("Path is not writable."), tr("%1 is not writable.").arg(path), QMessageBox::Close);
+    box.setWindowFlags(box.windowFlags() | Qt::WindowStaysOnTopHint);
+    box.exec();
     return;
   }
   test_file.close();

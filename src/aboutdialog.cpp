@@ -19,6 +19,7 @@
 
 #include "config.h"
 
+#include <memory>
 #include <boost/version.hpp>
 #include <magic.h>
 
@@ -32,16 +33,25 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QKeySequence>
-#include <QDebug>
+#include <QMovie>
+#include <QMouseEvent>
+
+#include "iconloader.h"
+#include "logging.h"
 
 #include "aboutdialog.h"
 #include "ui_aboutdialog.h"
 
-AboutDialog::AboutDialog(QWidget *parent):QDialog(parent) {
+class QShowEvent;
+class QCloseEvent;
+
+AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), mainwindow_(parent), dopefish_(new QMovie(":/pictures/dopefish.gif")) {
 
   ui_.setupUi(this);
   setWindowFlags(this->windowFlags()|Qt::WindowStaysOnTopHint);
   setWindowTitle(tr("About SQL Restore"));
+
+  ui_.label_icon->setPixmap(IconLoader::Load("backup").pixmap(64));
 
   QFont title_font;
   title_font.setBold(true);
@@ -77,5 +87,50 @@ AboutDialog::AboutDialog(QWidget *parent):QDialog(parent) {
   adjustSize();
   updateGeometry();
   ui_.buttonBox->button(QDialogButtonBox::Close)->setShortcut(QKeySequence::Close);
+
+  connect(ui_.buttonBox, SIGNAL(accepted()), SLOT(Close()));
+  connect(ui_.buttonBox, SIGNAL(rejected()), SLOT(Close()));
+
+}
+
+void AboutDialog::showEvent(QShowEvent*) {
+  SetPosition();
+}
+
+void AboutDialog::closeEvent(QCloseEvent*) {
+
+  HideDopeFish();
+
+}
+
+void AboutDialog::SetPosition() {
+  move(QPoint(mainwindow_->pos().x() + (mainwindow_->width() / 2) - (width() / 2), mainwindow_->pos().y() + (mainwindow_->height() / 2) - (height() / 2)));
+}
+
+void AboutDialog::Close() {
+
+  HideDopeFish();
+  hide();
+
+}
+
+void AboutDialog::HideDopeFish() {
+
+  if (dopefish_->state() == QMovie::Running) {
+    dopefish_->stop();
+    ui_.label_icon->clear();
+    ui_.label_icon->setPixmap(IconLoader::Load("backup").pixmap(64));
+  }
+
+}
+
+void AboutDialog::mouseDoubleClickEvent(QMouseEvent *e) {
+
+  if (e->button() == Qt::RightButton) {
+    ui_.label_icon->clear();
+    ui_.label_icon->setMovie(dopefish_.get());
+    dopefish_->setSpeed(250);
+    dopefish_->start();
+  }
 
 }

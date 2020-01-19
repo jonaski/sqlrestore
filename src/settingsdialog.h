@@ -50,6 +50,7 @@ class SettingsDialog : public QDialog {
   void closeEvent(QCloseEvent*);
 
  private:
+  void SetPosition();
   void Load();
   void ComboBoxLoadFromSettings(const QSettings &s, QComboBox *combobox, const QString &setting, const QString &default_value);
   DBConnectResult Connect();
@@ -71,6 +72,7 @@ class SettingsDialog : public QDialog {
   void SelectLocalPath();
 
  private:
+  QWidget *mainwindow_;
   Ui_SettingsDialog *ui_;
   TestServerDialog *testserver_;
   DBConnector *db_connector_;
