@@ -37,22 +37,19 @@ BakFileHeader::BakFileHeader(Qt::Orientation orientation, BakFileView *view, QWi
   connect(this, SIGNAL(sectionResized(int, int, int)), SLOT(SectionResized(int, int, int)));
   setSectionsClickable(true);
 
+}
+
+void BakFileHeader::Init() {
+
   column_widths_.resize(count());
+  std::fill(column_widths_.begin(), column_widths_.end(), 1.0 / count());
+
   for (int i = 0; i < count(); ++i) {
     column_widths_[i] = ColumnWidthType(sectionSize(i)) / width();
   }
 
   NormaliseWidths();
   UpdateWidths();
-
-}
-
-void BakFileHeader::setModel(QAbstractItemModel* model) {
-
-  QHeaderView::setModel(model);
-
-  column_widths_.resize(count());
-  std::fill(column_widths_.begin(), column_widths_.end(), 1.0 / count());
 
 }
 
@@ -81,9 +78,9 @@ void BakFileHeader::NormaliseWidths(const QList<int> &sections) {
         selected_sum += column_widths_[i];
   }
 
-  if (total_sum != 0.0 && !qFuzzyCompare(total_sum, 1.0)) {
-    const ColumnWidthType mult = (selected_sum + (1.0 - total_sum)) / selected_sum;
-    for (int i=0 ; i < column_widths_.count() ; ++i) {
+  if (total_sum != 0.0 && !qFuzzyCompare(total_sum, 0.99)) {
+    const ColumnWidthType mult = (selected_sum + (0.99 - total_sum)) / selected_sum;
+    for (int i = 0 ; i < column_widths_.count() ; ++i) {
       if (sections.isEmpty() || sections.contains(i))
         column_widths_[i] *= mult;
     }
@@ -99,7 +96,7 @@ void BakFileHeader::UpdateWidths(const QList<int>& sections) {
     int pixels = w * width();
 
     if (pixels != 0 && total_w - int(total_w) > 0.5)
-      pixels ++;
+      ++pixels;
 
     total_w += w;
 

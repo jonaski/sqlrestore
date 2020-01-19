@@ -40,7 +40,7 @@ class BakFileHeader : public QHeaderView {
 
   typedef double ColumnWidthType;
 
-  void setModel(QAbstractItemModel* model);
+  void Init();
   void SetColumnWidth(const int logical, const ColumnWidthType width);
 
  private:

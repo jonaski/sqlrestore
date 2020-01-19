@@ -48,6 +48,7 @@ void BakFileView::setModel(QAbstractItemModel *model) {
 
 void BakFileView::Init() {
 
+  header_->Init();
   header_->SetColumnWidth(BakFileModel::Column_Filename, 0.37);
   header_->SetColumnWidth(BakFileModel::Column_FileSize, 0.08);
   header_->SetColumnWidth(BakFileModel::Column_Modified, 0.10);
