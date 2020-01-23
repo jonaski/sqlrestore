@@ -73,7 +73,7 @@ Shared:
 
 Static with CMake:
 
-    PKG_CONFIG_LIBDIR=$HOME/mxe/usr/x86_64-w64-mingw32.static/lib/pkgconfig cmake .. -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw32-static.cmake -DARCH=x86_64 -DUSE_SYSTEM_SINGLEAPPLICATION=ON
+    PKG_CONFIG_LIBDIR=$HOME/mxe/usr/x86_64-w64-mingw32.static/lib/pkgconfig cmake .. -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw32-static.cmake
     make -j$(nproc)
 
 Static with QMake:
