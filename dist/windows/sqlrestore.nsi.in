@@ -326,6 +326,7 @@ Section "Uninstall"
   RMDir "$INSTDIR\platforms"
   RMDir "$INSTDIR\sqldrivers"
   RMDir "$INSTDIR\imageformats"
+  RMDir "$INSTDIR\styles"
   RMDir "$INSTDIR"
 
   ; Remove the Shortcuts
