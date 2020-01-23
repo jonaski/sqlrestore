@@ -25,7 +25,7 @@
 #include <magic.h>
 #include <boost/scope_exit.hpp>
 
-#if defined(Q_OS_MACOS) || defined(Q_OS_WIN)
+#if defined(Q_OS_MACOS)
 #  include <quazip/quazip.h>
 #  include <quazip/quazipfileinfo.h>
 #else

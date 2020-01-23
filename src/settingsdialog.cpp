@@ -198,8 +198,8 @@ void SettingsDialog::Load() {
   QByteArray password = s.value("password").toByteArray();
   if (password.isEmpty()) ui_->password->clear();
   else ui_->password->setText(QString::fromUtf8(QByteArray::fromBase64(password)));
-  ui_->remote_path->setText(s.value("remote_path", QCoreApplication::applicationDirPath()).toString());
-  ui_->local_path->setText(s.value("local_path", QCoreApplication::applicationDirPath()).toString());
+  ui_->remote_path->setText(s.value("remote_path", QDir::toNativeSeparators(QCoreApplication::applicationDirPath())).toString());
+  ui_->local_path->setText(s.value("local_path", QDir::toNativeSeparators(QCoreApplication::applicationDirPath())).toString());
 
   s.endGroup();
 
@@ -389,6 +389,6 @@ void SettingsDialog::SelectLocalPath() {
   if (test_file.exists()) test_file.remove();
   tmpfile_local.clear();
 
-  ui_->local_path->setText(path);
+  ui_->local_path->setText(QDir::toNativeSeparators(path));
 
 }

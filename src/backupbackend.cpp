@@ -23,7 +23,7 @@
 
 #include <boost/scope_exit.hpp>
 
-#if defined(Q_OS_MACOS) || defined(Q_OS_WIN)
+#if defined(Q_OS_MACOS)
 #  include <quazip/quazip.h>
 #  include <quazip/quazipfile.h>
 #  include <quazip/quachecksum32.h>
@@ -88,8 +88,8 @@ void BackupBackend::ReloadSettings() {
 
   QSettings s;
   s.beginGroup(SettingsDialog::kSettingsGroup);
-  remote_path_ = s.value("remote_path", QCoreApplication::applicationDirPath()).toString();
-  local_path_ = s.value("local_path", QCoreApplication::applicationDirPath()).toString();
+  remote_path_ = s.value("remote_path", QDir::toNativeSeparators(QCoreApplication::applicationDirPath())).toString();
+  local_path_ = s.value("local_path", QDir::toNativeSeparators(QCoreApplication::applicationDirPath())).toString();
   s.endGroup();
 
   db_connector_->ReloadSettings();
