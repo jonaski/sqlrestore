@@ -1,0 +1,122 @@
+# This file is used to ignore files which are generated
+# ----------------------------------------------------------------------------
+
+# Build
+build/
+bin/
+
+# CMake
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Makefile*
+Testing
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.so.*
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Dump files
+*.core
+*.stackdump
+
+# Qt
+*build-*
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.moc
+*.qm
+
+# QtCreator
+CMakeLists.txt.user*
+*.pro.user
+*.pro.user.*
+*creator.user*
+target_wrapper.*
+compile_commands.json
+
+*.kdev4
+*.vscode
+*.code-workspace
+*.sublime-workspace
+
+# Temporary files
+*~
+*.autosave
+*.orig
+*.rej
+.*.kate-swp
+.swp.*
+.*.swp
+*.flc
+
+# Directory files
+.directory
+.DS_Store
+Thumbs.db
+
+# MinGW generated files
+*.Debug
+*.Release
+
+# Package files
+*.spec
+*.nsi
+*.plist
+
+# Stuff in dist
+maketarball.sh
+create-dmg.sh
+changelog
+PKGBUILD
+
+# Translations
+translations.pot
+zanata.xml
+.zanata-cache/
+
+# Snap
+parts/
+prime/
+stage/
+*.snap
+/snap/.snapcraft/
+/*_source.tar.bz2
