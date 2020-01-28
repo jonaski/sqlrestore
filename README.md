@@ -50,6 +50,8 @@ Install dependencies on Ubuntu:
 
 MXE needs to be in $HOME/mxe
 
+Use the https://github.com/strawberrymusicplayer/strawberry-mxe repository.
+
 Shared:
 
     PKG_CONFIG_LIBDIR=$HOME/mxe/usr/x86_64-w64-mingw32.shared/lib/pkgconfig cmake .. -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw32-shared.cmake -DARCH=x86_64 -DUSE_SYSTEM_SINGLEAPPLICATION=ON
@@ -71,17 +73,14 @@ Shared:
     cp ../dist/windows/{sqlrestore.ico,sqlrestore.nsi,*.nsh} .
     makensis sqlrestore.nsi
 
-Static with CMake:
+Static:
 
-    PKG_CONFIG_LIBDIR=$HOME/mxe/usr/x86_64-w64-mingw32.static/lib/pkgconfig cmake .. -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw32-static.cmake
+MXE needs to be in $HOME/mxe-qt
+
+Use the https://github.com/jonaski/mxe-qt repository.
+
+    PKG_CONFIG_LIBDIR=$HOME/mxe-qt/usr/x86_64-w64-mingw32.static/lib/pkgconfig cmake .. -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw32-static.cmake
     make -j$(nproc)
-
-Static with QMake:
-
-    export PATH=$HOME/mxe/usr/bin:$PATH
-    mkdir build-win-static
-    cd build-win-static
-    $HOME/mxe/usr/x86_64-w64-mingw32.static/qt5/bin/qmake ../sqlrestore/sqlrestore.pro
 
 ### :penguin: Install "ODBC Driver 17 for SQL Server" on openSUSE Leap 15.1:
 
