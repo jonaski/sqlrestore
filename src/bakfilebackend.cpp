@@ -75,7 +75,7 @@ BakFileBackend::BakFileBackend(QObject *parent) :
 
 BakFileBackend::~BakFileBackend() {
   files_.clear(); // Releases shared_ptr's
-  magic_close(magic_);
+  if (magic_) magic_close(magic_);
 }
 
 void BakFileBackend::LoadMagic() {
@@ -171,6 +171,8 @@ QString BakFileBackend::LoadMagicToTemp() {
   }
 
   if (src_file.bytesAvailable() == 0) {
+    src_file.close();
+    dst_file.close();
     return QString();
   }
 
