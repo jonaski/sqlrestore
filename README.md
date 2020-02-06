@@ -26,6 +26,8 @@ To build SQL Restore from source you need the following installed on your system
 * [Boost](https://www.boost.org/)
 * [Qt 5.9 or higher with components Core, Gui, Widgets, Network and Sql](https://www.qt.io/)
 * [libmagic](http://darwinsys.com/file/)
+* [zlib](https://www.zlib.net/)
+* [quazip](https://github.com/stachenov/quazip)
 * [Microsoft ODBC Driver for SQL Server](https://docs.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server)
 
 
