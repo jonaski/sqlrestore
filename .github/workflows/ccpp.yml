@@ -56,8 +56,6 @@ jobs:
       with:
         version: ${{ matrix.qt_version }}
 
-    - name: Update HomeBrew
-      run: brew update
     - name: Unlink python
       run: brew unlink python@2
     - name: Install Packages
