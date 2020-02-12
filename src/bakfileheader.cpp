@@ -17,17 +17,17 @@
 
  */
 
-#include "config.h"
+#include <algorithm>
+#include <numeric>
 
+#include <QtGlobal>
 #include <QHeaderView>
-#include <QAbstractItemModel>
 #include <QList>
 #include <QResizeEvent>
 #include <QMouseEvent>
 
 #include "bakfileheader.h"
 #include "bakfileview.h"
-#include "logging.h"
 
 BakFileHeader::BakFileHeader(Qt::Orientation orientation, BakFileView *view, QWidget *parent)
     : QHeaderView(orientation, parent),

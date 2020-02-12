@@ -17,21 +17,26 @@
 
  */
 
-#include "config.h"
-
 #include <QMainWindow>
+#include <QWidget>
+#include <QApplication>
+#include <QAbstractItemModel>
+#include <QItemSelectionModel>
+#include <QItemSelection>
 #include <QThread>
 #include <QSettings>
-#include <QSortFilterProxyModel>
+#include <QVariant>
+#include <QIcon>
+#include <QMovie>
+#include <QAction>
 #include <QStackedWidget>
 #include <QPushButton>
-#include <QSettings>
-#include <QErrorMessage>
-#include <QMovie>
-#include <QMessageBox>
+#include <QLabel>
+#include <QProgressBar>
+#include <QStatusBar>
+#include <QTextBrowser>
 
 #include "logging.h"
-#include "utilities.h"
 #include "iconloader.h"
 #include "application.h"
 #include "dbconnector.h"

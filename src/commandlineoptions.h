@@ -20,8 +20,6 @@
 #ifndef COMMANDLINEOPTIONS_H
 #define COMMANDLINEOPTIONS_H
 
-#include "config.h"
-
 #include <QDataStream>
 #include <QByteArray>
 

@@ -17,17 +17,10 @@
 
  */
 
-#include "config.h"
-
-#include <functional>
-
 #include <QObject>
 #include <QThread>
-#include <QVariant>
-#include <QString>
 
 #include "application.h"
-#include "logging.h"
 #include "bakfilebackend.h"
 #include "dbconnector.h"
 #include "backupbackend.h"

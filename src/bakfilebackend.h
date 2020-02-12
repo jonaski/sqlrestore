@@ -20,19 +20,15 @@
 #ifndef BAKFILEBACKEND_H
 #define BAKFILEBACKEND_H
 
-#include "config.h"
-
 #include <magic.h>
 
-#include <QtGlobal>
 #include <QObject>
-#include <QFileSystemWatcher>
-#include <QString>
-#include <QStringList>
 #include <QMap>
+#include <QString>
 
 #include "bakfileitem.h"
 
+class QFileSystemWatcher;
 class QTimer;
 
 class BakFileBackend : public QObject {

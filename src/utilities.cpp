@@ -17,15 +17,16 @@
 
  */
 
-#include "config.h"
-
+#include <stdlib.h>
 #include <time.h>
 
 #include <QtGlobal>
+#include <QList>
+#include <QByteArray>
 #include <QString>
 #include <QStringList>
+#include <QChar>
 #include <QLocale>
-#include <QTranslator>
 
 #include "utilities.h"
 

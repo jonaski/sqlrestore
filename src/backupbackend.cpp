@@ -17,42 +17,42 @@
 
  */
 
-#include "config.h"
-
 #include <QtGlobal>
 
+#include <memory>
 #include <boost/scope_exit.hpp>
 
 #if defined(Q_OS_MACOS)
 #  include <quazip/quazip.h>
 #  include <quazip/quazipfile.h>
-#  include <quazip/quachecksum32.h>
+#  include <quazip/quazipfileinfo.h>
 #  include <quazip/quacrc32.h>
 #else
 #  include <quazip5/quazip.h>
 #  include <quazip5/quazipfile.h>
-#  include <quazip5/quachecksum32.h>
+#  include <quazip5/quazipfileinfo.h>
 #  include <quazip5/quacrc32.h>
 #endif
 
 #include <QObject>
 #include <QCoreApplication>
-#include <QThread>
 #include <QMutex>
 #include <QQueue>
+#include <QVariant>
+#include <QByteArray>
 #include <QString>
-#include <QUrl>
+#include <QRegExp>
+#include <QChar>
+#include <QIODevice>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QStorageInfo>
-#include <QSqlDriver>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QSqlError>
 #include <QSettings>
-#include <QDateTime>
 
 #include "logging.h"
 #include "utilities.h"

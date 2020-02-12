@@ -20,17 +20,12 @@
 #ifndef DBCONNECTOR_H
 #define DBCONNECTOR_H
 
-#include "config.h"
-
 #include <QObject>
 #include <QMutex>
 #include <QSqlDatabase>
-#include <QSqlQuery>
 #include <QString>
-#include <QStringList>
 
 class DBConnectResult;
-class ScopedResult;
 
 class DBConnector : public QObject {
   Q_OBJECT

@@ -22,31 +22,25 @@
 
 #include <QtGlobal>
 
-#include <stdlib.h>
-#include <memory>
-#include <time.h>
 #include <assert.h>
 
 #ifdef GLIB_FOUND
 #  include <glib.h>
 #endif
 
-#ifdef Q_OS_UNIX
-#  include <unistd.h>
-#endif
-
 #include <singleapplication.h>
 #include <singlecoreapplication.h>
 
 #include <QObject>
-#include <QApplication>
 #include <QCoreApplication>
 #include <QIODevice>
+#include <QFileDevice>
 #include <QFile>
 #include <QByteArray>
 #include <QString>
 #include <QLoggingCategory>
 #include <QSettings>
+#include <QtDebug>
 
 #include "main.h"
 #include "logging.h"
@@ -55,9 +49,6 @@
 #include "utilities.h"
 #include "metatypes.h"
 #include "mainwindow.h"
-
-//#include <QtPlugin>
-//Q_IMPORT_PLUGIN(qsqlodbc)
 
 int main(int argc, char* argv[]) {
 

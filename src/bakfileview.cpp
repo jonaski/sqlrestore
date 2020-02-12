@@ -17,11 +17,11 @@
 
  */
 
-#include "config.h"
-
 #include <QTreeView>
+#include <QWidget>
 #include <QAbstractItemView>
 #include <QAbstractItemModel>
+#include <QItemSelectionModel>
 
 #include "bakfilemodel.h"
 #include "bakfileview.h"

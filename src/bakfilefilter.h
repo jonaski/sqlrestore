@@ -20,14 +20,11 @@
 #ifndef BAKFILEFILTER_H
 #define BAKFILEFILTER_H
 
-#include "config.h"
-
+#include <QtGlobal>
+#include <QObject>
 #include <QSortFilterProxyModel>
 #include <QList>
-
-#include "bakfilemodel.h"
-
-class FilterTree;
+#include <QString>
 
 class BakFileFilter : public QSortFilterProxyModel {
   Q_OBJECT

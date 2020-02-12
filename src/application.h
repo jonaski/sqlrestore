@@ -20,11 +20,10 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include "config.h"
-
 #include <QObject>
 #include <QThread>
 #include <QList>
+#include <QString>
 
 class BakFileBackend;
 class DBConnector;

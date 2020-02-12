@@ -17,23 +17,18 @@
 
  */
 
-#ifndef BACKEND_H
-#define BACKEND_H
+#ifndef BACKUPBACKEND_H
+#define BACKUPBACKEND_H
 
-#include "config.h"
-
-#include <memory>
-
-#include <QtGlobal>
 #include <QObject>
 #include <QString>
 #include <QStringList>
 #include <QQueue>
 #include <QSqlDatabase>
 
-#include "dbconnector.h"
 #include "bakfileitem.h"
 
+class DBConnector;
 class ScopedResult;
 
 class BackupBackend : public QObject {
@@ -98,4 +93,4 @@ class BackupBackend : public QObject {
 
 };
 
-#endif  // BACKEND_H
+#endif  // BACKUPBACKEND_H

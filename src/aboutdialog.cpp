@@ -17,33 +17,31 @@
 
  */
 
-#include "config.h"
-
 #include <memory>
 #include <boost/version.hpp>
 #include <magic.h>
 
+#include <QtGlobal>
 #include <QCoreApplication>
 #include <QWidget>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QString>
-#include <QFlags>
+#include <QIcon>
+#include <QPoint>
 #include <QFont>
 #include <QLabel>
 #include <QPushButton>
 #include <QKeySequence>
 #include <QMovie>
+#include <QShowEvent>
+#include <QCloseEvent>
 #include <QMouseEvent>
 
 #include "iconloader.h"
-#include "logging.h"
 
 #include "aboutdialog.h"
 #include "ui_aboutdialog.h"
-
-class QShowEvent;
-class QCloseEvent;
 
 AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), mainwindow_(parent), dopefish_(new QMovie(":/pictures/dopefish.gif")) {
 

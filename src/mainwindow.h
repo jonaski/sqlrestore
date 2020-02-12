@@ -20,35 +20,32 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "config.h"
+#include <memory>
 
-#include <memory.h>
-
+#include <QtGlobal>
 #include <QMainWindow>
+#include <QObject>
+#include <QList>
+#include <QByteArray>
 #include <QString>
 #include <QStringList>
 #include <QMovie>
 #include <QItemSelection>
 
-#include "bakfilemodel.h"
-#include "bakfileview.h"
 #include "bakfileitem.h"
 #include "backupresult.h"
 
-class QSortFilterProxyModel;
 class QListView;
 class QLabel;
-class QAbstractButton;
-class QShowEvent;
-class QCloseEvent;
+
 class Ui_MainWindow;
 class Application;
 class CommandlineOptions;
 class AboutDialog;
 class SettingsDialog;
-class BakFileFilter;
-class Application;
 class BackupBackend;
+class BakFileModel;
+class BakFileFilter;
 
 class MainWindow : public QMainWindow {
   Q_OBJECT

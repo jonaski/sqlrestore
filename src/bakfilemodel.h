@@ -20,10 +20,11 @@
 #ifndef BAKFILEMODEL_H
 #define BAKFILEMODEL_H
 
-#include "config.h"
+#include <memory>
 
-#include <memory.h>
-
+#include <QtGlobal>
+#include <QObject>
+#include <QAbstractItemModel>
 #include <QAbstractListModel>
 #include <QVariant>
 #include <QString>

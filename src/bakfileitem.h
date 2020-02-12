@@ -20,10 +20,11 @@
 #ifndef BAKFILEITEM_H
 #define BAKFILEITEM_H
 
-#include "config.h"
-
 #include <memory>
 
+#include <QtGlobal>
+#include <QMetaType>
+#include <QSet>
 #include <QList>
 #include <QString>
 #include <QDateTime>

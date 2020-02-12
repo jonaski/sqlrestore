@@ -17,8 +17,6 @@
 
  */
 
-#include "config.h"
-
 #include <boost/scope_exit.hpp>
 
 #include <QtGlobal>
@@ -29,22 +27,35 @@
 #endif
 
 #include <QDialog>
+#include <QWidget>
 #include <QCoreApplication>
 #include <QSettings>
+#include <QMutex>
+#include <QtConcurrent>
+#include <QFuture>
+#include <QFutureWatcher>
 #include <QSqlDatabase>
+#include <QVariant>
+#include <QByteArray>
 #include <QStringList>
+#include <QChar>
+#include <QIODevice>
 #include <QFile>
 #include <QDir>
 #include <QFileInfo>
 #include <QFileDialog>
+#include <QMessageBox>
+#include <QFlags>
+#include <QPoint>
 #include <QComboBox>
 #include <QAbstractButton>
-#include <QMessageBox>
+#include <QCheckBox>
+#include <QDialogButtonBox>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QSpinBox>
 #include <QShowEvent>
 #include <QCloseEvent>
-#include <QtConcurrent>
-#include <QFuture>
-#include <QFutureWatcher>
 
 #include "settingsdialog.h"
 #include "ui_settingsdialog.h"
@@ -54,7 +65,6 @@
 #include "dbconnector.h"
 #include "utilities.h"
 #include "iconloader.h"
-#include "logging.h"
 
 const char *SettingsDialog::kSettingsGroup = "Settings";
 

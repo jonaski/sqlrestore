@@ -20,10 +20,11 @@
 #ifndef BAKFILEVIEW_H
 #define BAKFILEVIEW_H
 
-#include "config.h"
-
+#include <QObject>
 #include <QTreeView>
+#include <QString>
 
+class QWidget;
 class QAbstractItemModel;
 
 class BakFileHeader;

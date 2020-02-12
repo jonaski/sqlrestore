@@ -20,8 +20,6 @@
 #ifndef SCOPEDRESULT_H
 #define SCOPEDRESULT_H
 
-#include "config.h"
-
 #include <boost/noncopyable.hpp>
 
 #include <QObject>

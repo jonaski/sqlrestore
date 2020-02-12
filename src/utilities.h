@@ -20,8 +20,7 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
-#include "config.h"
-
+#include <QtGlobal>
 #include <QString>
 #include <QStringList>
 #include <QRegExp>

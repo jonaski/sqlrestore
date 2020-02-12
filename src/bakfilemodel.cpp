@@ -17,20 +17,22 @@
 
  */
 
-#include "config.h"
-
-#include <algorithm>
 #include <memory>
+#include <algorithm>
+#include <functional>
 
 #include <QAbstractListModel>
 #include <QList>
+#include <QMap>
 #include <QVariant>
 #include <QString>
+#include <QDateTime>
+#include <QFlags>
+#include <QtDebug>
 
 #include "logging.h"
 #include "utilities.h"
 
-#include "bakfilebackend.h"
 #include "bakfilemodel.h"
 #include "bakfileitem.h"
 

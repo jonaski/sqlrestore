@@ -17,21 +17,21 @@
 
  */
 
-#include "config.h"
-
+#include <QtGlobal>
 #include <QObject>
 #include <QThread>
 #include <QMutex>
+#include <QVariant>
+#include <QByteArray>
 #include <QString>
 #include <QStringList>
-#include <QSqlDriver>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSettings>
+#include <QtDebug>
 
 #include "logging.h"
 #include "dbconnector.h"
-#include "scopedresult.h"
 #include "settingsdialog.h"
 
 int DBConnector::sNextConnectionID = 1;

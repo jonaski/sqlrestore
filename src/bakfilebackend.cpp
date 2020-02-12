@@ -17,38 +17,36 @@
 
  */
 
-#include "config.h"
-
 #include <QtGlobal>
 
-#include <unistd.h>
+#include <memory>
 #include <magic.h>
 #include <boost/scope_exit.hpp>
 
 #if defined(Q_OS_MACOS)
 #  include <quazip/quazip.h>
-#  include <quazip/quazipfileinfo.h>
 #else
 #  include <quazip5/quazip.h>
-#  include <quazip5/quazipfileinfo.h>
 #endif
 
 #include <QCoreApplication>
 #include <QStandardPaths>
 #include <QThread>
 #include <QFileSystemWatcher>
-#include <QList>
+#include <QVariant>
 #include <QByteArray>
 #include <QString>
 #include <QStringList>
+#include <QChar>
 #include <QRegExp>
+#include <QIODevice>
 #include <QFileInfo>
 #include <QDir>
-#include <QDirIterator>
 #include <QFile>
 #include <QDateTime>
 #include <QTimer>
 #include <QSettings>
+#include <QtDebug>
 
 #include "logging.h"
 #include "bakfilebackend.h"

@@ -21,12 +21,11 @@
 #define SETTINGSDIALOG_H
 
 #include <QDialog>
+#include <QObject>
 #include <QSettings>
 #include <QString>
-#include <QFuture>
 
-#include "scopedresult.h"
-
+class QWidget;
 class QComboBox;
 class QAbstractButton;
 class QShowEvent;

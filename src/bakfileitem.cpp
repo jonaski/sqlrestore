@@ -17,12 +17,9 @@
 
  */
 
-#include "config.h"
-
 #include <QString>
 #include <QDateTime>
 
-#include "logging.h"
 #include "bakfileitem.h"
 
 BakFileItem::BakFileItem() : compressed_(false) {}

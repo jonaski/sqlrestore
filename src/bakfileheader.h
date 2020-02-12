@@ -20,13 +20,13 @@
 #ifndef BAKFILEHEADER_H
 #define BAKFILEHEADER_H
 
-#include "config.h"
-
+#include <QObject>
 #include <QHeaderView>
 #include <QList>
 #include <QVector>
+#include <QString>
 
-class QAbstractItemModel;
+class QWidget;
 class QMouseEvent;
 class QResizeEvent;
 

@@ -17,6 +17,8 @@
 
  */
 
+#include <QMetaType>
+#include <QList>
 #include <QStringList>
 
 #include "scopedresult.h"

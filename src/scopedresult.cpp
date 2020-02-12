@@ -17,19 +17,16 @@
 
  */
 
-#include "config.h"
-
 #include <QString>
 #include <QStringList>
+#include <QtDebug>
 
 #include "logging.h"
 #include "scopedresult.h"
 
-ScopedResult::ScopedResult(QObject *parent) : QObject(parent), pending_(true), success_(false) {
-}
+ScopedResult::ScopedResult(QObject *parent) : QObject(parent), pending_(true), success_(false) {}
 
-ScopedResult::ScopedResult(const QString &filename, QObject *parent) : QObject(parent), filename_(filename), pending_(true), success_(false) {
-}
+ScopedResult::ScopedResult(const QString &filename, QObject *parent) : QObject(parent), filename_(filename), pending_(true), success_(false) {}
 
 ScopedResult::~ScopedResult() {
 

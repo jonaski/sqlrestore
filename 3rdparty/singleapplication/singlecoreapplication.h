@@ -35,8 +35,12 @@
 #define SINGLECOREAPPLICATION_H
 
 #include <QtGlobal>
+#include <QObject>
 #include <QCoreApplication>
-#include <QLocalSocket>
+#include <QMetaType>
+#include <QFlags>
+#include <QByteArray>
+#include <QString>
 
 class SingleCoreApplicationPrivate;
 

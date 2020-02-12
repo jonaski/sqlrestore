@@ -17,15 +17,13 @@
 
  */
 
-#include "config.h"
-
 #include <QSortFilterProxyModel>
 #include <QAbstractItemModel>
 #include <QList>
+#include <QVariant>
 #include <QString>
+#include <QRegExp>
 
-#include "logging.h"
-#include "bakfilemodel.h"
 #include "bakfilefilter.h"
 
 BakFileFilter::BakFileFilter(QObject *parent) : QSortFilterProxyModel(parent) {

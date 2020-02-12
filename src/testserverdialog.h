@@ -23,7 +23,10 @@
 #include <memory>
 
 #include <QDialog>
+#include <QObject>
+#include <QString>
 #include <QMovie>
+#include <QLabel>
 
 #include "ui_testserverdialog.h"
 

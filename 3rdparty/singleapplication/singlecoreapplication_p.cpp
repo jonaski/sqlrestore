@@ -35,7 +35,6 @@
 
 #include <QtGlobal>
 
-#include <cstdlib>
 #include <cstddef>
 
 #ifdef Q_OS_UNIX
@@ -44,7 +43,8 @@
 #  include <pwd.h>
 #endif
 
-#include <QDir>
+#include <QIODevice>
+#include <QSharedMemory>
 #include <QByteArray>
 #include <QDataStream>
 #include <QCryptographicHash>

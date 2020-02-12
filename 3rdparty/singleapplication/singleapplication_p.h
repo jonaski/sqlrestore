@@ -35,12 +35,15 @@
 #define SINGLEAPPLICATION_P_H
 
 #include <QtGlobal>
-#include <QLocalSocket>
-#include <QLocalServer>
-#include <QSharedMemory>
+#include <QObject>
 #include <QMap>
+#include <QString>
 
 #include "singleapplication.h"
+
+class QLocalServer;
+class QLocalSocket;
+class QSharedMemory;
 
 struct InstancesInfo {
   bool primary;

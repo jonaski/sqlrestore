@@ -17,11 +17,14 @@
 
  */
 
+#include <QtGlobal>
 #include <QWidget>
 #include <QApplication>
 #include <QList>
 #include <QString>
+#include <QRegExp>
 #include <QTimer>
+#include <QFrame>
 #include <QEvent>
 #include <QKeyEvent>
 

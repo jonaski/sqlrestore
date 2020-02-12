@@ -20,9 +20,9 @@
 #ifndef BAKFILEVIEWCONTAINER_H
 #define BAKFILEVIEWCONTAINER_H
 
-#include "config.h"
-
+#include <QObject>
 #include <QWidget>
+#include <QString>
 
 class QTimer;
 class QEvent;

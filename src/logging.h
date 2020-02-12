@@ -24,7 +24,7 @@
 #include <QtGlobal>
 #include <QIODevice>
 #include <QString>
-#include <QDebug>
+#include <QtDebug>
 
 #ifdef QT_NO_DEBUG_STREAM
 #  define qLog(level) while (false) QNoDebug()

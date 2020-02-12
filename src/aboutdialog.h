@@ -20,12 +20,12 @@
 #ifndef ABOUTDIALOG_H
 #define ABOUTDIALOG_H
 
-#include "config.h"
-
 #include <memory>
 
 #include <QDialog>
+#include <QObject>
 #include <QMovie>
+#include <QString>
 
 #include "ui_aboutdialog.h"
 
