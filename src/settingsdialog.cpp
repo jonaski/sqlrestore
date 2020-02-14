@@ -65,6 +65,7 @@
 #include "dbconnector.h"
 #include "utilities.h"
 #include "iconloader.h"
+#include "logging.h"
 
 const char *SettingsDialog::kSettingsGroup = "Settings";
 
