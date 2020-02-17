@@ -1,4 +1,4 @@
-:file_cabinet: SQL Restore [![Build Status](https://github.com/jonaski/sqlrestore/workflows/CI:%20Build%20Test/badge.svg)](https://github.com/jonaski/sqlrestore/actions)
+:file_cabinet: SQL Restore
 ========================
 
 SQL Restore is a batch restore for MSSQL backups written in C++11.
