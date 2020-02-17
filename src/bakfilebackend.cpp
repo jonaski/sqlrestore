@@ -280,6 +280,7 @@ void BakFileBackend::Scan() {
   BakFileItemList deleted_files;
 
   int progress = 0;
+  bool retrigger_scan = false;
   for (const QString &filename : dir_files) {
     ++progress;
     // Skip any temp file.
@@ -289,8 +290,20 @@ void BakFileBackend::Scan() {
       continue;
     }
 
-    BakFileItemPtr new_fileitem(ScanFile(magic_, filename));
+    QString local_filename = local_path_ + QDir::separator() + filename;
+    QFileInfo info(local_filename);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
+    quint64 duration = QDateTime::currentDateTime().toSecsSinceEpoch() - info.metadataChangeTime().toSecsSinceEpoch();
+#else
+    quint64 duration = QDateTime::currentDateTime().toSecsSinceEpoch() - info.lastModified().toSecsSinceEpoch();
+#endif
+    // If the file was modified within the last seconds, it means that the file is being copied, so retrigger the scan to validate the updated file.
+    if (duration <= 2) {
+      qLog(Debug) << "File" << filename << "is too new:" << duration << "retriggering scan.";
+      retrigger_scan = true;
+    }
 
+    BakFileItemPtr new_fileitem(ScanFile(magic_, filename));
     if (!new_fileitem || !new_fileitem->is_valid()) { // Excludes invalid files.
       emit LoadProgress((int)((float)progress / (float)dir_files.count() * 100.0));
       continue;
@@ -348,6 +361,10 @@ void BakFileBackend::Scan() {
   }
   else {
     emit LoadError(error);
+  }
+
+  if (retrigger_scan) {
+    timer_scan_->start();
   }
 
 }
