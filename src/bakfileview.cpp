@@ -29,8 +29,6 @@
 
 BakFileView::BakFileView(QWidget *parent) : QTreeView(parent), header_(new BakFileHeader(Qt::Horizontal, this, this)) {
 
-  header_->setSortIndicator(BakFileModel::Column_Modified, Qt::DescendingOrder);
-  header_->setSectionsMovable(true);
   setHeader(header_);
   setSelectionMode(QAbstractItemView::ExtendedSelection);
   setMouseTracking(true);

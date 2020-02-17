@@ -26,6 +26,7 @@
 #include <QResizeEvent>
 #include <QMouseEvent>
 
+#include "bakfilemodel.h"
 #include "bakfileheader.h"
 #include "bakfileview.h"
 
@@ -34,8 +35,12 @@ BakFileHeader::BakFileHeader(Qt::Orientation orientation, BakFileView *view, QWi
       view_(view),
       in_mouse_move_event_(false) {
 
-  connect(this, SIGNAL(sectionResized(int, int, int)), SLOT(SectionResized(int, int, int)));
   setSectionsClickable(true);
+  setSectionsMovable(true);
+  setSectionResizeMode(QHeaderView::Interactive);
+  setSortIndicator(BakFileModel::Column_Modified, Qt::DescendingOrder);
+
+  connect(this, SIGNAL(sectionResized(int, int, int)), SLOT(SectionResized(int, int, int)));
 
 }
 
@@ -85,9 +90,10 @@ void BakFileHeader::NormaliseWidths(const QList<int> &sections) {
         column_widths_[i] *= mult;
     }
   }
+
 }
 
-void BakFileHeader::UpdateWidths(const QList<int>& sections) {
+void BakFileHeader::UpdateWidths(const QList<int> &sections) {
 
   ColumnWidthType total_w = 0.0;
 
@@ -115,14 +121,14 @@ void BakFileHeader::UpdateWidths(const QList<int>& sections) {
 
 }
 
-void BakFileHeader::resizeEvent(QResizeEvent* event) {
+void BakFileHeader::resizeEvent(QResizeEvent *e) {
 
-  QHeaderView::resizeEvent(event);
+  QHeaderView::resizeEvent(e);
   UpdateWidths();
 
 }
 
-void BakFileHeader::mouseMoveEvent(QMouseEvent* e) {
+void BakFileHeader::mouseMoveEvent(QMouseEvent *e) {
 
   in_mouse_move_event_ = true;
   QHeaderView::mouseMoveEvent(e);
