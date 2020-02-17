@@ -27,7 +27,7 @@
 #include "bakfileview.h"
 #include "bakfileheader.h"
 
-BakFileView::BakFileView(QWidget *parent) : QTreeView(parent), header_(new BakFileHeader(Qt::Horizontal, this, this)) {
+BakFileView::BakFileView(QWidget *parent) : QTreeView(parent), header_(new BakFileHeader(Qt::Horizontal, this)) {
 
   setHeader(header_);
   setSelectionMode(QAbstractItemView::ExtendedSelection);

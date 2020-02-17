@@ -30,13 +30,11 @@ class QWidget;
 class QMouseEvent;
 class QResizeEvent;
 
-class BakFileView;
-
 class BakFileHeader : public QHeaderView {
   Q_OBJECT
 
  public:
-  explicit BakFileHeader(Qt::Orientation orientation, BakFileView *view, QWidget *parent = nullptr);
+  explicit BakFileHeader(Qt::Orientation orientation, QWidget *parent = nullptr);
 
   typedef double ColumnWidthType;
 
@@ -56,7 +54,6 @@ class BakFileHeader : public QHeaderView {
   void SectionResized(const int logical, const int old_size, const int new_size);
 
  private:
-  BakFileView *view_;
   QVector<ColumnWidthType> column_widths_;
   bool in_mouse_move_event_;
 

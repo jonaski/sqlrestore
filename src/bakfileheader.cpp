@@ -28,11 +28,9 @@
 
 #include "bakfilemodel.h"
 #include "bakfileheader.h"
-#include "bakfileview.h"
 
-BakFileHeader::BakFileHeader(Qt::Orientation orientation, BakFileView *view, QWidget *parent)
+BakFileHeader::BakFileHeader(Qt::Orientation orientation, QWidget *parent)
     : QHeaderView(orientation, parent),
-      view_(view),
       in_mouse_move_event_(false) {
 
   setSectionsClickable(true);
@@ -78,9 +76,10 @@ void BakFileHeader::NormaliseWidths(const QList<int> &sections) {
 
   if (!sections.isEmpty()) {
     selected_sum = 0.0;
-    for (int i = 0 ; i < count() ; ++i)
+    for (int i = 0 ; i < count() ; ++i) {
       if (sections.contains(i))
         selected_sum += column_widths_[i];
+    }
   }
 
   if (total_sum != 0.0 && !qFuzzyCompare(total_sum, 0.99)) {
