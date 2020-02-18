@@ -23,7 +23,7 @@ set(SOURCES
   iconloader.cpp
   scopedresult.cpp
   aboutdialog.cpp
-  qsearchfield_nonmac.cpp
+  qsearchfield.cpp
   settingsdialog.cpp
   testserverdialog.cpp
   dbconnector.cpp
