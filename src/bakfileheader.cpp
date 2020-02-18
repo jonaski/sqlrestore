@@ -82,8 +82,8 @@ void BakFileHeader::NormaliseWidths(const QList<int> &sections) {
     }
   }
 
-  if (total_sum != 0.0 && !qFuzzyCompare(total_sum, 0.99)) {
-    const ColumnWidthType mult = (selected_sum + (0.99 - total_sum)) / selected_sum;
+  if (total_sum != 0.0 && !qFuzzyCompare(total_sum, 1.0)) {
+    const ColumnWidthType mult = (selected_sum + (1.0 - total_sum)) / selected_sum;
     for (int i = 0 ; i < column_widths_.count() ; ++i) {
       if (sections.isEmpty() || sections.contains(i))
         column_widths_[i] *= mult;
@@ -99,9 +99,6 @@ void BakFileHeader::UpdateWidths(const QList<int> &sections) {
   for (int i = 0 ; i < column_widths_.count() ; ++i) {
     const ColumnWidthType w = column_widths_[i];
     int pixels = w * width();
-
-    if (pixels != 0 && total_w - int(total_w) > 0.5)
-      ++pixels;
 
     total_w += w;
 
