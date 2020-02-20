@@ -128,20 +128,4 @@ QString CryptographicRandomString(const int len) {
   return GetRandomString(len, UseCharacters);
 }
 
-QStringList Prepend(const QString &text, const QStringList &list) {
-
-  QStringList ret(list);
-  for (int i = 0; i < ret.count(); ++i) ret[i].prepend(text);
-  return ret;
-
-}
-
-QStringList Updateify(const QStringList &list) {
-
-  QStringList ret(list);
-  for (int i = 0; i < ret.count(); ++i) ret[i].prepend(ret[i] + " = :");
-  return ret;
-
-}
-
 }  // namespace Utilities

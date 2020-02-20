@@ -40,8 +40,6 @@ QString CryptographicRandomString(const int len);
 QString PrettySize(const quint64 bytes);
 QString PrettyTime(int seconds);
 QString WordyTime(quint64 seconds);
-QStringList Prepend(const QString &text, const QStringList &list);
-QStringList Updateify(const QStringList &list);
 
 }  // namespace Utilities
 
