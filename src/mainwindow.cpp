@@ -228,8 +228,8 @@ void MainWindow::Reset() {
   ui_->button_back->hide();
   ui_->button_select_all->show();
   ui_->button_unselect_all->show();
-  ui_->button_select_all->setEnabled(bak_file_model_->rowCount() > ui_->file_view_container->view()->selectionModel()->selection().indexes().count());
-  ui_->button_unselect_all->setEnabled(!ui_->file_view_container->view()->selectionModel()->selection().indexes().isEmpty());
+  ui_->button_select_all->setEnabled(bak_file_model_->rowCount() > ui_->file_view_container->view()->selectionModel()->selectedRows().count());
+  ui_->button_unselect_all->setEnabled(!ui_->file_view_container->view()->selectionModel()->selectedRows().isEmpty());
   if (file_load_error_.isEmpty()) {
     statusbar_label_->setText(connection_status_);
   }
