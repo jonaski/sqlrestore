@@ -22,7 +22,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="select_file">
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -131,6 +131,9 @@
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="rightMargin">
+       <number>16</number>
+      </property>
       <item>
        <spacer name="horizontalSpacer">
         <property name="orientation">
@@ -138,8 +141,8 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>0</width>
-          <height>0</height>
+          <width>40</width>
+          <height>20</height>
          </size>
         </property>
        </spacer>
@@ -147,6 +150,21 @@
       <item>
        <widget class="QWidget" name="widget_watcher" native="true">
         <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
          <item>
           <widget class="QLabel" name="label_watcher_spinner">
            <property name="text">
@@ -166,6 +184,12 @@
          </item>
          <item>
           <widget class="QProgressBar" name="progress_watcher">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="value">
             <number>0</number>
            </property>
@@ -176,6 +200,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="button_select_all">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>Select all</string>
         </property>
@@ -183,6 +213,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="button_unselect_all">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>Unselect all</string>
         </property>
@@ -190,6 +226,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="button_cancel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>Cancel</string>
         </property>
@@ -197,6 +239,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="button_exit">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>Exit</string>
         </property>
@@ -204,6 +252,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="button_back">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>Back</string>
         </property>
@@ -211,6 +265,12 @@
       </item>
       <item>
        <widget class="QPushButton" name="button_restore">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>Restore</string>
         </property>
