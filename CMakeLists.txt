@@ -56,6 +56,11 @@ find_package(Boost REQUIRED)
 
 find_library(MAGIC_LIBRARIES NAMES magic libmagic.dll HINTS /usr/lib /usr/lib64)
 
+pkg_check_modules(GLIB glib-2.0)
+if(GLIB_FOUND)
+  set(HAVE_GLIB ON)
+endif()
+
 # QT
 set(QT_MIN_VERSION 5.9)
 find_package(Qt5 ${QT_MIN_VERSION} REQUIRED COMPONENTS Core Widgets Network Sql Concurrent)

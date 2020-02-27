@@ -24,6 +24,10 @@
 
 #include <assert.h>
 
+#ifdef GLIB_FOUND
+#  include <glib.h>
+#endif
+
 #include <QObject>
 #include <QApplication>
 #include <QCoreApplication>
@@ -56,7 +60,15 @@ int main(int argc, char* argv[]) {
   QCoreApplication::setApplicationVersion(SQLRESTORE_VERSION_DISPLAY);
   QCoreApplication::setOrganizationDomain("jkvinge.net");
 
+#ifdef GLIB_FOUND
+  g_set_application_name(QCoreApplication::applicationName().toLocal8Bit());
+#endif
+
   logging::Init();
+
+#ifdef GLIB_FOUND
+  g_log_set_default_handler(reinterpret_cast<GLogFunc>(&logging::GLog), nullptr);
+#endif
 
   CommandlineOptions options;
   {

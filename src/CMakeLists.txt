@@ -3,6 +3,8 @@
 include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 include_directories(${CMAKE_BINARY_DIR})
+include_directories(${GLIB_INCLUDE_DIRS})
+include_directories(${GLIBCONFIG_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${QUAZIP_INCLUDE_DIRS})
 
@@ -80,6 +82,7 @@ add_library(sqlrestore_lib STATIC
 
 target_link_libraries(sqlrestore_lib
   ${CMAKE_THREAD_LIBS_INIT}
+  ${GLIB_LIBRARIES}
   ${MAGIC_LIBRARIES}
   ${QT_LIBRARIES}
   ${QUAZIP_LIBRARIES}
