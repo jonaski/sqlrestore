@@ -1,0 +1,79 @@
+name: "CI: Build Test"
+
+on: [push, pull_request]
+
+jobs:
+
+  build-linux:
+
+    strategy:
+      matrix:
+        qt_version: [5.9.8, 5.10.1, 5.12.6, 5.13.2, 5.14.0]
+        platform: [ubuntu-latest]
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Update Packages
+      run: sudo apt-get update -y
+
+    - name: Install Packages
+      run:
+        sudo apt-get install libboost-dev libquazip5-dev
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2.2.1
+      with:
+        version: ${{ matrix.qt_version }}
+        
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{runner.workspace}}/build
+    - name: Configure CMake
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+    - name: Build
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE
+
+  build-macos:
+
+    strategy:
+      matrix:
+        qt_version: [5.9.8, 5.10.1, 5.12.6, 5.13.2, 5.14.0]
+        platform: [macos-latest]
+
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2.2.1
+      with:
+        version: ${{ matrix.qt_version }}
+
+    - name: Unlink python
+      run: brew unlink python@2
+    - name: Install Packages
+      run: brew install pkgconfig boost libmagic quazip
+
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{runner.workspace}}/build
+      
+    - name: Configure CMake
+      env:
+        PKG_CONFIG_PATH: /usr/local/lib/pkgconfig
+        Qt5_DIR: /usr/local/opt/qt5/lib/cmake
+        Qt5LinguistTools_DIR: /usr/local/opt/qt5/lib/cmake/Qt5LinguistTools
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+
+    - name: Build
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE
