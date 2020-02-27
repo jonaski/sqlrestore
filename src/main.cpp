@@ -24,14 +24,8 @@
 
 #include <assert.h>
 
-#ifdef GLIB_FOUND
-#  include <glib.h>
-#endif
-
-#include <singleapplication.h>
-#include <singlecoreapplication.h>
-
 #include <QObject>
+#include <QApplication>
 #include <QCoreApplication>
 #include <QIODevice>
 #include <QFileDevice>
@@ -62,33 +56,13 @@ int main(int argc, char* argv[]) {
   QCoreApplication::setApplicationVersion(SQLRESTORE_VERSION_DISPLAY);
   QCoreApplication::setOrganizationDomain("jkvinge.net");
 
-#ifdef GLIB_FOUND
-  g_set_application_name(QCoreApplication::applicationName().toLocal8Bit());
-#endif
-
   logging::Init();
-#ifdef GLIB_FOUND
-  g_log_set_default_handler(reinterpret_cast<GLogFunc>(&logging::GLog), nullptr);
-#endif
 
   CommandlineOptions options;
   {
-    // Only start a core application now so we can check if there's another instance without requiring an X server.
-    // This MUST be done before parsing the commandline options so QTextCodec gets the right system locale for filenames.
-    SingleCoreApplication core_app(argc, argv, true, SingleCoreApplication::Mode::User);
     // Parse commandline options - need to do this before starting the full QApplication so it works without an X server
+    QCoreApplication core_app(argc, argv);
     if (!options.Parse()) return 1;
-    if (core_app.isSecondary()) {
-      if (options.is_empty()) {
-        qLog(Info) << "SQLRestore is already running - activating existing window (1)";
-      }
-      if (core_app.sendMessage(options.Serialize(), 5000)) {
-        return 0;
-      }
-      else {
-        qLog(Error) << "Failed to send message to primary instance.";
-      }
-    }
   }
 
   qLog(Info) << "SQLRestore" << SQLRESTORE_VERSION_DISPLAY;
@@ -97,20 +71,10 @@ int main(int argc, char* argv[]) {
   Utilities::Seed();
   assert(Utilities::GetRandomStringWithCharsAndNumbers(20) != Utilities::GetRandomStringWithCharsAndNumbers(20));
 
-  // important: Do not remove this.
-  // This must also be done as a SingleApplication, in case SingleCoreApplication was compiled with a different appdata.
-  SingleApplication a(argc, argv, true, SingleApplication::Mode::User);
-  if (a.isSecondary()) {
-    if (options.is_empty()) {
-      qLog(Info) << "SQLRestore is already running - activating existing window (2)";
-    }
-    if (a.sendMessage(options.Serialize(), 5000)) {
-      return 0;
-    }
-    else {
-      qLog(Error) << "Failed to send message to primary instance.";
-    }
-  }
+  QApplication a(argc, argv);
+
+  QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+  QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
 #ifdef Q_OS_UNIX
   {
@@ -135,7 +99,6 @@ int main(int argc, char* argv[]) {
   SQLRestore_Metatypes::RegisterMetaTypes();
   Application app;
   MainWindow w(&app, options);
-  QObject::connect(&a, SIGNAL(receivedMessage(quint32, QByteArray)), &w, SLOT(CommandlineOptionsReceived(quint32, QByteArray)));
   int ret = a.exec();
   return ret;
 

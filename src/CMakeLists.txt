@@ -3,15 +3,8 @@
 include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
 include_directories(${CMAKE_BINARY_DIR})
-include_directories(${GLIB_INCLUDE_DIRS})
-include_directories(${GLIBCONFIG_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${QUAZIP_INCLUDE_DIRS})
-
-link_directories(${SINGLEAPPLICATION_LIBRARY_DIRS})
-link_directories(${SINGLECOREAPPLICATION_LIBRARY_DIRS})
-include_directories(${SINGLEAPPLICATION_INCLUDE_DIRS})
-include_directories(${SINGLECOREAPPLICATION_INCLUDE_DIRS})
 
 set(SOURCES
   mainwindow.cpp
@@ -87,22 +80,14 @@ add_library(sqlrestore_lib STATIC
 
 target_link_libraries(sqlrestore_lib
   ${CMAKE_THREAD_LIBS_INIT}
-  ${GLIB_LIBRARIES}
   ${MAGIC_LIBRARIES}
   ${QT_LIBRARIES}
-  ${SINGLEAPPLICATION_LIBRARIES}
-  ${SINGLECOREAPPLICATION_LIBRARIES}
   ${QUAZIP_LIBRARIES}
 )
 
 if (WIN32)
   target_link_libraries(sqlrestore_lib odbccp32 regex shlwapi)
 endif()
-
-if (NOT USE_SYSTEM_SINGLEAPPLICATION)
-  add_dependencies(sqlrestore_lib ${SINGLEAPPLICATION_LIBRARIES} ${SINGLECOREAPPLICATION_LIBRARIES})
-endif ()
-
 
 
 set(EXECUTABLE_OUTPUT_PATH ..)
@@ -119,7 +104,6 @@ if(WIN32)
 endif(WIN32)
 
 add_executable(sqlrestore ${SQLRESTORE-WIN32-FLAG} ${SQLRESTORE-WIN32-RESOURCES} main.cpp)
-#"target_link_libraries(sqlrestore PUBLIC "-static")
 target_link_libraries(sqlrestore sqlrestore_lib)
 install(TARGETS sqlrestore RUNTIME DESTINATION bin)
 
