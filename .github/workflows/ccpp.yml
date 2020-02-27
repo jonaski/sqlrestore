@@ -59,7 +59,7 @@ jobs:
     - name: Unlink python
       run: brew unlink python@2
     - name: Install Packages
-      run: brew install pkgconfig boost libmagic quazip
+      run: brew install pkgconfig boost libmagic glib quazip
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
