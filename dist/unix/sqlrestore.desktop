@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=SQL Restore
+GenericName=SQL Restore
+Comment=Restore SQL backups
+Exec=sqlrestore
+TryExec=sqlrestore
+Icon=sqlrestore
+Terminal=false
+Categories=Utility;
+StartupNotify=false
+StartupWMClass=sqlrestore

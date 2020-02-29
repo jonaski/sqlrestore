@@ -1,0 +1,135 @@
+Name:           sqlrestore
+Version:        @SQLRESTORE_VERSION_RPM_V@
+Release:        @SQLRESTORE_VERSION_RPM_R@.@RPM_DISTRO@
+Summary:        MSSQL Batch Restore Application
+Group:          Productivity/Databases/Tools
+License:        GPL-3.0+
+URL:            https://github.com/jonaski/sqlrestore
+Source0:        %{name}-@SQLRESTORE_VERSION_PACKAGE@.tar.xz
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+%if 0%{?suse_version} && 0%{?is_opensuse}
+BuildRequires:  libboost_headers-devel
+%else
+BuildRequires:  boost-devel
+%endif
+BuildRequires:  cmake
+BuildRequires:  gcc-c++
+BuildRequires:  hicolor-icon-theme
+BuildRequires:  make
+BuildRequires:  git
+BuildRequires:  gettext
+BuildRequires:  desktop-file-utils
+%if 0%{?suse_version}
+BuildRequires:  update-desktop-files
+%endif
+%if 0%{?suse_version} && 0%{?is_opensuse}
+BuildRequires:  appstream-glib
+%else
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos}
+BuildRequires:  libappstream-glib
+%else
+BuildRequires:  appstream-util
+%endif
+%endif
+%if 0%{?suse_version} || 0%{?fedora_version} || 0%{?mageia}
+BuildRequires:  cmake(Qt5LinguistTools)
+%endif
+BuildRequires:  pkgconfig
+BuildRequires:  pkgconfig(glib-2.0)
+BuildRequires:  pkgconfig(gio-2.0)
+BuildRequires:  pkgconfig(gio-unix-2.0)
+BuildRequires:  pkgconfig(gthread-2.0)
+BuildRequires:  pkgconfig(Qt5Core)
+BuildRequires:  pkgconfig(Qt5Gui)
+BuildRequires:  pkgconfig(Qt5Widgets)
+BuildRequires:  pkgconfig(Qt5Concurrent)
+BuildRequires:  pkgconfig(Qt5Network)
+BuildRequires:  pkgconfig(Qt5Sql)
+BuildRequires:  pkgconfig(Qt5X11Extras)
+BuildRequires:  pkgconfig(Qt5DBus)
+BuildRequires:  pkgconfig(Qt5Test)
+
+BuildRequires:  file-devel
+
+%if 0%{?fedora}
+BuildRequires:  quazip-qt5-devel
+%else
+%if 0%{?mageia}
+BuildRequires:  lib64quazip-devel
+%else
+BuildRequires:  quazip-devel
+%endif
+%endif
+
+%if 0%{?suse_version}
+Requires:       libQt5Sql5-unixODBC
+%endif
+
+%description
+SQL Restore is a batch restore for MSSQL backups written in C++11.
+It's using features in modern C++11, Boost and Qt.
+
+Features:
+ - Fully compatible with both SQL backups and zipped SQL backups.
+ - File view with search, sorting and FS listener with live updating.
+ - Uses threads.
+ - Uses libmagic to recognize files.
+ - SQL settings tester that runs in a concurrent thread.
+ - Looks for end of central directory signature before uncompressing ZIP files.
+ - Full CRC check of ZIP on restore.
+ - Works on Linux, macOS and Windows.
+ - Compatible with MSSQL 2008 R2 to SQL 2019 server on Linux and Windows.
+
+%prep
+%setup -qn %{name}-@SQLRESTORE_VERSION_PACKAGE@
+
+%build
+%if 0%{?suse_version} || 0%{?mageia}
+  %{cmake} ..
+%else
+  mkdir -p %{_target_platform}
+  pushd %{_target_platform}
+  %{cmake} ..
+  popd
+%endif
+
+%if 0%{?suse_version} || 0%{?mageia}
+  %if 0%{?suse_version} && 0%{?suse_version} < 1500
+    make %{?_smp_mflags}
+  %else
+    %make_build
+  %endif
+%else
+  %make_build -C %{_target_platform}
+%endif
+
+%install
+%if 0%{?suse_version}
+  %cmake_install
+%else
+  %if 0%{?mageia}
+    %make_install -C build
+  %else
+    %make_install -C %{_target_platform}
+  %endif
+%endif
+
+%if 0%{?suse_version}
+%suse_update_desktop_file sqlrestore Utility
+%endif
+
+%check
+desktop-file-validate %{buildroot}%{_datadir}/applications/sqlrestore.desktop
+
+%files
+%defattr(-,root,root,-)
+%doc README.md
+%license COPYING
+%{_bindir}/sqlrestore
+%{_datadir}/applications/*.desktop
+%{_datadir}/icons/hicolor/*/apps/sqlrestore.*
+
+%changelog
+* @RPM_DATE@ Jonas Kvinge <jonas@jkvinge.net> - @SQLRESTORE_VERSION_RPM_V@
+- Version @SQLRESTORE_VERSION_PACKAGE@

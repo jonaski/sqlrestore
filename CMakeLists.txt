@@ -12,6 +12,7 @@ include(CheckIncludeFiles)
 include(FindPkgConfig)
 include(FindPackageHandleStandardArgs)
 include(cmake/Version.cmake)
+include(cmake/Rpm.cmake)
 
 if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
   set(LINUX ON)

@@ -1,0 +1,41 @@
+#!/bin/bash
+
+name=sqlrestore
+version="@SQLRESTORE_VERSION_PACKAGE@"
+gitrev="@INCLUDE_GIT_REVISION@"
+root=$(cd "${0%/*}/../.." && echo $PWD/${0##*/})
+root=`dirname "$root"`
+rootnoslash=`echo $root | sed "s/^\///"`
+
+if ! [ "$gitrev" = "ON" ]; then
+  exclude_vcs="--exclude-vcs"
+fi
+
+echo "Creating $name-$version.tar.xz..."
+
+rm -f "$name-$version.tar.xz"
+tar -cJf $name-$version.tar.xz \
+    --transform "s,^$rootnoslash,$name-$version," $exclude_vcs \
+    --exclude="*.tar" \
+    --exclude="*.tar.*" \
+    --exclude="*.bz" \
+    --exclude="*.bz2" \
+    --exclude="*.xz" \
+    --exclude=".directory" \
+    --exclude="*.spec" \
+    --exclude="*.nsi" \
+    --exclude="$root/.github" \
+    --exclude="$root/Dockerfile" \
+    --exclude="$root/.travis.yml" \
+    --exclude="$root/CMakeLists.txt.user" \
+    --exclude="$root/build" \
+    --exclude="$root/zanata.xml" \
+    --exclude="$root/.zanata-cache" \
+    --exclude="$root/debian/changelog" \
+    --exclude="$root/dist/scripts/maketarball.sh" \
+    --exclude="$root/dist/pacman/PKGBUILD" \
+    --exclude="$root/dist/macos/create-dmg.sh" \
+    --exclude="$root/dist/macos/Info.plist" \
+    --exclude="$root/dist/windows/windres.rc" \
+    --exclude="$root/src/translations/translations.pot" \
+    "$root"
