@@ -787,7 +787,6 @@ bool BackupBackend::RestoreCheckCancel(ScopedResult *r) {
 
   if (cancel_requested_) {
     r->failure(tr("Restore cancelled."));
-    cancel_requested_ = false;
     return true;
   }
   return false;
@@ -800,4 +799,3 @@ void BackupBackend::UpdateRestoreStatus(const QString &message) {
   emit RestoreStatusCurrent(message);
 
 }
-
