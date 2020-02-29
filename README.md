@@ -56,7 +56,7 @@ Use the https://github.com/strawberrymusicplayer/strawberry-mxe repository.
 
 Shared:
 
-    PKG_CONFIG_LIBDIR=$HOME/mxe/usr/x86_64-w64-mingw32.shared/lib/pkgconfig cmake .. -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw32-shared.cmake -DARCH=x86_64 -DUSE_SYSTEM_SINGLEAPPLICATION=ON
+    PKG_CONFIG_LIBDIR=$HOME/mxe/usr/x86_64-w64-mingw32.shared/lib/pkgconfig cmake .. -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw32-shared.cmake -DARCH=x86_64
     make -j$(nproc)
 
 ### :open_file_folder: Copy dependencies for shared build:
