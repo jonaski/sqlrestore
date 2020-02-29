@@ -23,8 +23,8 @@
 #include <magic.h>
 
 #include <QObject>
-#include <QMap>
 #include <QString>
+#include <QMap>
 
 #include "bakfileitem.h"
 
@@ -39,11 +39,13 @@ class BakFileBackend : public QObject {
   ~BakFileBackend();
 
   void ReloadSettingsAsync();
+  void CancelScan() { cancel_requested_ = true; }
+  void Exit() { exit_requested_ = true; }
 
  private:
   void LoadMagic();
-  QString LoadMagicToTemp();
-  BakFileItem *ScanFile(const magic_t magic, const QString &filename);
+  QString WriteMagicToTemp();
+  BakFileItem *ScanFile(const QString &filename);
 
  private slots:
   void DirectoryChanged(const QString &path);
@@ -66,6 +68,8 @@ class BakFileBackend : public QObject {
   QString local_path_;
   QMap<QString, BakFileItemPtr> files_;
   bool initialized_;
+  bool cancel_requested_;
+  bool exit_requested_;
   magic_t magic_;
 
 };

@@ -58,6 +58,8 @@ BakFileBackend::BakFileBackend(QObject *parent) :
   watcher_(new QFileSystemWatcher(this)),
   timer_scan_(new QTimer(this)),
   initialized_(false),
+  cancel_requested_(false),
+  exit_requested_(false),
   magic_(nullptr)
   {
 
@@ -92,7 +94,7 @@ void BakFileBackend::LoadMagic() {
     magic_file = QDir::toNativeSeparators(QCoreApplication::applicationDirPath()) + QDir::separator().toLatin1() + QString("magic.mgc");
     magic_char = magic_file.toUtf8().data();
     if (magic_check(magic_, magic_char) == -1) {
-      magic_file = LoadMagicToTemp();
+      magic_file = WriteMagicToTemp();
       magic_char = magic_file.toUtf8().data();
       if (magic_file.isEmpty()) {
         magic_close(magic_);
@@ -123,7 +125,7 @@ void BakFileBackend::LoadMagic() {
 
 }
 
-QString BakFileBackend::LoadMagicToTemp() {
+QString BakFileBackend::WriteMagicToTemp() {
     
   // Open source magic file
   QFile src_file(":magic.mgc");
@@ -200,6 +202,14 @@ QString BakFileBackend::LoadMagicToTemp() {
 }
 
 void BakFileBackend::ReloadSettingsAsync() {
+
+  QSettings s;
+  s.beginGroup(SettingsDialog::kSettingsGroup);
+  QString local_path = s.value("local_path").toString();
+  s.endGroup();
+
+  if (local_path != local_path_) cancel_requested_ = true;
+
   metaObject()->invokeMethod(this, "ReloadSettings", Qt::QueuedConnection);
 }
 
@@ -258,6 +268,8 @@ void BakFileBackend::Scan() {
   qLog(Debug) << "Scan" << QThread::currentThread();
   emit ScanInProgress();
 
+  cancel_requested_ = false;
+
   QString error;
   QStringList dir_files;
   if (local_path_.isEmpty()) {
@@ -282,9 +294,13 @@ void BakFileBackend::Scan() {
   int progress = 0;
   bool retrigger_scan = false;
   for (const QString &filename : dir_files) {
+
+    if (cancel_requested_ || exit_requested_) break;
+
     ++progress;
+
     // Skip any temp file.
-    if (filename.toLower().contains(QRegExp(".*\\.tmp$"))) {
+    if (filename.toLower().contains(QRegExp(".*\\.tmp$")) || filename.toLower().contains(QRegExp("^\\..*"))) {
       qLog(Error) << "Skipping temp file" << filename;
       emit LoadProgress((int)((float)progress / (float)dir_files.count() * 100.0));
       continue;
@@ -303,7 +319,7 @@ void BakFileBackend::Scan() {
       retrigger_scan = true;
     }
 
-    BakFileItemPtr new_fileitem(ScanFile(magic_, filename));
+    BakFileItemPtr new_fileitem(ScanFile(filename));
     if (!new_fileitem || !new_fileitem->is_valid()) { // Excludes invalid files.
       emit LoadProgress((int)((float)progress / (float)dir_files.count() * 100.0));
       continue;
@@ -363,17 +379,19 @@ void BakFileBackend::Scan() {
     emit LoadError(error);
   }
 
+  cancel_requested_ = false;
+
   if (retrigger_scan) {
     timer_scan_->start();
   }
 
 }
 
-BakFileItem *BakFileBackend::ScanFile(const magic_t magic, const QString &filename) {
+BakFileItem *BakFileBackend::ScanFile(const QString &filename) {
 
   QString local_filename = local_path_ + QDir::separator() + filename;
   QString mime_data;
-  if (magic) mime_data = magic_file(magic, local_filename.toLatin1().data());
+  if (magic_) mime_data = magic_file(magic_, local_filename.toLatin1().data());
   bool magic_check = false;
   bool compressed = false;
   if (mime_data.isEmpty()) {
