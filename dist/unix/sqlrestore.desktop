@@ -8,6 +8,6 @@ Exec=sqlrestore
 TryExec=sqlrestore
 Icon=sqlrestore
 Terminal=false
-Categories=Utility;
+Categories=Utility;Archiving;
 StartupNotify=false
 StartupWMClass=sqlrestore
