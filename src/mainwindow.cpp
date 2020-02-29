@@ -34,7 +34,9 @@
 #include <QLabel>
 #include <QProgressBar>
 #include <QStatusBar>
+#include <QMessageBox>
 #include <QTextBrowser>
+#include <QCloseEvent>
 
 #include "logging.h"
 #include "iconloader.h"
@@ -93,7 +95,7 @@ MainWindow::MainWindow(Application *app, const CommandlineOptions &options, QWid
   ui_->file_view_container->view()->setModel(bakfile_sort_model_);
   ui_->file_view_container->view()->Init();
 
-  connect(ui_->action_exit, SIGNAL(triggered()), qApp, SLOT(quit()));
+  connect(ui_->action_exit, SIGNAL(triggered()), SLOT(Exit()));
   connect(ui_->action_about, SIGNAL(triggered()), about_, SLOT(show()));
   connect(ui_->action_about_qt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 
@@ -162,8 +164,31 @@ MainWindow::MainWindow(Application *app, const CommandlineOptions &options, QWid
 }
 
 MainWindow::~MainWindow() {
-  SaveGeometry();
   delete ui_;
+}
+
+void MainWindow::closeEvent(QCloseEvent *e) {
+
+  if (ui_->stackedWidget->currentWidget() == ui_->progress) {
+    e->ignore();
+  }
+  Exit();
+
+}
+
+void MainWindow::Exit() {
+
+  if (ui_->stackedWidget->currentWidget() == ui_->progress) {
+    QMessageBox box(QMessageBox::Critical, tr("Exit"), tr("Can't exit while restore is in progress!"), QMessageBox::Ok);
+    box.setWindowFlags(box.windowFlags() | Qt::WindowStaysOnTopHint);
+    box.exec();
+  }
+  else {
+    app_->bakfile_backend()->Exit();
+    SaveGeometry();
+    qApp->quit();
+  }
+
 }
 
 void MainWindow::CommandlineOptionsReceived(const quint32, const QByteArray &string_options) {
@@ -461,7 +486,7 @@ void MainWindow::RestoreComplete() {
       ui_->textBrowser->append(tr("Restore of %1 was successful.").arg(result.filename()));
     }
     else {
-      ui_->textBrowser->append(tr("Restoree of % 1 failed.").arg(result.filename()));
+      ui_->textBrowser->append(tr("Restore of %1 failed.").arg(result.filename()));
       for (const QString &i : result.errors()) {
         ui_->textBrowser->append(i);
       }

@@ -37,6 +37,7 @@
 
 class QListView;
 class QLabel;
+class QCloseEvent;
 
 class Ui_MainWindow;
 class Application;
@@ -63,10 +64,12 @@ class MainWindow : public QMainWindow {
   void DisableFileLoading();
 
  protected:
+  void closeEvent(QCloseEvent *e);
 
  private slots:
   void CommandlineOptionsReceived(const quint32 instance_id, const QByteArray &string_options);
   void ReloadSettings();
+  void Exit();
 
   void ScanInProgress();
   void FileLoadProgress(const int value);
