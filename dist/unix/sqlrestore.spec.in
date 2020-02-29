@@ -56,7 +56,11 @@ BuildRequires:  file-devel
 BuildRequires:  quazip-qt5-devel
 %else
 %if 0%{?mageia}
+%ifarch x86_64
 BuildRequires:  lib64quazip-devel
+%else
+BuildRequires:  libquazip-devel
+%endif
 %else
 BuildRequires:  quazip-devel
 %endif
