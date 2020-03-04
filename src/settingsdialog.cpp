@@ -99,43 +99,6 @@ SettingsDialog::SettingsDialog(QWidget *parent)
     ui_->drivers->addItem(driver, driver);
   }
 
-  QStringList odbc_drivers;
-
-#ifdef Q_OS_WIN
-  {
-    WCHAR buf[2001];
-    WORD buf_size = 2000;
-    WORD cb_buf_out;
-    WCHAR *pszBuf = buf;
-    if (SQLGetInstalledDriversW(buf, buf_size, &cb_buf_out)) {
-      do {
-        QString driver = QString::fromStdWString(pszBuf);
-        if (driver.toUpper().contains("SQL"))
-          odbc_drivers << driver;
-        pszBuf = wcschr(pszBuf, '\0' ) + 1;
-      }
-      while (pszBuf[1] != '\0');
-    }
-    else {
-      qLog(Error) << "SQLGetInstalledDriversW failed";
-    }
-  }
-#endif
-
-  if (odbc_drivers.isEmpty()) // Fallback to hardcoded list. Linux/macOS
-    odbc_drivers = QStringList() << "ODBC Driver 17 for SQL Server"
-                                 << "ODBC Driver 13.1 for SQL Server"
-                                 << "ODBC Driver 13 for SQL Server"
-                                 << "SQL Server Native Client 11.0"
-                                 << "ODBC Driver 11 for SQL Server"
-                                 << "SQL Server Native Client 10.0"
-                                 << "ODBC Driver 10 for SQL Server"
-                                 << "SQL Server";
-
-  for (const QString &driver : odbc_drivers) {
-    ui_->odbc_drivers->addItem(driver, driver);
-  }
-
   LoadGeometry();
 
 }
@@ -196,6 +159,58 @@ void SettingsDialog::SaveAndClose() {
 }
 
 void SettingsDialog::Load() {
+
+  QStringList odbc_drivers;
+
+#ifdef Q_OS_UNIX
+  {
+    QSettings odbc_inst("/etc/unixODBC/odbcinst.ini", QSettings::IniFormat);
+    for (const QString &group : odbc_inst.childGroups()) {
+      odbc_inst.beginGroup(group);
+      if (odbc_inst.contains("Description")) {
+        odbc_drivers << odbc_inst.value("Description").toString();
+      }
+      odbc_inst.endGroup();
+    }
+  }
+#endif
+
+#ifdef Q_OS_WIN
+  {
+    WCHAR buf[2001];
+    WORD buf_size = 2000;
+    WORD cb_buf_out;
+    WCHAR *pszBuf = buf;
+    if (SQLGetInstalledDriversW(buf, buf_size, &cb_buf_out)) {
+      do {
+        QString driver = QString::fromStdWString(pszBuf);
+        if (driver.toUpper().contains("SQL"))
+          odbc_drivers << driver;
+        pszBuf = wcschr(pszBuf, '\0' ) + 1;
+      }
+      while (pszBuf[1] != '\0');
+    }
+    else {
+      qLog(Error) << "SQLGetInstalledDriversW failed";
+    }
+  }
+#endif
+
+  if (odbc_drivers.isEmpty()) // Fallback to hardcoded list.
+    odbc_drivers = QStringList() << "ODBC Driver 17 for SQL Server"
+                                 << "ODBC Driver 13.1 for SQL Server"
+                                 << "ODBC Driver 13 for SQL Server"
+                                 << "SQL Server Native Client 11.0"
+                                 << "ODBC Driver 11 for SQL Server"
+                                 << "SQL Server Native Client 10.0"
+                                 << "ODBC Driver 10 for SQL Server"
+                                 << "SQL Server"
+                                 << "FreeTDS";
+
+  ui_->odbc_drivers->clear();
+  for (const QString &driver : odbc_drivers) {
+    ui_->odbc_drivers->addItem(driver, driver);
+  }
 
   QSettings s;
   s.beginGroup(kSettingsGroup);
