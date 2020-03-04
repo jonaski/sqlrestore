@@ -34,7 +34,7 @@ ScopedResult::~ScopedResult() {
     qLog(Error) << filename_ << "Still pending!";
 
   if (success_) {
-    qLog(Error) << "Success";
+    qLog(Debug) << "Success";
     emit Status(tr("Success"));
     emit Success();
   }
