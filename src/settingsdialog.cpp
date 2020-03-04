@@ -160,12 +160,21 @@ void SettingsDialog::SaveAndClose() {
 
 void SettingsDialog::Load() {
 
-  QStringList odbc_drivers;
+  QList<QPair<QString, QString>> odbc_drivers;
 
 #ifdef Q_OS_UNIX
   {
     QSettings odbc_inst("/etc/unixODBC/odbcinst.ini", QSettings::IniFormat);
-    odbc_drivers = odbc_inst.childGroups();
+    for (const QString &group : odbc_inst.childGroups()) {
+      odbc_inst.beginGroup(group);
+      if (odbc_inst.contains("Description")) {
+        odbc_drivers << qMakePair(group, odbc_inst.value("Description").toString());
+      }
+      else {
+        odbc_drivers << qMakePair(group, group);
+      }
+      odbc_inst.endGroup();
+    }
   }
 #endif
 
@@ -179,7 +188,7 @@ void SettingsDialog::Load() {
       do {
         QString driver = QString::fromStdWString(pszBuf);
         if (driver.toUpper().contains("SQL"))
-          odbc_drivers << driver;
+          odbc_drivers << qMakePair(driver, driver);
         pszBuf = wcschr(pszBuf, '\0' ) + 1;
       }
       while (pszBuf[1] != '\0');
@@ -190,20 +199,26 @@ void SettingsDialog::Load() {
   }
 #endif
 
-  if (odbc_drivers.isEmpty()) // Fallback to hardcoded list.
-    odbc_drivers = QStringList() << "ODBC Driver 17 for SQL Server"
-                                 << "ODBC Driver 13.1 for SQL Server"
-                                 << "ODBC Driver 13 for SQL Server"
-                                 << "SQL Server Native Client 11.0"
-                                 << "ODBC Driver 11 for SQL Server"
-                                 << "SQL Server Native Client 10.0"
-                                 << "ODBC Driver 10 for SQL Server"
-                                 << "SQL Server"
-                                 << "FreeTDS";
-
   ui_->odbc_drivers->clear();
-  for (const QString &driver : odbc_drivers) {
-    ui_->odbc_drivers->addItem(driver, driver);
+
+  if (odbc_drivers.isEmpty()) { // Fallback to hardcoded list.
+    QStringList odbc_drivers_fixed = QStringList() << "ODBC Driver 17 for SQL Server"
+                                                   << "ODBC Driver 13.1 for SQL Server"
+                                                   << "ODBC Driver 13 for SQL Server"
+                                                   << "SQL Server Native Client 11.0"
+                                                   << "ODBC Driver 11 for SQL Server"
+                                                   << "SQL Server Native Client 10.0"
+                                                   << "ODBC Driver 10 for SQL Server"
+                                                   << "SQL Server"
+                                                   << "FreeTDS";
+    for (const QString &odbc_driver : odbc_drivers_fixed) {
+      ui_->odbc_drivers->addItem(odbc_driver, odbc_driver);
+    }
+  }
+  else {
+    for (const QPair<QString, QString> &odbc_driver : odbc_drivers) {
+      ui_->odbc_drivers->addItem(odbc_driver.second, odbc_driver.first);
+    }
   }
 
   QSettings s;
@@ -229,8 +244,8 @@ void SettingsDialog::Save() {
 
   QSettings s;
   s.beginGroup(kSettingsGroup);
-  s.setValue("driver", ui_->drivers->currentText());
-  s.setValue("odbc_driver", ui_->odbc_drivers->currentText());
+  s.setValue("driver", ui_->drivers->currentData());
+  s.setValue("odbc_driver", ui_->odbc_drivers->currentData());
   s.setValue("server", ui_->server->text());
   s.setValue("trusted_connection", ui_->trusted_connection->isChecked());
   s.setValue("username", ui_->username->text());
