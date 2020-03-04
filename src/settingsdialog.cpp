@@ -165,13 +165,7 @@ void SettingsDialog::Load() {
 #ifdef Q_OS_UNIX
   {
     QSettings odbc_inst("/etc/unixODBC/odbcinst.ini", QSettings::IniFormat);
-    for (const QString &group : odbc_inst.childGroups()) {
-      odbc_inst.beginGroup(group);
-      if (odbc_inst.contains("Description")) {
-        odbc_drivers << odbc_inst.value("Description").toString();
-      }
-      odbc_inst.endGroup();
-    }
+    odbc_drivers = odbc_inst.childGroups();
   }
 #endif
 
