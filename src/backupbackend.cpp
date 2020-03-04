@@ -469,7 +469,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
   UpdateRestoreStatus(tr("Getting SQL server version"));
   {
     QSqlQuery query(db);
-    query.prepare(QString("SELECT SERVERPROPERTY('ProductMajorVersion')"));
+    query.prepare("SELECT SERVERPROPERTY('ProductMajorVersion')");
     if (!query.exec()) {
       r.failure(QStringList() << query.lastError().text() << query.lastQuery());
       return;
@@ -487,7 +487,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
   int db_version = 0;
   {
     QSqlQuery query(db);
-    query.prepare(QString("RESTORE HEADERONLY FROM DISK = :bakfile"));
+    query.prepare("RESTORE HEADERONLY FROM DISK = :bakfile");
     query.bindValue(":bakfile", bakfile);
     if (!query.exec()) {
       r.failure(QStringList() << query.lastError().text() << query.lastQuery());
@@ -520,7 +520,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
   UpdateRestoreStatus(tr("Verifying backup file \"%1\"").arg(bakfile));
   {
     QSqlQuery query(db);
-    query.prepare(QString("RESTORE VERIFYONLY FROM DISK = :bakfile"));
+    query.prepare("RESTORE VERIFYONLY FROM DISK = :bakfile");
     query.bindValue(":bakfile", bakfile);
     if (!query.exec()) {
       r.failure(QStringList() << query.lastError().text() << query.lastQuery());
@@ -594,7 +594,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
     UpdateRestoreStatus(tr("Getting logical names for database \"%1\"").arg(dbname));
     {
       QSqlQuery query(db);
-      query.prepare(QString("RESTORE FILELISTONLY FROM DISK = :bakfile WITH FILE = :filenr"));
+      query.prepare("RESTORE FILELISTONLY FROM DISK = :bakfile WITH FILE = :filenr");
       query.bindValue(":bakfile", bakfile);
       query.bindValue(":filenr", filenr);
       if (!query.exec()) {
