@@ -28,7 +28,7 @@ To build SQL Restore from source you need the following installed on your system
 * [libmagic](http://darwinsys.com/file/)
 * [zlib](https://www.zlib.net/)
 * [quazip](https://github.com/stachenov/quazip)
-* [Microsoft ODBC Driver for SQL Server](https://docs.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server)
+* FreeTDS or [Microsoft ODBC Driver for SQL Server](https://docs.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server)
 
 
 Install dependencies on openSUSE Leap 15.1:
@@ -83,6 +83,15 @@ Use the https://github.com/jonaski/mxe-qt repository.
 
     PKG_CONFIG_LIBDIR=$HOME/mxe-qt/usr/x86_64-w64-mingw32.static/lib/pkgconfig cmake .. -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw32-static.cmake
     make -j$(nproc)
+
+### :penguin: unixODBC with FreeTDS
+
+Add something like this to /etc/unixODBC/odbcinst.ini
+
+    [FreeTDS]
+    Description=FreeTDS
+    Driver = /usr/lib64/libtdsodbc.so.0.0.0
+    Setup = /usr/lib64/unixODBC/libtdsS.so
 
 ### :penguin: Install "ODBC Driver 17 for SQL Server" on openSUSE Leap 15.1:
 
