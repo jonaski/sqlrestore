@@ -60,6 +60,9 @@ int main(int argc, char* argv[]) {
   QCoreApplication::setApplicationVersion(SQLRESTORE_VERSION_DISPLAY);
   QCoreApplication::setOrganizationDomain("jkvinge.net");
 
+  QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+  QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+
 #ifdef GLIB_FOUND
   g_set_application_name(QCoreApplication::applicationName().toLocal8Bit());
 #endif
@@ -84,9 +87,6 @@ int main(int argc, char* argv[]) {
   assert(Utilities::GetRandomStringWithCharsAndNumbers(20) != Utilities::GetRandomStringWithCharsAndNumbers(20));
 
   QApplication a(argc, argv);
-
-  QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-  QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
 #ifdef Q_OS_UNIX
   {
