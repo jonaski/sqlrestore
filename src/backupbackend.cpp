@@ -205,7 +205,6 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
   emit RestoreHeaderCurrent(header);
   UpdateRestoreStatus(header);
 
-  emit RestoreProgressCurrentMax(100);
   emit RestoreProgressCurrentValue(0);
 
   if (RestoreCheckCancel(&r)) return;
@@ -237,7 +236,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
   }
   BOOST_SCOPE_EXIT_END
 
-    // Make sure the random number generator is seeded in this thread.
+  // Make sure the random number generator is seeded in this thread.
   Seed();
 
   QString tmpfile = GetRandomStringWithCharsAndNumbers(20) + ".tmp";
@@ -395,7 +394,6 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         return;
       }
 
-      emit RestoreProgressCurrentMax(100);
       emit RestoreProgressCurrentValue(0);
 
       qint64 total_size_written = 0;
@@ -451,7 +449,6 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
     bakfile = RemoteFilePath(fileitem->filename());
   }
 
-  emit RestoreProgressCurrentMax(100);
   emit RestoreProgressCurrentValue(0);
 
   if (RestoreCheckCancel(&r)) return;
@@ -579,7 +576,6 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
 
   if (RestoreCheckCancel(&r)) return;
 
-  emit RestoreProgressCurrentMax(dbnames.count());
   emit RestoreProgressCurrentValue(0);
 
   if (RestoreCheckCancel(&r)) return;
@@ -749,11 +745,11 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
       }
     }
 
-    emit RestoreProgressCurrentValue(progress);
+    emit RestoreProgressCurrentValue((int)((float)progress / (float)dbnames.count() * 100.0));
+
   }
 
   UpdateRestoreStatus(tr("Success"));
-  emit RestoreProgressCurrentMax(100);
   emit RestoreProgressCurrentValue(100);
 
   r.success();
