@@ -37,6 +37,7 @@
 #include <QObject>
 #include <QCoreApplication>
 #include <QMutex>
+#include <QMap>
 #include <QQueue>
 #include <QVariant>
 #include <QByteArray>
@@ -483,8 +484,8 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
 
   // Get header information from backup
   UpdateRestoreStatus(tr("Getting header information from %1").arg(bakfile));
-  QStringList dbnames;
-  int db_version = 0;
+  QMap<int, QString> dbnames;
+  int db_version_highest = 0;
   {
     QSqlQuery query(db);
     query.prepare("RESTORE HEADERONLY FROM DISK = :bakfile");
@@ -494,22 +495,27 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
       return;
     }
     while (query.next() && query.record().count() > 0) {
-      QString old_db_name = query.value("DatabaseName").toString();
-      if (!old_db_name.isEmpty()) dbnames << old_db_name;
-      db_version = query.value("SoftwareVersionMajor").toInt();
-      if (db_version > server_version) {
-        break;
+      int db_position = query.value("Position").toInt();
+      if (dbnames.contains(db_position)) {
+        r.failure(tr("Backup file \"%1\" contains multiple databases in position %2.").arg(bakfile).arg(db_position));
+        return;
+      }
+      QString db_name = query.value("DatabaseName").toString();
+      int db_version = query.value("SoftwareVersionMajor").toInt();
+      if (db_version > db_version_highest) db_version_highest = db_version;
+      if (!db_name.isEmpty()) {
+        dbnames.insert(db_position, db_name);
       }
     }
   }
 
-  if (db_version <= 0 || dbnames.isEmpty()) {
+  if (db_version_highest <= 0 || dbnames.isEmpty()) {
     r.failure(tr("Unable to read SQL Backup \"%1\", it is most likely created on a newer SQL server.").arg(bakfile));
     return;
   }
 
-  if (db_version > server_version) {
-    r.failure(tr("SQL Backup \"%1\" was created on %2 (%3), which is newer than this server, this server is %4 (%5). You need yo upgrade your SQL server.").arg(fileitem->filename()).arg(ProductMajorVersionToString(db_version)).arg(db_version).arg(ProductMajorVersionToString(server_version)).arg(server_version));
+  if (db_version_highest > server_version) {
+    r.failure(tr("SQL Backup \"%1\" was created on %2 (%3), which is newer than this server, this server is %4 (%5). You need yo upgrade your SQL server.").arg(fileitem->filename()).arg(ProductMajorVersionToString(db_version_highest)).arg(db_version_highest).arg(ProductMajorVersionToString(server_version)).arg(server_version));
     return;
   }
 
@@ -578,12 +584,15 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
 
   if (RestoreCheckCancel(&r)) return;
 
-  int filenr = 0;
-  for (const QString &dbname : dbnames) {
+  int progress = 0;
+  for (QMap<int, QString>::const_iterator i = dbnames.constBegin() ; i != dbnames.constEnd() ; ++i) {
+
+    ++progress;
+
+    int dbposition = i.key();
+    const QString &dbname = i.value();
 
     if (RestoreCheckCancel(&r)) return;
-
-    ++filenr;
 
     const QString logname = dbname + "_log";
     QString db_datapath = datapath;
@@ -594,9 +603,9 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
     UpdateRestoreStatus(tr("Getting logical names for database \"%1\"").arg(dbname));
     {
       QSqlQuery query(db);
-      query.prepare("RESTORE FILELISTONLY FROM DISK = :bakfile WITH FILE = :filenr");
+      query.prepare("RESTORE FILELISTONLY FROM DISK = :bakfile WITH FILE = :dbposition");
       query.bindValue(":bakfile", bakfile);
-      query.bindValue(":filenr", filenr);
+      query.bindValue(":dbposition", dbposition);
       if (!query.exec()) {
         r.failure(QStringList() << query.lastError().text() << query.lastQuery());
         return;
@@ -678,10 +687,10 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
     {
       UpdateRestoreStatus(tr("Restoring database \"%1\".").arg(dbname));
       QSqlQuery query(db);
-      query.prepare("RESTORE DATABASE :dbname FROM DISK = :bakfile WITH FILE = :filenr, MOVE :old_logical_dbname TO :datafile, MOVE :old_logical_logname TO :logfile, NOUNLOAD, REPLACE");
+      query.prepare("RESTORE DATABASE :dbname FROM DISK = :bakfile WITH FILE = :dbposition, MOVE :old_logical_dbname TO :datafile, MOVE :old_logical_logname TO :logfile, NOUNLOAD, REPLACE");
       query.bindValue(":dbname", dbname);
       query.bindValue(":bakfile", bakfile);
-      query.bindValue(":filenr", filenr);
+      query.bindValue(":dbposition", dbposition);
       query.bindValue(":old_logical_dbname", old_logical_dbname);
       query.bindValue(":old_logical_logname", old_logical_logname);
       query.bindValue(":datafile", datafile);
@@ -740,7 +749,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
       }
     }
 
-    emit RestoreProgressCurrentValue(filenr);
+    emit RestoreProgressCurrentValue(progress);
   }
 
   UpdateRestoreStatus(tr("Success"));
