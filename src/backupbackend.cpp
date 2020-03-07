@@ -483,6 +483,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
   UpdateRestoreStatus(tr("Getting header information from %1").arg(bakfile));
   QMap<int, QString> dbnames;
   int db_version_highest = 0;
+  bool backup_incorrect = false;
   {
     QSqlQuery query(db);
     query.prepare("RESTORE HEADERONLY FROM DISK = :bakfile");
@@ -492,6 +493,8 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
       return;
     }
     while (query.next() && query.record().count() > 0) {
+      int type = query.value("BackupType").toInt();
+      if (type != 1) backup_incorrect = true;
       int db_position = query.value("Position").toInt();
       if (dbnames.contains(db_position)) {
         r.failure(tr("Backup file \"%1\" contains multiple databases in position %2.").arg(bakfile).arg(db_position));
@@ -504,6 +507,11 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         dbnames.insert(db_position, db_name);
       }
     }
+  }
+
+  if (backup_incorrect) {
+    r.failure(tr("SQL Backup \"%1\" is not a normal full database backup.").arg(bakfile));
+    return;
   }
 
   if (db_version_highest <= 0 || dbnames.isEmpty()) {
