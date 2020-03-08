@@ -58,6 +58,10 @@ endif()
 find_package(PkgConfig REQUIRED)
 find_package(Threads REQUIRED)
 find_package(Boost REQUIRED)
+find_package(Backtrace QUIET)
+if(Backtrace_FOUND)
+  set(HAVE_BACKTRACE ON)
+endif()
 
 find_library(MAGIC_LIBRARIES NAMES magic libmagic.dll HINTS /usr/lib /usr/lib64)
 

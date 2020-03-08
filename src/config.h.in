@@ -26,7 +26,8 @@
 
 #cmakedefine DEBUG
 #cmakedefine USE_INSTALL_PREFIX
-#cmakedefine GLIB_FOUND
+#cmakedefine HAVE_BACKTRACE
 #cmakedefine HAVE_GLIB
+#cmakedefine GLIB_FOUND
 
 #endif  // CONFIG_H_IN
