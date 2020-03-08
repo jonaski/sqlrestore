@@ -266,11 +266,11 @@ void SettingsDialog::TestServer() {
     return;
   }
 
-  if (ui_->drivers->currentText().isEmpty()) {
+  if (ui_->drivers->currentData().toString().isEmpty()) {
     testserver_->Failure(tr("Missing SQL driver"));
     return;
   }
-  if (ui_->odbc_drivers->currentText().isEmpty()) {
+  if (ui_->odbc_drivers->currentData().toString().isEmpty()) {
     testserver_->Failure(tr("Missing ODBC driver"));
     return;
   }
@@ -302,7 +302,7 @@ void SettingsDialog::TestServer() {
 DBConnectResult SettingsDialog::Connect() {
 
   QMutexLocker l(db_connector_->Mutex());
-  return db_connector_->Connect(ui_->drivers->currentText(), ui_->odbc_drivers->currentText(), ui_->server->text(), ui_->trusted_connection->isChecked(), ui_->username->text(), ui_->password->text(), 4, true);
+  return db_connector_->Connect(ui_->drivers->currentData().toString(), ui_->odbc_drivers->currentData().toString(), ui_->server->text(), ui_->trusted_connection->isChecked(), ui_->username->text(), ui_->password->text(), 4, true);
 
 }
 
