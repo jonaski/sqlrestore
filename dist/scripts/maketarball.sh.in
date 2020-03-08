@@ -38,7 +38,7 @@ tar -cJf $name-$version.tar.xz \
     --exclude="$root/dist/macos/Info.plist" \
     --exclude="$root/dist/windows/windres.rc" \
     --exclude="$root/src/translations/translations.pot" \
-    --exclude="$root/*.*-workspace \
-    --exclude="$root/*.kdev4 \
-    --exclude="$root/.vscode \
+    --exclude="$root/*.*-workspace" \
+    --exclude="$root/*.kdev4" \
+    --exclude="$root/.vscode" \
     "$root"
