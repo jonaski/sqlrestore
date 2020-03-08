@@ -139,7 +139,7 @@ QString BackupBackend::ProductMajorVersionToString(const int product_major_versi
     case 12: return "SQL Server 2014";
     case 13: return "SQL Server 2016";
     case 14: return "SQL Server 2017";
-    default: return QString();
+    default: return "Unknown";
   }
 
 }
@@ -519,7 +519,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
     return;
   }
 
-  if (db_version_highest > server_version) {
+  if (server_version != 0 && db_version_highest > server_version) {
     r.failure(tr("SQL Backup \"%1\" was created on %2 (%3), which is newer than this server, this server is %4 (%5). You need yo upgrade your SQL server.").arg(fileitem->filename()).arg(ProductMajorVersionToString(db_version_highest)).arg(db_version_highest).arg(ProductMajorVersionToString(server_version)).arg(server_version));
     return;
   }
