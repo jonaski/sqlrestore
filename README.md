@@ -56,18 +56,18 @@ Use the https://github.com/strawberrymusicplayer/strawberry-mxe repository.
 
 Shared:
 
-    PKG_CONFIG_LIBDIR=$HOME/mxe/usr/x86_64-w64-mingw32.shared/lib/pkgconfig cmake .. -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw32-shared.cmake -DARCH=x86_64
+    PKG_CONFIG_LIBDIR=$HOME/mxe-shared/usr/x86_64-w64-mingw32.shared/lib/pkgconfig cmake .. -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw32-shared.cmake -DARCH=x86_64
     make -j$(nproc)
 
 ### :open_file_folder: Copy dependencies for shared build:
 
     mkdir -p platforms imageformats sqldrivers styles
-    cp $HOME/mxe/usr/x86_64-w64-mingw32.shared/qt5/plugins/platforms/qwindows.dll platforms/
-    cp $HOME/mxe/usr/x86_64-w64-mingw32.shared/qt5/plugins/sqldrivers/qsqlodbc.dll sqldrivers/
-    cp $HOME/mxe/usr/x86_64-w64-mingw32.shared/qt5/plugins/styles/qwindowsvistastyle.dll styles/
-    cp $HOME/mxe/usr/x86_64-w64-mingw32.shared/qt5/plugins/imageformats/{qgif.dll,qico.dll,qjp2.dll,qjpeg.dll,qsvg.dll,qtiff.dll} imageformats/
-    cp $HOME/mxe/usr/x86_64-w64-mingw32.shared/bin/killproc.exe .
-    $HOME/mxe/tools/copydlldeps.sh -c -F . -R $HOME/mxe/usr/x86_64-w64-mingw32.shared -d .
+    cp $HOME/mxe-shared/usr/x86_64-w64-mingw32.shared/qt5/plugins/platforms/qwindows.dll platforms/
+    cp $HOME/mxe-shared/usr/x86_64-w64-mingw32.shared/qt5/plugins/sqldrivers/qsqlodbc.dll sqldrivers/
+    cp $HOME/mxe-shared/usr/x86_64-w64-mingw32.shared/qt5/plugins/styles/qwindowsvistastyle.dll styles/
+    cp $HOME/mxe-shared/usr/x86_64-w64-mingw32.shared/qt5/plugins/imageformats/{qgif.dll,qico.dll,qjp2.dll,qjpeg.dll,qsvg.dll,qtiff.dll} imageformats/
+    cp $HOME/mxe-shared/usr/x86_64-w64-mingw32.shared/bin/killproc.exe .
+    $HOME/mxe-shared/tools/copydlldeps.sh -c -F . -R $HOME/mxe-shared/usr/x86_64-w64-mingw32.shared -d .
 
 ### :floppy_disk: Create nullsoft installer:
 
