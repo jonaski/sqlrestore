@@ -219,10 +219,12 @@ void MainWindow::LoadGeometry() {
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
   QScreen *screen = QGuiApplication::screenAt(pos());
-  const QRect sr = screen->availableGeometry();
-  const QRect wr({}, frameSize().boundedTo(sr.size()));
-  resize(wr.size());
-  move(sr.center() - wr.center());
+  if (screen) {
+    const QRect sr = screen->availableGeometry();
+    const QRect wr({}, frameSize().boundedTo(sr.size()));
+    resize(wr.size());
+    move(sr.center() - wr.center());
+  }
 #endif
 
 }
