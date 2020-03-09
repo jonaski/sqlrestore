@@ -81,7 +81,6 @@ class MainWindow : public QMainWindow {
   void ConnectionFailure(const QString &error);
 
   void Reset();
-  void MaybeExit();
   void Cancel();
   void Restore();
 

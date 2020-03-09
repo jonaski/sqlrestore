@@ -20,6 +20,7 @@
 #include <QMainWindow>
 #include <QWidget>
 #include <QApplication>
+#include <QScreen>
 #include <QAbstractItemModel>
 #include <QItemSelectionModel>
 #include <QItemSelection>
@@ -148,7 +149,7 @@ MainWindow::MainWindow(Application *app, const CommandlineOptions &options, QWid
   connect(ui_->button_restore, SIGNAL(clicked()), SLOT(Restore()));
   connect(ui_->button_back, SIGNAL(clicked()), SLOT(Reset()));
   connect(ui_->button_cancel, SIGNAL(clicked()), SLOT(Cancel()));
-  connect(ui_->button_exit, SIGNAL(clicked()), SLOT(MaybeExit()));
+  connect(ui_->button_exit, SIGNAL(clicked()), SLOT(Exit()));
   connect(ui_->button_select_all, SIGNAL(clicked()), ui_->file_view_container->view(), SLOT(SelectAll()));
   connect(ui_->button_unselect_all, SIGNAL(clicked()), ui_->file_view_container->view(), SLOT(UnSelectAll()));
 
@@ -215,6 +216,14 @@ void MainWindow::LoadGeometry() {
     restoreGeometry(s.value("geometry").toByteArray());
   }
   s.endGroup();
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
+  QScreen *screen = QGuiApplication::screenAt(pos());
+  const QRect sr = screen->availableGeometry();
+  const QRect wr({}, frameSize().boundedTo(sr.size()));
+  resize(wr.size());
+  move(sr.center() - wr.center());
+#endif
 
 }
 
@@ -399,14 +408,6 @@ void MainWindow::ConnectionFailure(const QString &error) {
 
   if (ui_->stackedWidget->currentWidget() == ui_->select_file) {
     ui_->button_restore->setEnabled(false);
-  }
-
-}
-
-void MainWindow::MaybeExit() {
-
-  if (ui_->stackedWidget->currentWidget() != ui_->progress) {
-    qApp->quit();
   }
 
 }
