@@ -29,5 +29,6 @@
 #cmakedefine HAVE_BACKTRACE
 #cmakedefine HAVE_GLIB
 #cmakedefine GLIB_FOUND
+#cmakedefine HAVE_QSQLODBCX
 
 #endif  // CONFIG_H_IN

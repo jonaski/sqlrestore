@@ -78,6 +78,13 @@ set(QT_LIBRARIES Qt5::Core Qt5::Widgets Qt5::Network Qt5::Sql Qt5::Concurrent)
 # QUAZIP
 find_package(QuaZip)
 
+# QODBC - Build a modified QODBC driver that works with FreeTDS on UNIX renamed QODBCX
+if (UNIX AND _Qt5Core_PRIVATE_DIRS_EXIST AND _Qt5Sql_PRIVATE_DIRS_EXIST AND Qt5Sql_VERSION VERSION_GREATER_EQUAL 5.14.1)
+  set(HAVE_QSQLODBCX ON)
+  add_subdirectory(3rdparty/qsqlodbc)
+  include_directories(3rdparty/qsqlodbc)
+endif ()
+
 if (WIN32)
   # RC compiler
   string(REPLACE "gcc" "windres" CMAKE_RC_COMPILER_INIT ${CMAKE_C_COMPILER})

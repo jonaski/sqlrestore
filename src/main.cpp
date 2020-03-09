@@ -48,6 +48,11 @@
 #include "metatypes.h"
 #include "mainwindow.h"
 
+#if defined(Q_OS_UNIX) && defined(HAVE_QSQLODBCX)
+#  include <QtPlugin>
+  Q_IMPORT_PLUGIN(QODBCXDriverPlugin)
+#endif
+
 int main(int argc, char* argv[]) {
 
 #if defined(Q_OS_WIN32) || defined(Q_OS_MACOS)
