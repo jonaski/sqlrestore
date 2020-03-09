@@ -89,7 +89,7 @@ target_link_libraries(sqlrestore_lib
   ${QUAZIP_LIBRARIES}
 )
 
-if (UNIX AND _Qt5Core_PRIVATE_DIRS_EXIST AND _Qt5Sql_PRIVATE_DIRS_EXIST AND Qt5Sql_VERSION VERSION_GREATER_EQUAL 5.14.1)
+if (UNIX AND _Qt5Core_PRIVATE_DIRS_EXIST AND _Qt5Sql_PRIVATE_DIRS_EXIST AND Qt5Sql_VERSION VERSION_GREATER_EQUAL 5.14.1 AND NOT APPLE)
   target_link_libraries(sqlrestore_lib qsqlodbc)
 endif()
 
