@@ -50,7 +50,7 @@ Install dependencies on Ubuntu:
 
 ### :wrench: Cross compile using MXE:
 
-MXE needs to be in $HOME/mxe
+MXE needs to be in $HOME/mxe-shared
 
 Use the https://github.com/strawberrymusicplayer/strawberry-mxe repository.
 
@@ -77,11 +77,11 @@ Shared:
 
 Static:
 
-MXE needs to be in $HOME/mxe-qt
+MXE needs to be in $HOME/mxe-static
 
 Use the https://github.com/jonaski/mxe-qt repository.
 
-    PKG_CONFIG_LIBDIR=$HOME/mxe-qt/usr/x86_64-w64-mingw32.static/lib/pkgconfig cmake .. -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw32-static.cmake
+    PKG_CONFIG_LIBDIR=$HOME/mxe-static/usr/x86_64-w64-mingw32.static/lib/pkgconfig cmake .. -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw32-static.cmake
     make -j$(nproc)
 
 ### :penguin: unixODBC with FreeTDS
