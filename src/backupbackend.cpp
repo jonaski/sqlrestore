@@ -486,8 +486,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
   bool backup_incorrect = false;
   {
     QSqlQuery query(db);
-    query.prepare("RESTORE HEADERONLY FROM DISK = :bakfile");
-    query.bindValue(":bakfile", bakfile);
+    query.prepare(QString("RESTORE HEADERONLY FROM DISK = '%1'").arg(bakfile));
     if (!query.exec()) {
       r.failure(QStringList() << query.lastError().text() << query.lastQuery());
       return;
@@ -714,11 +713,6 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         else new_logical_dbname = dbname + QString("_").repeated(i);
         QSqlQuery query(db);
         query.prepare("ALTER DATABASE " + dbname + " MODIFY FILE (NAME = " + old_logical_dbname + ", NEWNAME = " +new_logical_dbname +")");
-        // FIXME
-        //query.prepare("ALTER DATABASE :dbname MODIFY FILE (NAME = :old_logical_dbname, NEWNAME = :new_logical_dbname)");
-        //query.bindValue(":dbname", dbname);
-        //query.bindValue(":old_logical_dbname", old_logical_dbname);
-        //query.bindValue(":new_logical_dbname", new_logical_dbname);
         if (query.exec()) {
           break;
         }
@@ -732,11 +726,6 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         else new_logical_logname = logname + QString("_").repeated(i);
         QSqlQuery query(db);
         query.prepare("ALTER DATABASE " + dbname + " MODIFY FILE (NAME = " + old_logical_logname + ", NEWNAME = " + new_logical_logname +")");
-        // FIXME
-        //query.prepare("ALTER DATABASE :logname MODIFY FILE (NAME = :old_logical_logname, NEWNAME = :new_logical_logname)");
-        //query.bindValue(":logname", logname);
-        //query.bindValue(":old_logical_logname", old_logical_logname);
-        //query.bindValue(":new_logical_logname", new_logical_logname);
         if (query.exec()) {
           break;
         }
