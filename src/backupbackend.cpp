@@ -287,9 +287,9 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
             src_file.close();
           }
         } BOOST_SCOPE_EXIT_END
-        UpdateRestoreStatus(tr("Looking for end-of-central-directory signature in ZIP file."));
+        UpdateRestoreStatus(tr("Looking for end-of-central-directory signature in ZIP archive."));
         if (!src_file.open(QIODevice::ReadOnly)) {
-          r.failure(tr("Unable to open ZIP file \"%1\".: Error %2").arg(zipfile).arg(src_file.errorString()));
+          r.failure(tr("Unable to open ZIP archive \"%1\".: Error %2").arg(zipfile).arg(src_file.errorString()));
           return;
         }
         if (src_file.size() > kZipTailSize) {
@@ -299,7 +299,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         while (src_file.bytesAvailable() > 0) {
           QByteArray buf_tmp = src_file.read(kBufferChunkSize);
           if (buf_tmp.isEmpty()) {
-            r.failure(tr("Unable to read from \"%1\".: %2").arg(zipfile).arg(src_file.errorString()));
+            r.failure(tr("Unable to read from ZIP archive \"%1\".: %2").arg(zipfile).arg(src_file.errorString()));
             src_file.close();
             return;
           }
@@ -317,7 +317,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
           }
         }
         if (!found) {
-          r.failure(tr("End-of-central-directory signature not found. Zip file is incomplete or corrupt."));
+          r.failure(tr("End-of-central-directory signature not found in ZIP archive \"%1\". File is incomplete or corrupt.").arg(zipfile));
           return;
         }
       }
@@ -325,7 +325,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
 
    if (RestoreCheckCancel(&r)) return;
 
-    UpdateRestoreStatus(tr("Uncompressing file \"%1\"").arg(fileitem->filename()));
+    UpdateRestoreStatus(tr("Uncompressing ZIP archive \"%1\"").arg(fileitem->filename()));
 
     QuaZip archive(zipfile);
     BOOST_SCOPE_EXIT(&archive) {
@@ -334,7 +334,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
       }
     } BOOST_SCOPE_EXIT_END
     if (!archive.open(QuaZip::mdUnzip)) {
-      r.failure(tr("Unable to open ZIP file \"%1\".: Error %2").arg(zipfile).arg(archive.getZipError()));
+      r.failure(tr("Unable to open ZIP archive \"%1\".: Error %2").arg(zipfile).arg(archive.getZipError()));
       return;
     }
 
@@ -349,14 +349,14 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         }
       } BOOST_SCOPE_EXIT_END
       if (!zfile.open(QIODevice::ReadOnly)) {
-        r.failure(tr("Unable to open \"%1\" for reading.").arg(currentfile));
+        r.failure(tr("Unable to open file \"%1\" in ZIP archive \"%2\" for reading.").arg(currentfile).arg(zipfile));
         archive.close();
         return;
       }
 
       QuaZipFileInfo64 zip_info;
       if (!zfile.getFileInfo(&zip_info)) {
-       r.failure(tr("Unable to get ZIP file info for \"%1\".").arg(currentfile));
+       r.failure(tr("Unable to get ZIP file info for \"%1\" from ZIP archive \"%2\".").arg(currentfile).arg(zipfile));
         zfile.close();
         archive.close();
        return;
@@ -386,7 +386,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
       if (!dst_file.open(QIODevice::WriteOnly)) {
         zfile.close();
         archive.close();
-        r.failure(tr("Unable to open \"%1\" for writing.: %2").arg(tmpfile_local).arg(dst_file.errorString()));
+        r.failure(tr("Unable to open temporary file \"%1\" for writing.: %2").arg(tmpfile_local).arg(dst_file.errorString()));
         return;
       }
 
@@ -403,7 +403,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         }
         QByteArray buf = zfile.read(kBufferChunkSize);
         if (buf.isEmpty()) {
-          r.failure(tr("Unable to read from \"%1\".: %2").arg(archive.getZipName()).arg(zfile.errorString()));
+          r.failure(tr("Unable to read file \"%1\" in ZIP archive \"%2\" (File possibly corrupt).: %3.").arg(currentfile).arg(zipfile).arg(zfile.errorString()));
           zfile.close();
           dst_file.close();
           archive.close();
@@ -412,7 +412,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         checksum.update(buf);
         qint64 written = dst_file.write(buf.data(), buf.size());
         if (written != buf.size()) {
-          r.failure(tr("Unable to write to temp ZIP archive \"%1\".: %2").arg(tmpfile_local).arg(dst_file.errorString()));
+          r.failure(tr("Unable to write to temporary file \"%1\".: %2").arg(tmpfile_local).arg(dst_file.errorString()));
           zfile.close();
           dst_file.close();
           archive.close();
@@ -426,11 +426,11 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
       if (total_size_written < zfile.size()) {
         zfile.close();
         archive.close();
-        r.failure(tr("Unexpected end of file while reading ZIP archive. File %1 is corrupt.").arg(zipfile));
+        r.failure(tr("Unexpected end of file while reading file \"%1\" in ZIP archive \"%2\". File is corrupt.").arg(currentfile).arg(zipfile));
         return;
       }
       if (checksum.value() != zip_info.crc) {
-        r.failure(tr("CRC check failed. File \"%1\" is corrupt.").arg(currentfile));
+        r.failure(tr("CRC checksum failed for file \"%1\" in ZIP archive \"%2\". File is corrupt.").arg(currentfile).arg(zipfile));
         zfile.close();
         archive.close();
         return;
@@ -438,7 +438,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
       zfile.close();
     }
     else {
-      r.failure(tr("ZIP file \"%1\" has no files.").arg(zipfile));
+      r.failure(tr("Backup ZIP archive \"%1\" has no files.").arg(zipfile));
       archive.close();
       return;
     }
