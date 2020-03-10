@@ -356,7 +356,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
 
       QuaZipFileInfo64 zip_info;
       if (!zfile.getFileInfo(&zip_info)) {
-       r.failure(tr("Unable to get ZIP file info for \"%1\" from ZIP archive \"%2\".").arg(currentfile).arg(zipfile));
+       r.failure(tr("Unable to get file info for \"%1\" from ZIP archive \"%2\".").arg(currentfile).arg(zipfile));
         zfile.close();
         archive.close();
        return;
