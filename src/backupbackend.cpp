@@ -337,12 +337,8 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
       r.failure(tr("Unable to open ZIP file \"%1\".: Error %2").arg(zipfile).arg(archive.getZipError()));
       return;
     }
-    if (archive.getFileNameList().isEmpty()) {
-      r.failure(tr("ZIP file \"%1\" has no files.").arg(zipfile));
-      archive.close();
-      return;
-    }
-    for (bool f = archive.goToFirstFile(); f; f = archive.goToNextFile()) {
+
+    if (!archive.getFileNameList().isEmpty() && archive.goToFirstFile()) {
 
       // Open ZIP File
       QString currentfile = archive.getCurrentFileName();
@@ -440,13 +436,18 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         return;
       }
       zfile.close();
-      break; // Only read the first file.
+    }
+    else {
+      r.failure(tr("ZIP file \"%1\" has no files.").arg(zipfile));
+      archive.close();
+      return;
     }
     archive.close();
     bakfile = RemoteFilePath(tmpfile);
   }
   else {
     bakfile = RemoteFilePath(fileitem->filename());
+    tmpfile_local.clear();
   }
 
   emit RestoreProgressCurrentValue(0);
