@@ -4,7 +4,7 @@
 SQL Restore is a batch restore for MSSQL backups written in C++11.
 It's using features in modern C++11, Boost and Qt.
 
-![Browse](https://raw.githubusercontent.com/jonaski/sqlrestore/gif/data/pictures/sqlrestore.gif)
+![Browse](https://raw.githubusercontent.com/jonaski/sqlrestore/master/data/pictures/sqlrestore.gif)
 
 ### :heavy_check_mark: Features:
 
