@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>515</width>
-    <height>600</height>
+    <height>378</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -299,6 +299,9 @@
         <spacer name="spacer_bottom">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::MinimumExpanding</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>

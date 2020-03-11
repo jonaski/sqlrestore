@@ -79,7 +79,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), mainwindow_(parent)
 
   html += "<p>";
 
-  html += tr("If you like this program and can make use it, consider sponsoring or donating.");
+  html += tr("If you like this program and can make use of it, consider sponsoring or donating.");
   html += "<br />";
   html += tr("To sponsor me visit %1.").arg("<a href=\"https://github.com/sponsors/jonaski\">my GitHub sponsors profile</a>");
   html += "<br />";
@@ -133,6 +133,7 @@ void AboutDialog::showEvent(QShowEvent*) {
 
   setMinimumHeight(0);
   setMaximumHeight(9000);
+
   adjustSize();
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
