@@ -91,7 +91,6 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), mainwindow_(parent)
   html += "</p>";
 
   ui_.text->setText(html);
-  ui_.text->adjustSize();
 
   html.clear();
 
