@@ -18,7 +18,7 @@ It's using features in modern C++11, Boost and Qt.
 * Works on Linux, macOS and Windows.
 * Compatible with MSSQL 2008 R2 to SQL 2019 server on Linux and Windows.
 
-The program is free software, released under GPL. If you like this program and can make use it, consider sponsoring or donating.
+The program is free software, released under GPL. If you like this program and can make use of it, consider sponsoring or donating.
 To sponsor me visit [my GitHub sponsors profile](https://github.com/sponsors/jonaski)
 Funding developers through GitHub Sponsors is one more way to contribute to open source projects you appreciate, it helps developers get the resources they need, and recognize contributors working behind the scenes to make open source better for everyone.
 You can also make a one-time payment through [paypal.me/jonaskvinge](https://paypal.me/jonaskvinge)
