@@ -72,8 +72,13 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), mainwindow_(parent)
 
   html += tr("SQL Restore is a SQL batch restore program by %1.").arg("<a href=\"https://jkvinge.net/\">Jonas Kvinge</a>");
   html += "<br />";
-  html += tr("The program is free software, released under GPL.");
+  html += tr("The program is free software, released under GPL. The source code is available on GitHub %1").arg("<a href=\"https://github.com/jonaski/sqlrestore\">here</a>");
   html += "<br />";
+  html += tr("You should have received a copy of the GNU General Public License along with this program.  If not, see %1").arg("<a href=\"http://www.gnu.org/licenses/\">http://www.gnu.org/licenses/</a>");
+  html += "</p>";
+
+  html += "<p>";
+
   html += tr("If you like this program and can make use it, consider sponsoring or donating.");
   html += "<br />";
   html += tr("To sponsor me visit %1.").arg("<a href=\"https://github.com/sponsors/jonaski\">my GitHub sponsors profile</a>");
@@ -81,10 +86,12 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), mainwindow_(parent)
   html += tr("Funding developers through GitHub Sponsors is one more way to contribute to open source projects you appreciate, it helps developers get the resources they need, and recognize contributors working behind the scenes to make open source better for everyone.");
   html += "<br />";
   html += tr("You can also make a one-time payment through %1.").arg("<a href=\"https://paypal.me/jonaskvinge\">paypal.me/jonaskvinge</a>");
+  html += "<br />";
 
   html += "</p>";
 
   ui_.text->setText(html);
+  ui_.text->adjustSize();
 
   html.clear();
 
@@ -128,8 +135,6 @@ void AboutDialog::showEvent(QShowEvent*) {
   setMinimumHeight(0);
   setMaximumHeight(9000);
   adjustSize();
-  setMinimumHeight(height());
-  setMaximumHeight(height());
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
   QScreen *screen = QGuiApplication::screenAt(pos());
@@ -140,6 +145,11 @@ void AboutDialog::showEvent(QShowEvent*) {
     move(sr.center() - wr.center());
   }
 #endif
+
+  adjustSize();
+
+  setMinimumHeight(height());
+  setMaximumHeight(height());
 
 }
 
