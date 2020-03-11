@@ -1,7 +1,7 @@
 :file_cabinet: SQL Restore [![Build Status](https://github.com/jonaski/sqlrestore/workflows/CI:%20Build%20Test/badge.svg)](https://github.com/jonaski/sqlrestore/actions)
 ========================
 
-SQL Restore is a batch restore for MSSQL backups written in C++11.
+SQL Restore is a batch restore program for MSSQL backups written in C++11.
 It's using features in modern C++11, Boost and Qt.
 
 ![Browse](https://raw.githubusercontent.com/jonaski/sqlrestore/master/data/pictures/sqlrestore.gif)
@@ -17,6 +17,11 @@ It's using features in modern C++11, Boost and Qt.
 * Full CRC check of ZIP on restore.
 * Works on Linux, macOS and Windows.
 * Compatible with MSSQL 2008 R2 to SQL 2019 server on Linux and Windows.
+
+The program is free software, released under GPL. If you like this program and can make use it, consider sponsoring or donating.
+To sponsor me visit [my GitHub sponsors profile](https://github.com/sponsors/jonaski)
+Funding developers through GitHub Sponsors is one more way to contribute to open source projects you appreciate, it helps developers get the resources they need, and recognize contributors working behind the scenes to make open source better for everyone.
+You can also make a one-time payment through [paypal.me/jonaskvinge](https://paypal.me/jonaskvinge)
 
 ### :heavy_exclamation_mark: Requirements
 
