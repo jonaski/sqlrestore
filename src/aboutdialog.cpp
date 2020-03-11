@@ -20,9 +20,11 @@
 #include <memory>
 #include <boost/version.hpp>
 #include <magic.h>
+#include <zlib.h>
 
 #include <QtGlobal>
 #include <QCoreApplication>
+#include <QScreen>
 #include <QWidget>
 #include <QDialog>
 #include <QDialogButtonBox>
@@ -63,27 +65,57 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), mainwindow_(parent)
   html += "</p>";
   html += tr("</p>");
   ui_.headline->setText(html);
+
   html.clear();
+
   html += "<p>";
-  html += tr("SQL Restore is a SQL batch restore application by Jonas Kvinge.");
+
+  html += tr("SQL Restore is a SQL batch restore program by %1.").arg("<a href=\"https://jkvinge.net/\">Jonas Kvinge</a>");
   html += "<br />";
-  html += tr("Use at your own risk!");
+  html += tr("The program is free software, released under GPL.");
+  html += "<br />";
+  html += tr("If you like this program and can make use it, consider sponsoring or donating.");
+  html += "<br />";
+  html += tr("To sponsor me visit %1.").arg("<a href=\"https://github.com/sponsors/jonaski\">my GitHub sponsors profile</a>");
+  html += "<br />";
+  html += tr("Funding developers through GitHub Sponsors is one more way to contribute to open source projects you appreciate, it helps developers get the resources they need, and recognize contributors working behind the scenes to make open source better for everyone.");
+  html += "<br />";
+  html += tr("You can also make a one-time payment through %1.").arg("<a href=\"https://paypal.me/jonaskvinge\">paypal.me/jonaskvinge</a>");
+
   html += "</p>";
+
   ui_.text->setText(html);
 
   html.clear();
-  html += "<p>";
-  html += "<b>";
-  html += tr("Technical details") + ":";
-  html += "</b><br />";
-  html += QString("Boost %1.%2.%3<br />").arg(BOOST_VERSION / 100000).arg(BOOST_VERSION / 100 % 1000).arg(BOOST_VERSION % 100);
-  html += QString("Qt %1<br />").arg(qVersion());
-  html += QString("Magic %1<br />").arg(magic_version());
-  html += "</p>";
-  ui_.technical->setText(html);
 
-  adjustSize();
-  updateGeometry();
+  html += "<p>";
+  html += tr("This program uses %1 %2 which is licensed under %3.").arg("<a href=\"https://www.boost.org/\">Boost C++ Libraries</a>").arg(QString("%1.%2.%3<br />").arg(BOOST_VERSION / 100000).arg(BOOST_VERSION / 100 % 1000).arg(BOOST_VERSION % 100)).arg("<a href=\"http://www.boost.org/users/license.html\">The Boost License</a>");
+  html += "</p>";
+  ui_.label_boost_text->setText(html);
+
+  html.clear();
+
+  html += "<p>";
+  html += tr("This program uses %1 %2 which is licensed under %3.").arg("<a href=\"https://www.qt.io/\">Qt</a>").arg(qVersion()).arg("<a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">The GNU General Public License</a>");
+  html += "</p>";
+  ui_.label_qt_text->setText(html);
+
+  html.clear();
+
+  html += "<p>";
+  html += tr("This program uses %1 %2 which is licensed under %3.").arg("<a href=\"https://www.darwinsys.com/file/\">libmagic (darwinsys file)</a>").arg(magic_version()).arg("<a href=\"https://opensource.org/licenses/BSD-3-Clause\">The BSD license</a>");
+  html += "</p>";
+  ui_.label_darwinsysfile_text->setText(html);
+
+  html.clear();
+
+  html += "<p>";
+  html += tr("This program uses %1 %2 which is licensed under %3.").arg("<a href=\"https://www.zlib.net/\">zlib</a>").arg(ZLIB_VERSION).arg("<a href=\"https://www.zlib.net/zlib_license.html\">The zlib License</a>");
+  html += "</p>";
+  ui_.label_zlib_text->setText(html);
+
+  html.clear();
+
   ui_.buttonBox->button(QDialogButtonBox::Close)->setShortcut(QKeySequence::Close);
 
   connect(ui_.buttonBox, SIGNAL(accepted()), SLOT(Close()));
@@ -92,17 +124,29 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), mainwindow_(parent)
 }
 
 void AboutDialog::showEvent(QShowEvent*) {
-  SetPosition();
+
+  setMinimumHeight(0);
+  setMaximumHeight(9000);
+  adjustSize();
+  setMinimumHeight(height());
+  setMaximumHeight(height());
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
+  QScreen *screen = QGuiApplication::screenAt(pos());
+  if (screen) {
+    const QRect sr = screen->availableGeometry();
+    const QRect wr({}, frameSize().boundedTo(sr.size()));
+    resize(wr.size());
+    move(sr.center() - wr.center());
+  }
+#endif
+
 }
 
 void AboutDialog::closeEvent(QCloseEvent*) {
 
   HideDopeFish();
 
-}
-
-void AboutDialog::SetPosition() {
-  move(QPoint(mainwindow_->pos().x() + (mainwindow_->width() / 2) - (width() / 2), mainwindow_->pos().y() + (mainwindow_->height() / 2) - (height() / 2)));
 }
 
 void AboutDialog::Close() {

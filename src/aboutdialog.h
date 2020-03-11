@@ -45,7 +45,6 @@ class AboutDialog : public QDialog {
   void mouseDoubleClickEvent(QMouseEvent *e);
 
  private:
-  void SetPosition();
   void HideDopeFish();
 
  private slots:

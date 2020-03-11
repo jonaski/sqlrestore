@@ -5,5 +5,9 @@
     <file>icons/512x512/backup.png</file>
     <file>pictures/spinner.gif</file>
     <file>pictures/dopefish.gif</file>
+    <file>pictures/boost.png</file>
+    <file>pictures/qt.png</file>
+    <file>pictures/darwinsysfile.png</file>
+    <file>pictures/zlib.png</file>
   </qresource>
 </RCC>
