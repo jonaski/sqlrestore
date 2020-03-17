@@ -57,11 +57,11 @@ Install dependencies on Ubuntu:
 
 ### :wrench: Cross compile using MXE:
 
+Shared:
+
 MXE needs to be in $HOME/mxe-shared
 
 Use the https://github.com/strawberrymusicplayer/strawberry-mxe repository.
-
-Shared:
 
     PKG_CONFIG_LIBDIR=$HOME/mxe-shared/usr/x86_64-w64-mingw32.shared/lib/pkgconfig cmake .. -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw32-shared.cmake -DARCH=x86_64
     make -j$(nproc)
