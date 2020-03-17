@@ -20,6 +20,7 @@
 #include <QMainWindow>
 #include <QWidget>
 #include <QApplication>
+#include <QGuiApplication>
 #include <QScreen>
 #include <QAbstractItemModel>
 #include <QItemSelectionModel>

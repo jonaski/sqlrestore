@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>437</width>
-    <height>458</height>
+    <width>438</width>
+    <height>479</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>438</width>
+    <height>0</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>438</width>
+    <height>16777215</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Settings</string>
@@ -25,7 +37,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
-       <layout class="QFormLayout" name="formLayout_2">
+       <layout class="QFormLayout" name="layout_server_settings">
         <item row="0" column="0">
          <widget class="QLabel" name="label_driver">
           <property name="text">
@@ -113,7 +125,7 @@
          </widget>
         </item>
         <item>
-         <spacer name="horizontalSpacer_2">
+         <spacer name="spacer_login_timeout">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -131,7 +143,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_2">
+    <widget class="QGroupBox" name="groupbox_paths">
      <property name="title">
       <string>Backup paths</string>
      </property>
@@ -164,7 +176,7 @@
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <layout class="QHBoxLayout" name="layout_remote_path">
         <item>
          <widget class="QLabel" name="label_remote_path">
           <property name="text">
@@ -181,9 +193,9 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="layout_buttons">
      <item>
-      <spacer name="horizontalSpacer">
+      <spacer name="spacer_buttons">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -221,7 +233,7 @@
     </layout>
    </item>
    <item>
-    <spacer name="verticalSpacer">
+    <spacer name="spacer_bottom">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
@@ -230,8 +242,8 @@
      </property>
      <property name="sizeHint" stdset="0">
       <size>
-       <width>0</width>
-       <height>0</height>
+       <width>20</width>
+       <height>20</height>
       </size>
      </property>
     </spacer>

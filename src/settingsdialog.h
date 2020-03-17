@@ -29,7 +29,6 @@ class QWidget;
 class QComboBox;
 class QAbstractButton;
 class QShowEvent;
-class QCloseEvent;
 class Ui_SettingsDialog;
 class DBConnector;
 class DBConnectResult;
@@ -46,15 +45,11 @@ class SettingsDialog : public QDialog {
 
  protected:
   void showEvent(QShowEvent*);
-  void closeEvent(QCloseEvent*);
 
  private:
-  void SetPosition();
   void Load();
   void ComboBoxLoadFromSettings(const QSettings &s, QComboBox *combobox, const QString &setting, const QString &default_value);
   DBConnectResult Connect();
-  void LoadGeometry();
-  void SaveGeometry();
 
  signals:
   void SettingsChanged();

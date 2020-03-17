@@ -99,13 +99,9 @@ SettingsDialog::SettingsDialog(QWidget *parent)
     ui_->drivers->addItem(driver, driver);
   }
 
-  LoadGeometry();
-
 }
 
 SettingsDialog::~SettingsDialog() {
-
-  SaveGeometry();
 
   //delete db_connector_;
   delete ui_;
@@ -113,39 +109,17 @@ SettingsDialog::~SettingsDialog() {
 }
 
 void SettingsDialog::showEvent(QShowEvent*) {
-  LoadGeometry();
-  Load();
-}
 
-void SettingsDialog::closeEvent(QCloseEvent*) {
-  SaveGeometry();
-}
-
-void SettingsDialog::LoadGeometry() {
-
-  QSettings s;
-  s.beginGroup(kSettingsGroup);
-  if (s.contains("geometry")) {
-    restoreGeometry(s.value("geometry").toByteArray());
-  }
-  s.endGroup();
-
-  SetPosition();
-
-}
-
-void SettingsDialog::SaveGeometry() {
-
-  QSettings s;
-  s.beginGroup(kSettingsGroup);
-  s.setValue("geometry", saveGeometry());
-  s.endGroup();
-
-}
-
-void SettingsDialog::SetPosition() {
+  setMinimumHeight(0);
+  setMaximumHeight(9000);
   adjustSize();
-  move(QPoint(mainwindow_->pos().x() + (mainwindow_->width() / 2) - (width() / 2), mainwindow_->pos().y() + (mainwindow_->height() / 2) - (height() / 2)));
+  // Set fixed height and workaround bottom spacer taking up to much space.
+  setMinimumHeight(height() - ui_->spacer_bottom->geometry().height() + 15);
+  setMaximumHeight(height() - ui_->spacer_bottom->geometry().height() + 15);
+  adjustSize();
+
+  Load();
+
 }
 
 void SettingsDialog::Clicked(QAbstractButton *button) {
@@ -153,9 +127,10 @@ void SettingsDialog::Clicked(QAbstractButton *button) {
 }
 
 void SettingsDialog::SaveAndClose() {
-  SaveGeometry();
+
   Save();
   QDialog::accept();
+
 }
 
 void SettingsDialog::Load() {

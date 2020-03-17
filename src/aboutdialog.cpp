@@ -24,7 +24,6 @@
 
 #include <QtGlobal>
 #include <QCoreApplication>
-#include <QScreen>
 #include <QWidget>
 #include <QDialog>
 #include <QDialogButtonBox>
@@ -133,23 +132,11 @@ void AboutDialog::showEvent(QShowEvent*) {
 
   setMinimumHeight(0);
   setMaximumHeight(9000);
-
   adjustSize();
-
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 10, 0))
-  QScreen *screen = QGuiApplication::screenAt(pos());
-  if (screen) {
-    const QRect sr = screen->availableGeometry();
-    const QRect wr({}, frameSize().boundedTo(sr.size()));
-    resize(wr.size());
-    move(sr.center() - wr.center());
-  }
-#endif
-
+  // Set fixed height and workaround bottom spacer taking up to much space.
+  setMinimumHeight(height() - ui_.spacer_bottom->geometry().height() + 15);
+  setMaximumHeight(height() - ui_.spacer_bottom->geometry().height() + 15);
   adjustSize();
-
-  setMinimumHeight(height());
-  setMaximumHeight(height());
 
 }
 
