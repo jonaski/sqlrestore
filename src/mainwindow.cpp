@@ -222,7 +222,7 @@ void MainWindow::LoadGeometry() {
   QScreen *screen = QGuiApplication::screenAt(pos());
   if (screen) {
     const QRect sr = screen->availableGeometry();
-    const QRect wr({}, frameSize().boundedTo(sr.size()));
+    const QRect wr({}, size().boundedTo(sr.size()));
     resize(wr.size());
     move(sr.center() - wr.center());
   }
