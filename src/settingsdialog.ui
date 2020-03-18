@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>438</width>
-    <height>479</height>
+    <height>499</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -31,7 +31,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="groupbox_server_settings">
      <property name="title">
       <string>SQL Server</string>
      </property>
