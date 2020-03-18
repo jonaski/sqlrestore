@@ -62,6 +62,7 @@ find_package(Backtrace QUIET)
 if(Backtrace_FOUND)
   set(HAVE_BACKTRACE ON)
 endif()
+find_package(ZLIB REQUIRED)
 
 find_library(MAGIC_LIBRARIES NAMES magic libmagic.dll HINTS /usr/lib /usr/lib64)
 
