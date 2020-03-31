@@ -71,7 +71,6 @@ const char *SettingsDialog::kSettingsGroup = "Settings";
 
 SettingsDialog::SettingsDialog(QWidget *parent)
     : QDialog(parent),
-      mainwindow_(parent),
       ui_(new Ui_SettingsDialog),
       testserver_(new TestServerDialog(this)),
       db_connector_(new DBConnector(this)),

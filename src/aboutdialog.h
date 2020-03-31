@@ -52,7 +52,6 @@ class AboutDialog : public QDialog {
 
  private:
   Ui::AboutDialog ui_;
-  QWidget *mainwindow_;
   std::unique_ptr<QMovie> dopefish_;
 };
 

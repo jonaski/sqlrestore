@@ -66,7 +66,6 @@ class SettingsDialog : public QDialog {
   void SelectLocalPath();
 
  private:
-  QWidget *mainwindow_;
   Ui_SettingsDialog *ui_;
   TestServerDialog *testserver_;
   DBConnector *db_connector_;

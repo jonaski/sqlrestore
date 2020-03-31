@@ -44,7 +44,7 @@
 #include "aboutdialog.h"
 #include "ui_aboutdialog.h"
 
-AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), mainwindow_(parent), dopefish_(new QMovie(":/pictures/dopefish.gif")) {
+AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), dopefish_(new QMovie(":/pictures/dopefish.gif")) {
 
   ui_.setupUi(this);
   setWindowFlags(this->windowFlags()|Qt::WindowStaysOnTopHint);
