@@ -113,8 +113,7 @@ void SettingsDialog::showEvent(QShowEvent*) {
   setMaximumHeight(9000);
   adjustSize();
   // Set fixed height and workaround bottom spacer taking up to much space.
-  setMinimumHeight(height() - ui_->spacer_bottom->geometry().height() + 15);
-  setMaximumHeight(height() - ui_->spacer_bottom->geometry().height() + 15);
+  setFixedHeight(height() - ui_->spacer_bottom->geometry().height() + 15);
   adjustSize();
 
   Load();
