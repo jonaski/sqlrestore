@@ -644,7 +644,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
     if (exists) {
       UpdateRestoreStatus(tr("Setting database \"%1\" to single user.").arg(dbname));
       QSqlQuery query(db);
-      query.prepare("ALTER DATABASE " + dbname + " SET SINGLE_USER WITH ROLLBACK IMMEDIATE");
+      query.prepare(QString("ALTER DATABASE %1 SET SINGLE_USER WITH ROLLBACK IMMEDIATE").arg(dbname));
       if (!query.exec()) {
         r.failure(QStringList() << query.lastError().text() << query.lastQuery());
         return;
@@ -654,7 +654,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
     if (exists) {
       UpdateRestoreStatus(tr("Getting system filenames for database \"%1\".").arg(dbname));
       QSqlQuery query(db);
-      query.prepare("SELECT filename FROM " + dbname + "..sysfiles");
+      query.prepare(QString("SELECT filename FROM %1..sysfiles").arg(dbname));
       if (!query.exec()) {
         r.failure(QStringList() << query.lastError().text() << query.lastQuery());
         return;
@@ -713,7 +713,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         if (i == 0) new_logical_dbname = dbname;
         else new_logical_dbname = dbname + QString("_").repeated(i);
         QSqlQuery query(db);
-        query.prepare("ALTER DATABASE " + dbname + " MODIFY FILE (NAME = " + old_logical_dbname + ", NEWNAME = " +new_logical_dbname +")");
+        query.prepare(QString("ALTER DATABASE %1 MODIFY FILE (NAME = %2, NEWNAME = %3)").arg(dbname).arg(old_logical_dbname).arg(new_logical_dbname));
         if (query.exec()) {
           break;
         }
@@ -726,7 +726,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         if (i == 0) new_logical_logname = logname;
         else new_logical_logname = logname + QString("_").repeated(i);
         QSqlQuery query(db);
-        query.prepare("ALTER DATABASE " + dbname + " MODIFY FILE (NAME = " + old_logical_logname + ", NEWNAME = " + new_logical_logname +")");
+        query.prepare(QString("ALTER DATABASE %1 MODIFY FILE (NAME = %2, NEWNAME = %3)").arg(dbname).arg(old_logical_logname).arg(new_logical_logname));
         if (query.exec()) {
           break;
         }
