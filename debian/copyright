@@ -1,0 +1,78 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: sqlrestore
+Upstream-Contact: Jonas Kvinge <jonas@jkvinge.net>
+Source: https://github.com/jonaski/sqlrestore
+
+Files: src/aboutdialog.cpp
+       src/aboutdialog.h
+       src/aboutdialog.ui
+       src/application.cpp
+       src/application.h
+       src/backupbackend.cpp
+       src/backupbackend.h
+       src/backupresult.h
+       src/bakfilebackend.cpp
+       src/bakfilebackend.h
+       src/bakfilecontainer.ui
+       src/bakfilefilter.cpp
+       src/bakfilefilter.h
+       src/bakfileheader.cpp
+       src/bakfileheader.h
+       src/bakfileitem.cpp
+       src/bakfileitem.h
+       src/bakfilemodel.cpp
+       src/bakfilemodel.h
+       src/bakfileviewcontainer.cpp
+       src/bakfileviewcontainer.h
+       src/bakfileviewcontainer.ui
+       src/bakfileview.cpp
+       src/bakfileview.h
+       src/commandlineoptions.cpp
+       src/commandlineoptions.h
+       src/config.h.in
+       src/dbconnector.cpp
+       src/dbconnector.h
+       src/iconloader.cpp
+       src/iconloader.h
+       src/logging.cpp
+       src/logging.h
+       src/main.cpp
+       src/main.h
+       src/mainwindow.cpp
+       src/mainwindow.h
+       src/mainwindow.ui
+       src/metatypes.cpp
+       src/metatypes.h
+       src/qsearchfield.cpp
+       src/qsearchfield.h
+       src/scopedresult.cpp
+       src/scopedresult.h
+       src/settingsdialog.cpp
+       src/settingsdialog.h
+       src/settingsdialog.ui
+       src/testserverdialog.cpp
+       src/testserverdialog.h
+       src/testserverdialog.ui
+       src/utilities.cpp
+       src/utilities.h
+       src/version.h.in
+Copyright: 2020, Jonas Kvinge <jonas@jkvinge.net>
+License: GPL-3+
+
+License: GPL-3+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ .
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ .
+ On Debian systems, the complete text of the GNU General Public
+ License can be found in the file /usr/share/common-licenses/GPL-3'.
+

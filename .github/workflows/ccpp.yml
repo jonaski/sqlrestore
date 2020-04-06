@@ -19,9 +19,12 @@ jobs:
     - name: Update Packages
       run: sudo apt-get update -y
 
+    - name: Upgrade Packages
+      run: sudo apt-get upgrade -y
+
     - name: Install Packages
       run:
-        sudo apt-get install libboost-dev libquazip5-dev
+        sudo apt-get install libboost-dev libmagic-dev libquazip5-dev
 
     - name: Install Qt
       uses: jurplel/install-qt-action@v2.2.1

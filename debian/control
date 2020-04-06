@@ -1,0 +1,25 @@
+Source: sqlrestore
+Section: sound
+Priority: optional
+Maintainer: Jonas Kvinge <jonas@jkvinge.net>
+Build-Depends: debhelper (>= 11),
+               make,
+               cmake,
+               gcc,
+               libglib2.0-dev,
+               libboost-dev,
+               libmagic-dev,
+               qtbase5-dev,
+               qtbase5-dev-tools,
+               qttools5-dev,
+               libquazip5-dev
+Standards-Version: 4.2.1
+
+Package: sqlrestore
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Homepage: https://github.com/jonaski/sqlrestore
+Description: MSSQL Batch Restore Application
+ SQL Restore is a batch restore program for MSSQL backups written in C++11.
+ .
+ It's using features in modern C++11, Boost and Qt.

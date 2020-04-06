@@ -1,0 +1,19 @@
+ignore:
+  pattern:
+  - README.md
+  - Changelog
+  - COPYING
+  - CMakeLists.txt
+  - Dockerfile
+  - .gitignore
+  - .travis.yml
+  - /debian/
+  - /cmake/
+  - /data/
+  - /dist/
+  - /snap/
+
+  suffixes:
+  - jpg
+  - png
+  - gif

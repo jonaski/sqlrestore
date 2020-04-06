@@ -1,0 +1,19 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@ --buildsystem=cmake -builddirectory=build
+
+override_dh_auto_clean:
+	rm -f dist/macos/Info.plist
+	rm -f dist/macos/create-dmg.sh
+	rm -f dist/pacman/PKGBUILD
+	rm -f dist/rpm/sqlrestore.spec
+	rm -f dist/scripts/maketarball.sh
+	rm -f dist/windows/sqlrestore.nsi
+	rm -f src/translations/translations.pot
+	dh_auto_clean
+
+override_dh_installchangelogs:
+	dh_installchangelogs Changelog
+
+override_dh_auto_test:
