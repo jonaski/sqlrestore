@@ -38,7 +38,6 @@ list(APPEND COMPILE_OPTIONS
   -Wextra
   -Wpedantic
   -Wunused
-  -Wundef
   -Wuninitialized
   -Wredundant-decls
   -Wcast-align
