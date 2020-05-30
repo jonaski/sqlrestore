@@ -22,12 +22,7 @@
 #include <memory>
 #include <magic.h>
 #include <boost/scope_exit.hpp>
-
-#if defined(Q_OS_MACOS)
-#  include <quazip/quazip.h>
-#else
-#  include <quazip5/quazip.h>
-#endif
+#include <quazip.h>
 
 #include <QCoreApplication>
 #include <QStandardPaths>

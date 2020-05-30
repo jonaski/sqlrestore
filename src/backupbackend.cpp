@@ -22,17 +22,10 @@
 #include <memory>
 #include <boost/scope_exit.hpp>
 
-#if defined(Q_OS_MACOS)
-#  include <quazip/quazip.h>
-#  include <quazip/quazipfile.h>
-#  include <quazip/quazipfileinfo.h>
-#  include <quazip/quacrc32.h>
-#else
-#  include <quazip5/quazip.h>
-#  include <quazip5/quazipfile.h>
-#  include <quazip5/quazipfileinfo.h>
-#  include <quazip5/quacrc32.h>
-#endif
+#include <quazip.h>
+#include <quazipfile.h>
+#include <quazipfileinfo.h>
+#include <quacrc32.h>
 
 #include <QObject>
 #include <QCoreApplication>
