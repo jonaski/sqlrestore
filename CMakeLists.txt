@@ -38,7 +38,6 @@ list(APPEND COMPILE_OPTIONS
   -Wextra
   -Wpedantic
   -Wunused
-  -Wshadow
   -Wundef
   -Wuninitialized
   -Wredundant-decls
