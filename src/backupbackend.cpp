@@ -701,10 +701,10 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
     // Rename logical names to reflect new client numbers.
     if (dbname != old_logical_dbname) {
       UpdateRestoreStatus(tr("Setting logical names for database \"%1\".").arg(dbname));
-      for (int i = 0 ; i < 3 ; ++i) {
+      for (int y = 0 ; y < 3 ; ++y) {
         QString new_logical_dbname;
-        if (i == 0) new_logical_dbname = dbname;
-        else new_logical_dbname = dbname + QString("_").repeated(i);
+        if (y == 0) new_logical_dbname = dbname;
+        else new_logical_dbname = dbname + QString("_").repeated(y);
         QSqlQuery query(db);
         query.prepare(QString("ALTER DATABASE %1 MODIFY FILE (NAME = %2, NEWNAME = %3)").arg(dbname).arg(old_logical_dbname).arg(new_logical_dbname));
         if (query.exec()) {
@@ -714,10 +714,10 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
     }
     if (logname != old_logical_logname) {
       UpdateRestoreStatus(tr("Setting logical names for database \"%1\".").arg(dbname));
-      for (int i = 0 ; i < 3 ; ++i) {
+      for (int y = 0 ; y < 3 ; ++y) {
         QString new_logical_logname;
-        if (i == 0) new_logical_logname = logname;
-        else new_logical_logname = logname + QString("_").repeated(i);
+        if (y == 0) new_logical_logname = logname;
+        else new_logical_logname = logname + QString("_").repeated(y);
         QSqlQuery query(db);
         query.prepare(QString("ALTER DATABASE %1 MODIFY FILE (NAME = %2, NEWNAME = %3)").arg(dbname).arg(old_logical_logname).arg(new_logical_logname));
         if (query.exec()) {
