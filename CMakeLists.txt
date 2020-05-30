@@ -61,7 +61,7 @@ if(APPLE)
 endif()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
-  list(APPEND COMPILE_OPTIONS "-Wno-language-extension-token")
+  list(APPEND COMPILE_OPTIONS -Wno-language-extension-token)
 endif()
 
 option(BUILD_WERROR "Build with -Werror" ON)
