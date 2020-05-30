@@ -21,6 +21,7 @@
 #include <QList>
 #include <QStringList>
 
+#include "metatypes.h"
 #include "scopedresult.h"
 #include "bakfileitem.h"
 
