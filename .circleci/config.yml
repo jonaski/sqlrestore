@@ -51,19 +51,20 @@ commands:
     description: Install openSUSE dependencies
     steps:
       - run:
+          name: Update packages
+          command: zypper --non-interactive --gpg-auto-import-keys ref
+      - run:
           name: Install openSUSE dependencies
           command: >
             zypper --non-interactive --gpg-auto-import-keys install
             lsb-release
             rpm-build
-            rpmdevtools
             git
             tar
             make
             cmake
             gcc
             gcc-c++
-            pkg-config
             gettext-tools
             glibc-devel
             libboost_headers-devel
@@ -72,18 +73,19 @@ commands:
             zlib-devel
             glib2-devel
             glib2-tools
+            unixODBC-devel
             libQt5Core-devel
             libQt5Gui-devel
             libQt5Widgets-devel
             libQt5Concurrent-devel
             libQt5Network-devel
             libQt5Sql-devel
-            libQt5DBus-devel
             libQt5Test-devel
-            libqt5-qtx11extras-devel
             libqt5-qtbase-common-devel
             libQt5Sql5-unixODBC
             libqt5-linguist-devel
+            libQt5Core-private-headers-devel
+            libQt5Sql-private-headers-devel
             quazip-qt5-devel
             desktop-file-utils
             update-desktop-files
@@ -94,6 +96,12 @@ commands:
   install_fedora_dependencies:
     description: Install Fedora dependencies
     steps:
+      - run:
+          name: Update packages
+          command: yum update --assumeyes
+      - run:
+          name: Upgrade packages
+          command: yum upgrade --assumeyes
       - run:
           name: Install Fedora dependencies
           command: >
@@ -114,10 +122,11 @@ commands:
             openssh
             boost-devel
             file-devel
-            qt5-devel
+            glib2-devel
+            unixODBC-devel
             qt5-qtbase-devel
-            qt5-qtx11extras-devel
             qt5-qttools-devel
+            qt5-qtbase-private-devel
             quazip-qt5-devel
             desktop-file-utils
             libappstream-glib
@@ -154,6 +163,7 @@ commands:
             notification-daemon
             lib64boost-devel
             file-devel
+            libunixODBC-devel
             lib64qt5core-devel
             lib64qt5gui-devel
             lib64qt5widgets-devel
@@ -193,6 +203,7 @@ commands:
             dpkg-dev
             libboost-dev
             libmagic-dev
+            unixodbc-dev
             qtbase5-dev
             qtbase5-dev-tools
             qtbase5-private-dev
@@ -229,6 +240,7 @@ commands:
             libglib2.0-dev
             libboost-dev
             libmagic-dev
+            unixodbc-dev
             qtbase5-dev
             qtbase5-dev-tools
             qtbase5-private-dev
@@ -254,6 +266,12 @@ jobs:
     environment:
       RPM_BUILD_NCPUS: "2"
     steps:
+      - run:
+          name: Update packages
+          command: zypper --non-interactive --gpg-auto-import-keys ref
+      - run:
+          name: Upgrade packages
+          command: zypper --non-interactive --gpg-auto-import-keys dup
       - install_opensuse_dependencies
       - checkout
       - cmake
@@ -285,9 +303,9 @@ jobs:
       - build_rpm
 
 
-  build_fedora_30:
+  build_fedora_31:
     docker:
-      - image: fedora:30
+      - image: fedora:31
     environment:
       RPM_BUILD_NCPUS: "2"
     steps:
@@ -297,9 +315,21 @@ jobs:
       - build_source
       - build_rpm
 
-  build_fedora_31:
+  build_fedora_32:
     docker:
-      - image: fedora:31
+      - image: fedora:32
+    environment:
+      RPM_BUILD_NCPUS: "2"
+    steps:
+      - install_fedora_dependencies
+      - checkout
+      - cmake
+      - build_source
+      - build_rpm
+
+  build_fedora_33:
+    docker:
+      - image: fedora:33
     environment:
       RPM_BUILD_NCPUS: "2"
     steps:
@@ -322,6 +352,15 @@ jobs:
       - build_source
       - build_rpm
 
+
+  build_debian_stretch:
+    docker:
+      - image: debian:stretch
+    steps:
+      - install_debian_dependencies
+      - checkout
+      - cmake
+      - build_deb
 
   build_debian_buster:
     docker:
@@ -370,6 +409,15 @@ jobs:
       - cmake
       - build_deb
 
+  build_ubuntu_groovy:
+    docker:
+      - image: ubuntu:groovy
+    steps:
+      - install_ubuntu_dependencies
+      - checkout
+      - cmake
+      - build_deb
+
 workflows:
   version: 2
   build_all:
@@ -395,11 +443,15 @@ workflows:
               only: /.*/
 
 
-      - build_fedora_30:
+      - build_fedora_31:
           filters:
             tags:
               only: /.*/
-      - build_fedora_31:
+      - build_fedora_32:
+          filters:
+            tags:
+              only: /.*/
+      - build_fedora_33:
           filters:
             tags:
               only: /.*/
@@ -411,6 +463,10 @@ workflows:
               only: /.*/
 
 
+      - build_debian_stretch:
+          filters:
+            tags:
+              only: /.*/
       - build_debian_buster:
           filters:
             tags:
@@ -430,6 +486,10 @@ workflows:
             tags:
               only: /.*/
       - build_ubuntu_focal:
+          filters:
+            tags:
+              only: /.*/
+      - build_ubuntu_groovy:
           filters:
             tags:
               only: /.*/
