@@ -28,16 +28,48 @@ endif()
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11 -U__STRICT_ANSI__ -Wall -Wextra -Wpedantic -Woverloaded-virtual -fpermissive")
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+list(APPEND COMPILE_OPTIONS
+  $<$<COMPILE_LANGUAGE:C>:--std=c99>
+  $<$<COMPILE_LANGUAGE:CXX>:--std=c++11>
+  -U__STRICT_ANSI__
+  -Wall
+  -Wextra
+  -Wpedantic
+  -Wunused
+  -Wshadow
+  -Wundef
+  -Wuninitialized
+  -Wredundant-decls
+  -Wcast-align
+  -Winit-self
+  -Wmissing-include-dirs
+  -Wmissing-declarations
+  -Wstrict-overflow=2
+  -Wunused-parameter
+  -Wformat=2
+  -Wdisabled-optimization
+  -Wno-sign-conversion
+  $<$<COMPILE_LANGUAGE:CXX>:-Woverloaded-virtual>
+  $<$<COMPILE_LANGUAGE:CXX>:-Wno-old-style-cast>
+  $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>
+)
+
+if(APPLE)
+  list(APPEND COMPILE_OPTIONS -Wno-unused-parameter)
+endif()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-language-extension-token")
+  list(APPEND COMPILE_OPTIONS "-Wno-language-extension-token")
 endif()
 
 option(BUILD_WERROR "Build with -Werror" ON)
 if(BUILD_WERROR)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
 endif(BUILD_WERROR)
+
+add_compile_options(${COMPILE_OPTIONS})
 
 if(${CMAKE_BUILD_TYPE} MATCHES "Release")
   add_definitions(-DNDEBUG)
