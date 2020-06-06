@@ -63,7 +63,7 @@ MXE needs to be in $HOME/mxe-shared
 
 Use the https://github.com/strawberrymusicplayer/strawberry-mxe repository.
 
-    PKG_CONFIG_LIBDIR=$HOME/mxe-shared/usr/x86_64-w64-mingw32.shared/lib/pkgconfig cmake .. -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw32-shared.cmake -DARCH=x86_64
+    PKG_CONFIG_LIBDIR=$HOME/mxe-shared/usr/x86_64-w64-mingw32.shared/lib/pkgconfig cmake .. -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw32-shared.cmake -DARCH=x86_64
     make -j$(nproc)
 
 ### :open_file_folder: Copy dependencies for shared build:
@@ -88,7 +88,7 @@ MXE needs to be in $HOME/mxe-static
 
 Use the https://github.com/jonaski/mxe-qt repository.
 
-    PKG_CONFIG_LIBDIR=$HOME/mxe-static/usr/x86_64-w64-mingw32.static/lib/pkgconfig cmake .. -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw32-static.cmake
+    PKG_CONFIG_LIBDIR=$HOME/mxe-static/usr/x86_64-w64-mingw32.static/lib/pkgconfig cmake .. -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw32-static.cmake
     make -j$(nproc)
 
 ### :penguin: unixODBC with FreeTDS
