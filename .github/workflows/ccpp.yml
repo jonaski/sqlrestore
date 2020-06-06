@@ -770,3 +770,41 @@ jobs:
       #  working-directory: build
       #  shell: bash
       #  run: make dmg
+
+
+  build-windows:
+    name: Build Windows
+    runs-on: ubuntu-latest
+    container:
+      image: jonaski/mxe-qt
+    steps:
+      - uses: actions/checkout@v1.2.0
+
+      - name: Create Build Environment
+        shell: bash
+        run: cmake -E make_directory build
+
+      - name: Link MXE directory
+        shell: bash
+        run: ln -s /usr/src/mxe-qt ~/mxe-static
+
+      - name: Run CMake
+        shell: bash
+        env:
+          PKG_CONFIG_PATH: /usr/src/mxe-qt/usr/x86_64-w64-mingw32.static/lib/pkgconfig
+        working-directory: build
+        run: >
+          cmake ..
+          -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw32-static.cmake
+          -DENABLE_WIN32_CONSOLE=OFF
+          -DUSE_SYSTEM_SINGLEAPPLICATION=OFF
+          -DProtobuf_PROTOC_EXECUTABLE=/usr/src/mxe-qt/usr/x86_64-pc-linux-gnu/bin/protoc
+
+      - name: Run Make
+        working-directory: build
+        run: make -j2
+
+      - name: Strip executables
+        working-directory: build
+        run: /usr/src/mxe-qt/usr/bin/x86_64-w64-mingw32.static-strip *.exe
