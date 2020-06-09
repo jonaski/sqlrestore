@@ -7,8 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>515</width>
-    <height>378</height>
+    <height>382</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
@@ -38,9 +44,9 @@
 }
 </string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="layout_about">
    <property name="sizeConstraint">
-    <enum>QLayout::SetDefaultConstraint</enum>
+    <enum>QLayout::SetMinimumSize</enum>
    </property>
    <item>
     <layout class="QHBoxLayout" name="layout_left">
@@ -80,10 +86,25 @@
      </item>
      <item>
       <layout class="QVBoxLayout" name="layout_right">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetMinimumSize</enum>
+       </property>
        <item>
         <widget class="QLabel" name="headline">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="text">
           <string/>
+         </property>
+         <property name="openExternalLinks">
+          <bool>true</bool>
+         </property>
+         <property name="textInteractionFlags">
+          <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
          </property>
         </widget>
        </item>
@@ -97,7 +118,7 @@
        <item>
         <widget class="QLabel" name="text">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -117,7 +138,7 @@
         </widget>
        </item>
        <item>
-        <widget class="Line" name="line_middle">
+        <widget class="Line" name="line_2">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -125,6 +146,9 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="layout_boost">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetMinimumSize</enum>
+         </property>
          <item>
           <widget class="QLabel" name="label_boost_logo">
            <property name="sizePolicy">
@@ -143,49 +167,12 @@
          </item>
          <item>
           <widget class="QLabel" name="label_boost_text">
-           <property name="text">
-            <string/>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-           </property>
-           <property name="wordWrap">
-            <bool>true</bool>
-           </property>
-           <property name="openExternalLinks">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="Line" name="line_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="layout_qt">
-         <item>
-          <widget class="QLabel" name="label_qt_logo">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap resource="../data/data.qrc">:/pictures/qt.png</pixmap>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_qt_text">
            <property name="text">
             <string/>
            </property>
@@ -210,11 +197,14 @@
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="layout_file">
+        <layout class="QHBoxLayout" name="layout_qt">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetMinimumSize</enum>
+         </property>
          <item>
-          <widget class="QLabel" name="label_darwinsysfile_logo">
+          <widget class="QLabel" name="label_qt_logo">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -223,12 +213,18 @@
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap resource="../data/data.qrc">:/pictures/darwinsysfile.png</pixmap>
+            <pixmap resource="../data/data.qrc">:/pictures/qt.png</pixmap>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="label_darwinsysfile_text">
+          <widget class="QLabel" name="label_qt_text">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="text">
             <string/>
            </property>
@@ -253,9 +249,12 @@
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="layout_zlib">
+        <layout class="QHBoxLayout" name="layout_file">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetMinimumSize</enum>
+         </property>
          <item>
-          <widget class="QLabel" name="label_zlib_logo">
+          <widget class="QLabel" name="label_darwinsysfile_logo">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -266,12 +265,18 @@
             <string/>
            </property>
            <property name="pixmap">
-            <pixmap resource="../data/data.qrc">:/pictures/zlib.png</pixmap>
+            <pixmap resource="../data/data.qrc">:/pictures/darwinsysfile.png</pixmap>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="label_zlib_text">
+          <widget class="QLabel" name="label_darwinsysfile_text">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="text">
             <string/>
            </property>
@@ -296,6 +301,58 @@
         </widget>
        </item>
        <item>
+        <layout class="QHBoxLayout" name="layout_zlib">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetMinimumSize</enum>
+         </property>
+         <item>
+          <widget class="QLabel" name="label_zlib_logo">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="../data/data.qrc">:/pictures/zlib.png</pixmap>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_zlib_text">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+           <property name="openExternalLinks">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="Line" name="line_6">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="spacer_bottom">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -305,8 +362,8 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>0</width>
-           <height>0</height>
+           <width>20</width>
+           <height>2</height>
           </size>
          </property>
         </spacer>

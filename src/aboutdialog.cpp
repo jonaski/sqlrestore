@@ -35,7 +35,6 @@
 #include <QPushButton>
 #include <QKeySequence>
 #include <QMovie>
-#include <QShowEvent>
 #include <QCloseEvent>
 #include <QMouseEvent>
 
@@ -125,17 +124,6 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), dopefish_(new QMovi
 
   connect(ui_.buttonBox, SIGNAL(accepted()), SLOT(Close()));
   connect(ui_.buttonBox, SIGNAL(rejected()), SLOT(Close()));
-
-}
-
-void AboutDialog::showEvent(QShowEvent*) {
-
-  setMinimumHeight(0);
-  setMaximumHeight(9000);
-  adjustSize();
-  // Set fixed height and workaround bottom spacer taking up to much space.
-  setFixedHeight(height() - ui_.spacer_bottom->geometry().height() + 15);
-  adjustSize();
 
 }
 

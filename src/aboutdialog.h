@@ -29,7 +29,6 @@
 
 #include "ui_aboutdialog.h"
 
-class QShowEvent;
 class QCloseEvent;
 class QMouseEvent;
 
@@ -40,7 +39,6 @@ class AboutDialog : public QDialog {
   explicit AboutDialog(QWidget *parent = nullptr);
 
  protected:
-  void showEvent(QShowEvent*);
   void closeEvent(QCloseEvent*);
   void mouseDoubleClickEvent(QMouseEvent *e);
 
