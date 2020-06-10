@@ -58,6 +58,11 @@ jobs:
         working-directory: build
         run: ../dist/scripts/maketarball.sh
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: release-windows
+          path: build/*.xz
+
 
   build_opensuse_lp151:
     name: Build openSUSE Leap 15.1
@@ -122,6 +127,11 @@ jobs:
         working-directory: build
         run: rpmbuild -ba ../dist/unix/sqlrestore.spec
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: release-opensuse-lp151
+          path: /usr/src/packages/RPMS/*/*.rpm
+
 
   build_opensuse_lp152:
     name: Build openSUSE Leap 15.2
@@ -185,6 +195,11 @@ jobs:
       - name: Build RPM
         working-directory: build
         run: rpmbuild -ba ../dist/unix/sqlrestore.spec
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: release-opensuse-lp152
+          path: /usr/src/packages/RPMS/*/*.rpm
 
 
   build_opensuse_tumbleweed:
@@ -319,6 +334,11 @@ jobs:
         working-directory: build
         run: rpmbuild -ba ../dist/unix/sqlrestore.spec
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: release-fedora-32
+          path: ~/rpmbuild/RPMS/*/*.rpm
+
 
   build_fedora_33:
     name: Build Fedora 33
@@ -383,6 +403,11 @@ jobs:
       - name: Build RPM
         working-directory: build
         run: rpmbuild -ba ../dist/unix/sqlrestore.spec
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: release-fedora-33
+          path: ~/rpmbuild/RPMS/*/*.rpm
 
 
   build_mageia_7:
@@ -455,6 +480,11 @@ jobs:
         working-directory: build
         run: rpmbuild -ba ../dist/unix/sqlrestore.spec
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: release-mageia-7
+          path: ~/rpmbuild/RPMS/*/*.rpm
+
 
   build_debian_buster:
     name: Build Debian Buster
@@ -497,6 +527,14 @@ jobs:
       - name: make deb
         shell: bash
         run: dpkg-buildpackage -b -d -uc -us -nc -j2
+      - name: move deb
+        shell: bash
+        run: mv ../*.deb ${GITHUB_WORKSPACE}/build/
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: release-debian-buster
+          path: build/*.deb
 
 
   build_debian_bullseye:
@@ -540,6 +578,14 @@ jobs:
       - name: make deb
         shell: bash
         run: dpkg-buildpackage -b -d -uc -us -nc -j2
+      - name: move deb
+        shell: bash
+        run: mv ../*.deb ${GITHUB_WORKSPACE}/build/
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: release-debian-bullseye
+          path: build/*.deb
 
 
   build_ubuntu_bionic:
@@ -587,6 +633,14 @@ jobs:
       - name: make deb
         shell: bash
         run: dpkg-buildpackage -b -d -uc -us -nc -j2
+      - name: move deb
+        shell: bash
+        run: mv ../*.deb ${GITHUB_WORKSPACE}/build/
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: release-ubuntu-bionic
+          path: build/*.deb
 
 
   build_ubuntu_eoan:
@@ -634,6 +688,14 @@ jobs:
       - name: make deb
         shell: bash
         run: dpkg-buildpackage -b -d -uc -us -nc -j2
+      - name: move deb
+        shell: bash
+        run: mv ../*.deb ${GITHUB_WORKSPACE}/build/
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: release-ubuntu-eoan
+          path: build/*.deb
 
 
   build_ubuntu_focal:
@@ -681,6 +743,14 @@ jobs:
       - name: make deb
         shell: bash
         run: dpkg-buildpackage -b -d -uc -us -nc -j2
+      - name: move deb
+        shell: bash
+        run: mv ../*.deb ${GITHUB_WORKSPACE}/build/
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: release-ubuntu-focal
+          path: build/*.deb
 
 
   build_ubuntu_groovy:
@@ -728,6 +798,14 @@ jobs:
       - name: make deb
         shell: bash
         run: dpkg-buildpackage -b -d -uc -us -nc -j2
+      - name: move deb
+        shell: bash
+        run: mv ../*.deb ${GITHUB_WORKSPACE}/build/
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: release-ubuntu-groovy
+          path: build/*.deb
 
 
   build-macos:
@@ -798,8 +876,8 @@ jobs:
           -DCMAKE_BUILD_TYPE=Release
           -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw32-static.cmake
           -DENABLE_WIN32_CONSOLE=OFF
-          -DUSE_SYSTEM_SINGLEAPPLICATION=OFF
-          -DProtobuf_PROTOC_EXECUTABLE=/usr/src/mxe-qt/usr/x86_64-pc-linux-gnu/bin/protoc
+          -DQUAZIP_LIBRARIES=/usr/src/mxe-qt/usr/x86_64-w64-mingw32.static/lib/libQt5Quazip.a
+          -DQUAZIP_INCLUDE_DIRS=/usr/src/mxe-qt/usr/x86_64-w64-mingw32.static/include/Qt5Quazip
 
       - name: Run Make
         working-directory: build
@@ -808,3 +886,46 @@ jobs:
       - name: Strip executables
         working-directory: build
         run: /usr/src/mxe-qt/usr/bin/x86_64-w64-mingw32.static-strip *.exe
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: release-windows
+          path: build/*.exe
+
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/release'
+    needs:
+      - build_source
+      - build_opensuse_lp151
+      - build_opensuse_lp152
+      - build_fedora_32
+      - build_fedora_33
+      - build_mageia_7
+      - build_debian_buster
+      - build_debian_bullseye
+      - build_ubuntu_bionic
+      - build_ubuntu_eoan
+      - build_ubuntu_focal
+      - build_ubuntu_groovy
+      - build-windows
+      - build-macos
+    steps:
+      - uses: actions/checkout@v1.2.0
+      - uses: actions/download-artifact@v2
+        with:
+          path: release_artifacts
+      - name: Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -x
+          version=$(git describe --tags --always)
+          assets=()
+          for asset in $(find release_artifacts -type f); do
+            echo "Adding asset: ${asset}"
+            assets+=("-a" "$asset")
+          done
+          hub release create "${assets[@]}" -m "SQL Restore $version" -t "$GITHUB_SHA" "$version"
