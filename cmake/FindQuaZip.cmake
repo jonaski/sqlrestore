@@ -4,22 +4,19 @@ find_package(PkgConfig QUIET)
 
 pkg_check_modules(QUAZIP QUIET quazip5)
 if (NOT QUAZIP_FOUND)
-  pkg_check_modules(QUAZIP QUIET libQt5Quazip)
+  pkg_check_modules(QUAZIP QUIET quazip)
 endif(NOT QUAZIP_FOUND)
 
 if(QUAZIP_LIBRARIES MATCHES "quazip5;Qt5Core")
   set(QUAZIP_LIBRARIES "quazip5")
 endif()
 
+if(QUAZIP_LIBRARIES MATCHES "Qt5Quazip;Qt5Core")
+  set(QUAZIP_LIBRARIES "Qt5Quazip")
+endif()
+
 if(NOT QUAZIP_LIBRARIES)
-  if(APPLE)
-    set(QUAZIPLIB "quazip")
-  elseif(WIN32)
-    set(QUAZIPLIB "Qt5Quazip")
-  else()
-    set(QUAZIPLIB "quazip5")
-  endif()
-  find_library(QUAZIP_LIBRARY NAMES ${QUAZIPLIB} libquazip5.a libquazip.a quazip5.dll libQt5Quazip.dll quazip.dll HINTS /usr/lib /usr/local/lib /usr/lib64 /usr/local/lib64 /usr/lib/x86_64-linux-gnu)
+  find_library(QUAZIP_LIBRARY NAMES libQt5Quazip.dll libQt5Quazip.a Qt5Quazip quazip5 quazip HINTS /usr/lib64 /usr/local/lib64 /usr/lib /usr/local/lib /usr/lib/x86_64-linux-gnu)
   set(QUAZIP_LIBRARIES ${QUAZIP_LIBRARY})
 endif(NOT QUAZIP_LIBRARIES)
 
