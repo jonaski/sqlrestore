@@ -10,6 +10,8 @@ jobs:
       image: opensuse/leap:15.1
     steps:
       - uses: actions/checkout@v1.2.0
+      - name: Update packages
+        run: zypper --non-interactive --gpg-auto-import-keys ref
       - name: Install openSUSE dependencies
         run: >
             zypper --non-interactive --gpg-auto-import-keys install
@@ -71,6 +73,8 @@ jobs:
       image: opensuse/leap:15.1
     steps:
       - uses: actions/checkout@v1.2.0
+      - name: Update packages
+        run: zypper --non-interactive --gpg-auto-import-keys ref
       - name: Install openSUSE dependencies
         run: >
             zypper --non-interactive --gpg-auto-import-keys install
@@ -140,6 +144,8 @@ jobs:
       image: opensuse/leap:15.2
     steps:
       - uses: actions/checkout@v1.2.0
+      - name: Update packages
+        run: zypper --non-interactive --gpg-auto-import-keys ref
       - name: Install openSUSE dependencies
         run: >
             zypper --non-interactive --gpg-auto-import-keys install
