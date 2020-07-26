@@ -22,7 +22,6 @@
 #include <QApplication>
 #include <QList>
 #include <QString>
-#include <QRegExp>
 #include <QTimer>
 #include <QFrame>
 #include <QEvent>
@@ -67,7 +66,12 @@ void BakFileViewContainer::Init(BakFileModel *model, BakFileFilter *proxy) {
   proxy_ = proxy;
   proxy_->setFilterKeyColumns(QList<qint32>() << BakFileModel::Column_Filename << BakFileModel::Column_FileType);
   proxy_->sort(BakFileModel::Column_Modified, Qt::AscendingOrder);
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+  ui_->filter->setText(proxy_->filterRegularExpression().pattern());
+#else
   ui_->filter->setText(proxy_->filterRegExp().pattern());
+#endif
 
 }
 
