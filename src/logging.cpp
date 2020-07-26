@@ -18,9 +18,9 @@
 
 #include "config.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <memory>
 #include <cxxabi.h>
@@ -35,7 +35,8 @@
 #include <QMap>
 #include <QString>
 #include <QStringList>
-#include <QRegExp>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
 #include <QDateTime>
 #include <QIODevice>
 #include <QBuffer>
@@ -88,7 +89,7 @@ template <class T>
 class DebugBase : public QDebug {
  public:
   DebugBase() : QDebug(sNullDevice) {}
-  DebugBase(QtMsgType t) : QDebug(t) {}
+  explicit DebugBase(QtMsgType t) : QDebug(t) {}
   T& space() { return static_cast<T&>(QDebug::space()); }
   T& noSpace() { return static_cast<T&>(QDebug::nospace()); }
 };
@@ -96,8 +97,8 @@ class DebugBase : public QDebug {
 // Debug message will be stored in a buffer.
 class BufferedDebug : public DebugBase<BufferedDebug> {
  public:
-  BufferedDebug() : DebugBase() {}
-  BufferedDebug(QtMsgType) : DebugBase(), buf_(new QBuffer, later_deleter) {
+  BufferedDebug() {}
+  explicit BufferedDebug(QtMsgType) : buf_(new QBuffer, later_deleter) {
     buf_->open(QIODevice::WriteOnly);
 
     // QDebug doesn't have a method to set a new io device, but swap() allows the devices to be swapped between two instances.
@@ -115,8 +116,8 @@ class BufferedDebug : public DebugBase<BufferedDebug> {
 // Debug message will be logged immediately.
 class LoggedDebug : public DebugBase<LoggedDebug> {
  public:
-  LoggedDebug() : DebugBase() {}
-  LoggedDebug(QtMsgType t) : DebugBase(t) { nospace() << kMessageHandlerMagic; }
+  LoggedDebug() {}
+  explicit LoggedDebug(QtMsgType t) : DebugBase(t) { nospace() << kMessageHandlerMagic; }
 };
 
 static void MessageHandler(QtMsgType type, const QMessageLogContext&, const QString &message) {
@@ -195,10 +196,10 @@ void SetLevels(const QString &levels) {
     }
 
     if (class_name.isEmpty() || class_name == "*") {
-      sDefaultLevel = (Level) level;
+      sDefaultLevel = static_cast<Level>(level);
     }
     else {
-      sClassLevels->insert(class_name, (Level) level);
+      sClassLevels->insert(class_name, static_cast<Level>(level));
     }
   }
 
@@ -305,11 +306,12 @@ QString LinuxDemangle(const QString &symbol);
 
 QString LinuxDemangle(const QString &symbol) {
 
-  QRegExp regex("\\(([^+]+)");
-  if (!symbol.contains(regex)) {
+  QRegularExpression regex("\\(([^+]+)");
+  QRegularExpressionMatch match = regex.match(symbol);
+  if (!match.hasMatch()) {
     return symbol;
   }
-  QString mangled_function = regex.cap(1);
+  QString mangled_function = match.captured(1);
   return CXXDemangle(mangled_function);
 
 }
