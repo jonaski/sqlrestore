@@ -35,7 +35,7 @@
 #include <QVariant>
 #include <QByteArray>
 #include <QString>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QChar>
 #include <QIODevice>
 #include <QDir>
@@ -655,11 +655,11 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
       while (query.next()) {
         QString s = query.value(0).toString();
         QString *p = nullptr;
-        if (s.toLower().contains(QRegExp(".*\\.mdf"))) {
+        if (s.toLower().contains(QRegularExpression(".*\\.mdf"))) {
           db_datapath = s;
           p = &db_datapath;
         }
-        else if (s.toLower().contains(QRegExp(".*\\.ldf"))) {
+        else if (s.toLower().contains(QRegularExpression(".*\\.ldf"))) {
           db_logpath = s;
           p = &db_logpath;
         }

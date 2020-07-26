@@ -23,12 +23,12 @@
 #include <QtGlobal>
 #include <QString>
 #include <QStringList>
-#include <QRegExp>
+#include <QRegularExpression>
 
 namespace Utilities {
 
-static const QRegExp kValidFatCharacters("[^a-zA-Z0-9!#\\$%&'()\\-@\\^_`{}~/. ]");
-static const QRegExp kInvalidFatCharacters("[\"*\\:<>?|/.]");
+static const QRegularExpression kValidFatCharacters("[^a-zA-Z0-9!#\\$%&'()\\-@\\^_`{}~/. ]");
+static const QRegularExpression kInvalidFatCharacters("[\"*\\:<>?|/.]");
 
 QString GetEnv(const QString &key);
 void SetEnv(const char *key, const QString &value);

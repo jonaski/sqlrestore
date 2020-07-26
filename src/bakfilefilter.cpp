@@ -22,7 +22,6 @@
 #include <QList>
 #include <QVariant>
 #include <QString>
-#include <QRegExp>
 
 #include "bakfilefilter.h"
 
@@ -46,7 +45,11 @@ void BakFileFilter::setFilterKeyColumns(const QList<qint32> &filter_columns) {
  
 bool BakFileFilter::filterAcceptsRow(const int source_row, const QModelIndex &source_parent) const {
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+  QString filter = filterRegularExpression().pattern();
+#else
   QString filter = filterRegExp().pattern().toLower();
+#endif
   if (filter_columns_.isEmpty() || filter.isEmpty()) return true;
 
   bool ret = false;

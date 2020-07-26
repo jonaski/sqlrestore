@@ -33,7 +33,7 @@
 #include <QString>
 #include <QStringList>
 #include <QChar>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QIODevice>
 #include <QFileInfo>
 #include <QDir>
@@ -295,7 +295,7 @@ void BakFileBackend::Scan() {
     ++progress;
 
     // Skip any temp file.
-    if (filename.toLower().contains(QRegExp(".*\\.tmp$")) || filename.toLower().contains(QRegExp("^\\..*"))) {
+    if (filename.toLower().contains(QRegularExpression(".*\\.tmp$")) || filename.toLower().contains(QRegularExpression("^\\..*"))) {
       qLog(Error) << "Skipping temp file" << filename;
       emit LoadProgress((int)((float)progress / (float)dir_files.count() * 100.0));
       continue;
@@ -390,16 +390,16 @@ BakFileItem *BakFileBackend::ScanFile(const QString &filename) {
   bool magic_check = false;
   bool compressed = false;
   if (mime_data.isEmpty()) {
-    if (!filename.toLower().contains(QRegExp(".*\\.bak")) && !filename.toLower().contains(QRegExp(".*\\.ubk$")) && !filename.toLower().contains(QRegExp(".*\\.zip$"))) {
+    if (!filename.toLower().contains(QRegularExpression(".*\\.bak")) && !filename.toLower().contains(QRegularExpression(".*\\.ubk$")) && !filename.toLower().contains(QRegularExpression(".*\\.zip$"))) {
       return nullptr;
     }
   }
   else {
     magic_check = true;
-    if (mime_data.contains(QRegExp("^Windows NTbackup archive NT.*: Microsoft SQL Server$"))) {
+    if (mime_data.contains(QRegularExpression("^Windows NTbackup archive NT.*: Microsoft SQL Server$"))) {
       compressed = false;
     }
-    else if (mime_data.contains(QRegExp("^Zip archive data.*$"))) {
+    else if (mime_data.contains(QRegularExpression("^Zip archive data.*$"))) {
       compressed = true;
     }
     else {
