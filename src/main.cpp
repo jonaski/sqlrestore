@@ -22,7 +22,7 @@
 
 #include <QtGlobal>
 
-#include <assert.h>
+#include <cassert>
 
 #ifdef GLIB_FOUND
 #  include <glib.h>

@@ -17,7 +17,7 @@
 
  */
 
-#include <string.h>
+#include <string>
 
 #include <QFile>
 #include <QList>
