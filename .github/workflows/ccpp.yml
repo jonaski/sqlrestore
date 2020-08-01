@@ -838,7 +838,6 @@ jobs:
       - build_opensuse_lp151
       - build_opensuse_lp152
       - build_fedora_32
-      - build_fedora_33
       - build_mageia_7
       - build_debian_buster
       - build_debian_bullseye
