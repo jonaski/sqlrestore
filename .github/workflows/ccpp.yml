@@ -863,4 +863,4 @@ jobs:
             echo "Adding asset: ${asset}"
             assets+=("-a" "$asset")
           done
-          hub release create -p "${assets[@]}" -m "SQL Restore $version" -t "$GITHUB_SHA" "$version"
+          #hub release create -p "${assets[@]}" -m "SQL Restore $version" -t "$GITHUB_SHA" "$version"
