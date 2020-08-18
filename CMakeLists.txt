@@ -103,9 +103,25 @@ if(GLIB_FOUND)
 endif()
 
 # QT
-set(QT_MIN_VERSION 5.9)
-find_package(Qt5 ${QT_MIN_VERSION} REQUIRED COMPONENTS Core Widgets Network Sql Concurrent)
-set(QT_LIBRARIES Qt5::Core Qt5::Widgets Qt5::Network Qt5::Sql Qt5::Concurrent)
+
+option(BUILD_WITH_QT5 "Build with Qt 5")
+option(BUILD_WITH_QT6 "Build with Qt 6")
+
+if (NOT BUILD_WITH_QT5 AND NOT BUILD_WITH_QT6)
+ set(BUILD_WITH_QT5 ON)
+endif()
+
+set(QT_COMPONENTS Core Widgets Network Sql Concurrent)
+if(BUILD_WITH_QT6)
+  find_package(Qt6 REQUIRED COMPONENTS ${QT_COMPONENTS})
+  set(QT_LIBRARIES Qt6::Core Qt6::Widgets Qt6::Network Qt6::Sql Qt6::Concurrent)
+elseif(BUILD_WITH_QT5)
+  set(QT_MIN_VERSION 5.9)
+  find_package(Qt5 ${QT_MIN_VERSION} REQUIRED COMPONENTS ${QT_COMPONENTS})
+  set(QT_LIBRARIES Qt5::Core Qt5::Widgets Qt5::Network Qt5::Sql Qt5::Concurrent)
+else()
+  message(FATAL_ERROR "You need to set either BUILD_WITH_QT5 or BUILD_WITH_QT6.")
+endif()
 
 # QUAZIP
 find_package(QuaZip REQUIRED)
