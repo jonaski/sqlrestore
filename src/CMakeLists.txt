@@ -67,9 +67,15 @@ option(USE_INSTALL_PREFIX "Look for data in CMAKE_INSTALL_PREFIX" ON)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/version.h)
 
-qt5_wrap_cpp(MOC ${HEADERS})
-qt5_wrap_ui(UIC ${UI})
-qt5_add_resources(QRC ${RESOURCES})
+if(Qt6Core_FOUND)
+  qt6_wrap_cpp(MOC ${HEADERS})
+  qt6_wrap_ui(UIC ${UI})
+  qt6_add_resources(QRC ${RESOURCES})
+else()
+  qt5_wrap_cpp(MOC ${HEADERS})
+  qt5_wrap_ui(UIC ${UI})
+  qt5_add_resources(QRC ${RESOURCES})
+endif()
 
 add_library(sqlrestore_lib STATIC
   ${SOURCES}
@@ -84,9 +90,11 @@ add_library(sqlrestore_lib STATIC
 target_link_libraries(sqlrestore_lib
   ${CMAKE_THREAD_LIBS_INIT}
   ${GLIB_LIBRARIES}
+  ${ZLIB_LIBRARIES}
   ${MAGIC_LIBRARIES}
   ${QT_LIBRARIES}
   ${QUAZIP_LIBRARIES}
+  z
 )
 
 if (UNIX AND _Qt5Core_PRIVATE_DIRS_EXIST AND _Qt5Sql_PRIVATE_DIRS_EXIST AND Qt5Sql_VERSION VERSION_GREATER_EQUAL 5.14.1 AND NOT APPLE)
