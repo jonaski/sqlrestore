@@ -38,7 +38,13 @@ int DBConnector::sNextConnectionID = 1;
 QMutex DBConnector::sNextConnectionIDMutex;
 int DBConnector::sDefaultLoginTimeout = 5;
 
-DBConnector::DBConnector(QObject *parent) : QObject(parent), mutex_(QMutex::Recursive), trusted_connection_(false), login_timeout_(sDefaultLoginTimeout) {
+DBConnector::DBConnector(QObject *parent) :
+  QObject(parent),
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
+  mutex_(QMutex::Recursive),
+#endif
+  trusted_connection_(false),
+  login_timeout_(sDefaultLoginTimeout) {
 
   {
     QMutexLocker l(&sNextConnectionIDMutex);

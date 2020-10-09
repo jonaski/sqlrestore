@@ -22,6 +22,9 @@
 
 #include <QObject>
 #include <QMutex>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+#  include <QRecursiveMutex>
+#endif
 #include <QSqlDatabase>
 #include <QString>
 
@@ -37,7 +40,11 @@ class DBConnector : public QObject {
   static int sDefaultLoginTimeout;
 
   void ReloadSettings();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+  QRecursiveMutex *Mutex() { return &mutex_; }
+#else
   QMutex *Mutex() { return &mutex_; }
+#endif
   void ConnectAsync();
   void ConnectAsync(const QString &driver, const QString &odbc_driver, const QString &server, const bool trusted_connection, const QString &username, const QString &password, const int login_timeout = 0, const bool test = false);
   void CloseAsync();
@@ -59,7 +66,11 @@ class DBConnector : public QObject {
   static int sNextConnectionID;
 
   QMutex connect_mutex_;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+  QRecursiveMutex mutex_;
+#else
   QMutex mutex_;
+#endif
   int connection_id_;
   QString driver_;
   QString odbc_driver_;
