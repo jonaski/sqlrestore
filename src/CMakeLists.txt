@@ -89,7 +89,7 @@ target_include_directories(sqlrestore_lib PUBLIC
   ${QUAZIP_INCLUDE_DIRS}
 )
 
-target_link_directories(sqlrestore_lib PUBLIC
+link_directories(
   ${GLIB_LIBRARY_DIRS}
   ${QUAZIP_LIBRARY_DIRS}
 )
