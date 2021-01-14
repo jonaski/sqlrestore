@@ -25,10 +25,6 @@ if (NOT QUAZIP_FOUND)
   endif()
 endif(NOT QUAZIP_FOUND)
 
-if (NOT QUAZIP_FOUND)
-  pkg_check_modules(QUAZIP QUIET quazip)
-endif()
-
 if(QUAZIP_LIBRARIES MATCHES "quazip5;Qt5Core")
   set(QUAZIP_LIBRARIES "quazip5")
 endif()
