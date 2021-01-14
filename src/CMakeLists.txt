@@ -1,14 +1,5 @@
 # SQL Restore - Copyright 2019, Jonas Kvinge <jonas@jkvinge.net>
 
-include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
-
-include_directories(${CMAKE_BINARY_DIR})
-include_directories(${GLIB_INCLUDE_DIRS})
-include_directories(${GLIBCONFIG_INCLUDE_DIRS})
-link_directories(${GLIB_LIBRARY_DIRS})
-include_directories(${Boost_INCLUDE_DIRS})
-include_directories(${QUAZIP_INCLUDE_DIRS})
-
 set(SOURCES
   mainwindow.cpp
   application.cpp
@@ -87,7 +78,23 @@ add_library(sqlrestore_lib STATIC
   ${OTHER_UIC_SOURCES}
 )
 
-target_link_libraries(sqlrestore_lib
+target_include_directories(sqlrestore_lib PUBLIC
+  ${CMAKE_SOURCE_DIR}
+  ${CMAKE_BINARY_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${GLIB_INCLUDE_DIRS}
+  ${GLIBCONFIG_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIRS}
+  ${QUAZIP_INCLUDE_DIRS}
+)
+
+target_link_directories(sqlrestore_lib PUBLIC
+  ${GLIB_LIBRARY_DIRS}
+  ${QUAZIP_LIBRARY_DIRS}
+)
+
+target_link_libraries(sqlrestore_lib PUBLIC
   ${CMAKE_THREAD_LIBS_INIT}
   ${GLIB_LIBRARIES}
   ${ZLIB_LIBRARIES}
@@ -98,11 +105,11 @@ target_link_libraries(sqlrestore_lib
 )
 
 if (UNIX AND _Qt5Core_PRIVATE_DIRS_EXIST AND _Qt5Sql_PRIVATE_DIRS_EXIST AND Qt5Sql_VERSION VERSION_GREATER_EQUAL 5.14.1 AND NOT APPLE)
-  target_link_libraries(sqlrestore_lib qsqlodbc)
+  target_link_libraries(sqlrestore_lib PRIVATE qsqlodbc)
 endif()
 
 if (WIN32)
-  target_link_libraries(sqlrestore_lib odbccp32 regex shlwapi)
+  target_link_libraries(sqlrestore_lib PRIVATE odbccp32 regex shlwapi)
 endif()
 
 
@@ -120,6 +127,6 @@ if(WIN32)
 endif(WIN32)
 
 add_executable(sqlrestore ${SQLRESTORE-WIN32-FLAG} ${SQLRESTORE-WIN32-RESOURCES} main.cpp)
-target_link_libraries(sqlrestore sqlrestore_lib)
+target_link_libraries(sqlrestore PRIVATE sqlrestore_lib)
 install(TARGETS sqlrestore RUNTIME DESTINATION bin)
 

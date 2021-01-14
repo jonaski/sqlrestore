@@ -15,24 +15,14 @@ include(cmake/Version.cmake)
 include(cmake/Rpm.cmake)
 include(cmake/Deb.cmake)
 
-if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
-  set(LINUX ON)
-endif()
-if (${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
-  set(FREEBSD ON)
-endif()
-if (${CMAKE_SYSTEM_NAME} STREQUAL "OpenBSD")
-  set(OPENBSD ON)
-endif()
-
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 list(APPEND COMPILE_OPTIONS
-  $<$<COMPILE_LANGUAGE:C>:--std=c99>
-  $<$<COMPILE_LANGUAGE:CXX>:--std=c++11>
+  $<$<COMPILE_LANGUAGE:C>:-std=c99>
+  $<$<COMPILE_LANGUAGE:CXX>:-std=c++17>
   -U__STRICT_ANSI__
   -Wall
   -Wextra
@@ -111,17 +101,29 @@ if (NOT BUILD_WITH_QT5 AND NOT BUILD_WITH_QT6)
  set(BUILD_WITH_QT5 ON)
 endif()
 
-set(QT_COMPONENTS Core Widgets Network Sql Concurrent)
-if(BUILD_WITH_QT6)
-  find_package(Qt6 REQUIRED COMPONENTS ${QT_COMPONENTS})
-  set(QT_LIBRARIES Qt6::Core Qt6::Widgets Qt6::Network Qt6::Sql Qt6::Concurrent)
-elseif(BUILD_WITH_QT5)
-  set(QT_MIN_VERSION 5.9)
-  find_package(Qt5 ${QT_MIN_VERSION} REQUIRED COMPONENTS ${QT_COMPONENTS})
-  set(QT_LIBRARIES Qt5::Core Qt5::Widgets Qt5::Network Qt5::Sql Qt5::Concurrent)
+if(BUILD_WITH_QT5)
+  set(QT_MAJOR_VERSION 5)
+elseif(BUILD_WITH_QT6)
+  set(QT_MAJOR_VERSION 6)
 else()
   message(FATAL_ERROR "You need to set either BUILD_WITH_QT5 or BUILD_WITH_QT6.")
 endif()
+
+set(QT_COMPONENTS Core Concurrent Widgets Network Sql)
+
+if(QT_MAJOR_VERSION EQUAL 5)
+  set(QT_MIN_VERSION 5.9)
+endif()
+
+find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} REQUIRED COMPONENTS ${QT_COMPONENTS})
+
+set(QtCore_LIBRARIES Qt${QT_MAJOR_VERSION}::Core)
+set(QtConcurrent_LIBRARIES Qt${QT_MAJOR_VERSION}::Concurrent)
+set(QtGui_LIBRARIES Qt${QT_MAJOR_VERSION}::Gui)
+set(QtWidgets_LIBRARIES Qt${QT_MAJOR_VERSION}::Widgets)
+set(QtNetwork_LIBRARIES Qt${QT_MAJOR_VERSION}::Network)
+set(QtSql_LIBRARIES Qt${QT_MAJOR_VERSION}::Sql)
+set(QT_LIBRARIES Qt${QT_MAJOR_VERSION}::Core Qt${QT_MAJOR_VERSION}::Concurrent Qt${QT_MAJOR_VERSION}::Gui Qt${QT_MAJOR_VERSION}::Widgets Qt${QT_MAJOR_VERSION}::Network Qt${QT_MAJOR_VERSION}::Sql)
 
 # QUAZIP
 find_package(QuaZip REQUIRED)
