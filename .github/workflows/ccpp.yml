@@ -759,8 +759,6 @@ jobs:
           -DCMAKE_BUILD_TYPE=Release
           -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain-mingw32-static.cmake
           -DENABLE_WIN32_CONSOLE=OFF
-          -DQUAZIP_LIBRARIES=/usr/src/mxe-qt/usr/x86_64-w64-mingw32.static/lib/libQt5Quazip.a
-          -DQUAZIP_INCLUDE_DIRS=/usr/src/mxe-qt/usr/x86_64-w64-mingw32.static/include/Qt5Quazip
 
       - name: Run Make
         working-directory: build
