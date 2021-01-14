@@ -18,4 +18,9 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR} ${CM
 
 add_library(qsqlodbc STATIC ${QODBC-SOURCES} ${QODBC-SOURCES-MOC})
 set_property(TARGET qsqlodbc PROPERTY QT_STATICPLUGIN 1)
-target_link_libraries(qsqlodbc odbc Qt5::Core Qt5::Sql)
+
+if(Qt6Core_FOUND)
+  target_link_libraries(qsqlodbc odbc Qt6::Core Qt6::Sql)
+else()
+  target_link_libraries(qsqlodbc odbc Qt5::Core Qt5::Sql)
+endif()
