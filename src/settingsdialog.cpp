@@ -17,8 +17,6 @@
 
  */
 
-#include <functional>
-
 #include <boost/scope_exit.hpp>
 
 #include <QtGlobal>
@@ -266,8 +264,11 @@ void SettingsDialog::TestServer() {
 
   test_in_progress_ = true;
   testserver_->Start(ui_->odbc_drivers->currentText(), ui_->server->text());
-
-  QFuture<DBConnectResult> future = QtConcurrent::run(std::bind(&SettingsDialog::Connect, this));
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+  QFuture<DBConnectResult> future = QtConcurrent::run(&SettingsDialog::Connect, this);
+#else
+  QFuture<DBConnectResult> future = QtConcurrent::run(this, &SettingsDialog::Connect);
+#endif
   QFutureWatcher<DBConnectResult> *watcher = new QFutureWatcher<DBConnectResult>(this);
   watcher->setFuture(future);
   connect(watcher, SIGNAL(finished()), SLOT(ConnectFinished()));
