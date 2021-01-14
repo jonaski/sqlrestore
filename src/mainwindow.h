@@ -64,7 +64,7 @@ class MainWindow : public QMainWindow {
   void DisableFileLoading();
 
  protected:
-  void closeEvent(QCloseEvent *e);
+  void closeEvent(QCloseEvent *e) override;
 
  private slots:
   void CommandlineOptionsReceived(const quint32 instance_id, const QByteArray &string_options);

@@ -47,8 +47,8 @@ class BakFileHeader : public QHeaderView {
 
  protected:
   // QWidget
-  void mouseMoveEvent(QMouseEvent* e);
-  void resizeEvent(QResizeEvent* event);
+  void mouseMoveEvent(QMouseEvent *e) override;
+  void resizeEvent(QResizeEvent *e) override;
 
  private slots:
   void SectionResized(const int logical, const int old_size, const int new_size);

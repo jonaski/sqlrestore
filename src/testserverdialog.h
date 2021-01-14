@@ -38,6 +38,7 @@ class TestServerDialog : public QDialog {
  public:
   explicit TestServerDialog(QWidget *parent = nullptr);
   ~TestServerDialog();
+
   void setText(const QString &text) { ui_->text->setText(text); }
   void Start(const QString &odbc_driver, const QString &server);
   void Stop();
@@ -45,7 +46,7 @@ class TestServerDialog : public QDialog {
   void Success();
 
  protected:
-  void closeEvent(QCloseEvent*);
+  void closeEvent(QCloseEvent*) override;
 
  private:
   Ui_TestServerDialog *ui_;

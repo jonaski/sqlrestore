@@ -32,11 +32,11 @@ class BakFileFilter : public QSortFilterProxyModel {
  public:
   explicit BakFileFilter(QObject *parent = nullptr);
 
-  void sort(const int column, const Qt::SortOrder order = Qt::AscendingOrder);
+  void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
   void setFilterKeyColumns(const QList<qint32> &filter_columns);
  
  protected:
-  bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+  bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
  
  private:
   QList<qint32> filter_columns_;

@@ -55,7 +55,7 @@ QString BakFileModel::column_name(const Column column) {
 
 }
 
-QVariant BakFileModel::headerData(const int section, const Qt::Orientation, const int role) const {
+QVariant BakFileModel::headerData(int section, Qt::Orientation, int role) const {
 
   if (role != Qt::DisplayRole && role != Qt::ToolTipRole) return QVariant();
 
@@ -67,7 +67,7 @@ QVariant BakFileModel::headerData(const int section, const Qt::Orientation, cons
 }
 
 
-QVariant BakFileModel::data(const QModelIndex &idx, const int role) const {
+QVariant BakFileModel::data(const QModelIndex &idx, int role) const {
 
   if (!idx.isValid()) return QVariant();
 
@@ -106,7 +106,7 @@ Qt::ItemFlags BakFileModel::flags(const QModelIndex &index) const {
 
 }
 
-void BakFileModel::sort(const int column, const Qt::SortOrder order) {
+void BakFileModel::sort(int column, Qt::SortOrder order) {
 
   sort_column_ = column;
   sort_order_ = order;

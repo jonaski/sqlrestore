@@ -42,7 +42,7 @@ class BakFileViewContainer : public QWidget {
 
   void Init(BakFileModel *model, BakFileFilter *proxy);
   BakFileView *view() const;
-  bool eventFilter(QObject*, QEvent*);
+  bool eventFilter(QObject*, QEvent*) override;
 
  private slots:
   void MaybeUpdateFilter();

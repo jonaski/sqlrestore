@@ -29,7 +29,7 @@ BakFileFilter::BakFileFilter(QObject *parent) : QSortFilterProxyModel(parent) {
   setDynamicSortFilter(true);
 }
 
-void BakFileFilter::sort(const int column, const Qt::SortOrder order) {
+void BakFileFilter::sort(int column, Qt::SortOrder order) {
   sourceModel()->sort(column, order);  // QAbstractItemModel
 }
  
@@ -43,7 +43,7 @@ void BakFileFilter::setFilterKeyColumns(const QList<qint32> &filter_columns) {
 
 }
  
-bool BakFileFilter::filterAcceptsRow(const int source_row, const QModelIndex &source_parent) const {
+bool BakFileFilter::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
   QString filter = filterRegularExpression().pattern();

@@ -49,15 +49,15 @@ class BakFileModel : public QAbstractListModel {
 
   const BakFileItemPtr &item_at(const int idx) const { return items_[idx]; }
 
-  int rowCount(const QModelIndex &parent = QModelIndex()) const { Q_UNUSED(parent); return items_.size(); }
-  void sort(const int column, const Qt::SortOrder order);
+  int rowCount(const QModelIndex &parent = QModelIndex()) const override { Q_UNUSED(parent); return items_.size(); }
+  void sort(int column, Qt::SortOrder order) override;
 
  private:
-  QVariant headerData(const int section, const Qt::Orientation orientation, const int role = Qt::DisplayRole) const;
-  QVariant data(const QModelIndex &idx, const int role) const;
-  int columnCount(const QModelIndex &parent = QModelIndex()) const { Q_UNUSED(parent); return ColumnCount; }
+  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+  QVariant data(const QModelIndex &idx, int role) const override;
+  int columnCount(const QModelIndex &parent = QModelIndex()) const override { Q_UNUSED(parent); return ColumnCount; }
   void InsertFileItems(const BakFileItemList &items_in);
-  Qt::ItemFlags flags(const QModelIndex &index) const;
+  Qt::ItemFlags flags(const QModelIndex &index) const override;
   static bool CompareItems(const int column, const Qt::SortOrder order, std::shared_ptr<BakFileItem> _a, std::shared_ptr<BakFileItem> _b);
 
  private slots:

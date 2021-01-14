@@ -39,8 +39,8 @@ class AboutDialog : public QDialog {
   explicit AboutDialog(QWidget *parent = nullptr);
 
  protected:
-  void closeEvent(QCloseEvent*);
-  void mouseDoubleClickEvent(QMouseEvent *e);
+  void closeEvent(QCloseEvent*) override;
+  void mouseDoubleClickEvent(QMouseEvent *e) override;
 
  private:
   void HideDopeFish();

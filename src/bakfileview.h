@@ -35,7 +35,7 @@ class BakFileView : public QTreeView {
  public:
   explicit BakFileView(QWidget *parent = nullptr);
 
-  void setModel(QAbstractItemModel *model);
+  void setModel(QAbstractItemModel *model) override;
   void Init();
   
  private slots:
