@@ -94,19 +94,27 @@ endif()
 
 # QT
 
-option(BUILD_WITH_QT5 "Build with Qt 5")
-option(BUILD_WITH_QT6 "Build with Qt 6")
-
-if (NOT BUILD_WITH_QT5 AND NOT BUILD_WITH_QT6)
- set(BUILD_WITH_QT5 ON)
+if(NOT QT_DEFAULT_MAJOR_VERSION)
+  set(QT_DEFAULT_MAJOR_VERSION 5)
 endif()
+set(QT_MAJOR_VERSION ${QT_DEFAULT_MAJOR_VERSION} CACHE STRING "Qt version to use (5 or 6), defaults to ${QT_DEFAULT_MAJOR_VERSION}")
+
+option(BUILD_WITH_QT5 "Use Qt 5" OFF)
+option(BUILD_WITH_QT6 "Use Qt 6" OFF)
 
 if(BUILD_WITH_QT5)
   set(QT_MAJOR_VERSION 5)
 elseif(BUILD_WITH_QT6)
   set(QT_MAJOR_VERSION 6)
 else()
-  message(FATAL_ERROR "You need to set either BUILD_WITH_QT5 or BUILD_WITH_QT6.")
+  if(QT_MAJOR_VERSION EQUAL 5)
+    set(BUILD_WITH_QT5 ON)
+  elseif(QT_MAJOR_VERSION EQUAL 6)
+    set(BUILD_WITH_QT6 ON)
+  else()
+    set(BUILD_WITH_QT5 ON)
+    set(QT_MAJOR_VERSION 5)
+  endif()
 endif()
 
 set(QT_COMPONENTS Core Concurrent Widgets Network Sql)

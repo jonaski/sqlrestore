@@ -6,7 +6,6 @@ Group:          Productivity/Databases/Tools
 License:        GPL-3.0+
 URL:            https://github.com/jonaski/sqlrestore
 Source0:        %{name}-@SQLRESTORE_VERSION_PACKAGE@.tar.xz
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %if 0%{?suse_version} && 0%{?is_opensuse}
 BuildRequires:  libboost_headers-devel
@@ -32,41 +31,56 @@ BuildRequires:  libappstream-glib
 BuildRequires:  appstream-util
 %endif
 %endif
-%if 0%{?suse_version} || 0%{?fedora_version} || 0%{?mageia}
-BuildRequires:  cmake(Qt5LinguistTools)
-%endif
 BuildRequires:  pkgconfig
 BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  pkgconfig(gio-2.0)
 BuildRequires:  pkgconfig(gio-unix-2.0)
 BuildRequires:  pkgconfig(gthread-2.0)
 BuildRequires:  pkgconfig(zlib)
-BuildRequires:  pkgconfig(Qt5Core)
-BuildRequires:  pkgconfig(Qt5Gui)
-BuildRequires:  pkgconfig(Qt5Widgets)
-BuildRequires:  pkgconfig(Qt5Concurrent)
-BuildRequires:  pkgconfig(Qt5Network)
-BuildRequires:  pkgconfig(Qt5Sql)
-BuildRequires:  pkgconfig(Qt5Test)
+
+%if "@QT_MAJOR_VERSION@" == "5" && ( 0%{?fedora} || 0%{?rhel_version} || 0%{?centos} )
+BuildRequires:  pkgconfig(Qt@QT_MAJOR_VERSION@Core)
+BuildRequires:  pkgconfig(Qt@QT_MAJOR_VERSION@Gui)
+BuildRequires:  pkgconfig(Qt@QT_MAJOR_VERSION@Widgets)
+BuildRequires:  pkgconfig(Qt@QT_MAJOR_VERSION@Concurrent)
+BuildRequires:  pkgconfig(Qt@QT_MAJOR_VERSION@Network)
+BuildRequires:  pkgconfig(Qt@QT_MAJOR_VERSION@Sql)
+%else
+BuildRequires:  cmake(Qt@QT_MAJOR_VERSION@Core)
+BuildRequires:  cmake(Qt@QT_MAJOR_VERSION@Gui)
+BuildRequires:  cmake(Qt@QT_MAJOR_VERSION@Widgets)
+BuildRequires:  cmake(Qt@QT_MAJOR_VERSION@Concurrent)
+BuildRequires:  cmake(Qt@QT_MAJOR_VERSION@Network)
+BuildRequires:  cmake(Qt@QT_MAJOR_VERSION@Sql)
+BuildRequires:  cmake(Qt@QT_MAJOR_VERSION@Core5Compat)
+%endif
 
 BuildRequires:  file-devel
 
 %if 0%{?fedora} || (0%{?suse_version} && 0%{?sle_version} < 150200)
+  %if "@QT_MAJOR_VERSION@" == "5"
 BuildRequires:  quazip-qt5-devel
+  %else
+BuildRequires:  quazip-qt6-devel
+  %endif
 %else
-%if 0%{?mageia}
-%ifarch x86_64
+  %if 0%{?mageia}
+    %ifarch x86_64
 BuildRequires:  lib64quazip-devel
-%else
+    %else
 BuildRequires:  libquazip-devel
-%endif
-%else
+    %endif
+  %else
 BuildRequires:  quazip-devel
-%endif
+  %endif
 %endif
 
 %if 0%{?suse_version}
+%if "@QT_MAJOR_VERSION@" == "5"
 Requires:       libQt5Sql5-unixODBC
+%else
+Requires:       qt6-sql-unixODBC
+%endif
 %endif
 
 %description
@@ -84,38 +98,33 @@ Features:
  - Works on Linux, macOS and Windows.
  - Compatible with MSSQL 2008 R2 to SQL 2019 server on Linux and Windows.
 
+%if 0%{?suse_version}
+%debug_package
+%endif
+
 %prep
 %setup -qn %{name}-@SQLRESTORE_VERSION_PACKAGE@
 
 %build
-%if 0%{?suse_version} || 0%{?mageia}
-  %{cmake} ..
-%else
-  mkdir -p %{_target_platform}
-  pushd %{_target_platform}
-  %{cmake} ..
-  popd
+%if 0%{?fedora} || 0%{?rhel_version} || 0%{?centos}
+  export CXXFLAGS="-fPIC $RPM_OPT_FLAGS"
 %endif
-
-%if 0%{?suse_version} || 0%{?mageia}
-  %if 0%{?suse_version} && 0%{?suse_version} < 1500
-    make %{?_smp_mflags}
-  %else
-    %make_build
-  %endif
+%{cmake} -DCMAKE_BUILD_TYPE:STRING=Release -DQT_MAJOR_VERSION=@QT_MAJOR_VERSION@
+%if 0%{?centos} || (0%{?mageia} && 0%{?mageia} <= 7)
+  %make_build
 %else
-  %make_build -C %{_target_platform}
+  %cmake_build
 %endif
 
 %install
-%if 0%{?suse_version}
-  %cmake_install
+%if 0%{?centos}
+  %make_install
 %else
-  %if 0%{?mageia}
-    %make_install -C build
-  %else
-    %make_install -C %{_target_platform}
-  %endif
+%if 0%{?mageia}
+  %make_install -C build
+%else
+  %cmake_install
+%endif
 %endif
 
 %if 0%{?suse_version}
