@@ -153,21 +153,35 @@ void SettingsDialog::Load() {
 
 #ifdef Q_OS_WIN
   {
-    WCHAR buf[2001];
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    wchar_t buf[2001];
+    wchar_t *pszBuf = buf;
+#else
+    char buf[2001];
+    char *pszBuf = buf;
+#endif
     WORD buf_size = 2000;
     WORD cb_buf_out;
-    WCHAR *pszBuf = buf;
-    if (SQLGetInstalledDriversW(buf, buf_size, &cb_buf_out)) {
+    if (SQLGetInstalledDrivers(pszBuf, buf_size, &cb_buf_out)) {
       do {
-        QString driver = QString::fromStdWString(pszBuf);
-        if (driver.toUpper().contains("SQL"))
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        QString driver = QString::fromWCharArray(pszBuf);
+#else
+        QString driver = QString(pszBuf);
+#endif
+        if (driver.toUpper().contains("SQL")) {
           odbc_drivers << qMakePair(driver, driver);
+        }
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
         pszBuf = wcschr(pszBuf, '\0' ) + 1;
+#else
+        pszBuf = strchr(pszBuf, '\0' ) + 1;
+#endif
       }
       while (pszBuf[1] != '\0');
     }
     else {
-      qLog(Error) << "SQLGetInstalledDriversW failed";
+      qLog(Error) << "SQLGetInstalledDrivers failed";
     }
   }
 #endif
