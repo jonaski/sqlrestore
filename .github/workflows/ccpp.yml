@@ -7,7 +7,7 @@ jobs:
     name: Create source tarball
     runs-on: ubuntu-latest
     container:
-      image: opensuse/leap:15.1
+      image: opensuse/leap:15.2
     steps:
       - uses: actions/checkout@v1.2.0
       - name: Update packages
@@ -62,79 +62,8 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: release-windows
+          name: release_source
           path: build/*.xz
-
-
-  build_opensuse_lp151:
-    name: Build openSUSE Leap 15.1
-    runs-on: ubuntu-latest
-    container:
-      image: opensuse/leap:15.1
-    steps:
-      - uses: actions/checkout@v1.2.0
-      - name: Update packages
-        run: zypper --non-interactive --gpg-auto-import-keys ref
-      - name: Install openSUSE dependencies
-        run: >
-            zypper --non-interactive --gpg-auto-import-keys install
-            lsb-release
-            rpm-build
-            git
-            tar
-            make
-            cmake
-            gcc
-            gcc-c++
-            gettext-tools
-            glibc-devel
-            libboost_headers-devel
-            boost-devel
-            file-devel
-            zlib-devel
-            glib2-devel
-            glib2-tools
-            unixODBC-devel
-            libQt5Core-devel
-            libQt5Gui-devel
-            libQt5Widgets-devel
-            libQt5Concurrent-devel
-            libQt5Network-devel
-            libQt5Sql-devel
-            libQt5Test-devel
-            libqt5-qtbase-common-devel
-            libQt5Sql5-unixODBC
-            libqt5-linguist-devel
-            libQt5Core-private-headers-devel
-            libQt5Sql-private-headers-devel
-            quazip-qt5-devel
-            desktop-file-utils
-            update-desktop-files
-            appstream-glib
-            hicolor-icon-theme
-      - name: Create Build Environment
-        shell: bash
-        run: cmake -E make_directory build
-      - name: Configure CMake
-        shell: bash
-        working-directory: build
-        run: cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
-      - name: Create source tarball
-        working-directory: build
-        run: ../dist/scripts/maketarball.sh
-      - name: Create RPM build sources directories
-        run: mkdir -p ~/rpmbuild/SOURCES /usr/src/packages/SOURCES
-      - name: Copy source tarball
-        working-directory: build
-        run: cp sqlrestore-*.tar.xz /usr/src/packages/SOURCES/
-      - name: Build RPM
-        working-directory: build
-        run: rpmbuild -ba ../dist/unix/sqlrestore.spec
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: release-opensuse-lp151
-          path: /usr/src/packages/RPMS/*/*.rpm
 
 
   build_opensuse_lp152:
@@ -204,7 +133,78 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: release-opensuse-lp152
+          name: release_opensuse_lp152
+          path: /usr/src/packages/RPMS/*/*.rpm
+
+
+  build_opensuse_lp153:
+    name: Build openSUSE Leap 15.3
+    runs-on: ubuntu-latest
+    container:
+      image: opensuse/leap:15.3
+    steps:
+      - uses: actions/checkout@v1.2.0
+      - name: Update packages
+        run: zypper --non-interactive --gpg-auto-import-keys ref
+      - name: Install openSUSE dependencies
+        run: >
+            zypper --non-interactive --gpg-auto-import-keys install
+            lsb-release
+            rpm-build
+            git
+            tar
+            make
+            cmake
+            gcc
+            gcc-c++
+            gettext-tools
+            glibc-devel
+            libboost_headers-devel
+            boost-devel
+            file-devel
+            zlib-devel
+            glib2-devel
+            glib2-tools
+            unixODBC-devel
+            libQt5Core-devel
+            libQt5Gui-devel
+            libQt5Widgets-devel
+            libQt5Concurrent-devel
+            libQt5Network-devel
+            libQt5Sql-devel
+            libQt5Test-devel
+            libqt5-qtbase-common-devel
+            libQt5Sql5-unixODBC
+            libqt5-linguist-devel
+            libQt5Core-private-headers-devel
+            libQt5Sql-private-headers-devel
+            quazip-qt5-devel
+            desktop-file-utils
+            update-desktop-files
+            appstream-glib
+            hicolor-icon-theme
+      - name: Create Build Environment
+        shell: bash
+        run: cmake -E make_directory build
+      - name: Configure CMake
+        shell: bash
+        working-directory: build
+        run: cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+      - name: Create source tarball
+        working-directory: build
+        run: ../dist/scripts/maketarball.sh
+      - name: Create RPM build sources directories
+        run: mkdir -p ~/rpmbuild/SOURCES /usr/src/packages/SOURCES
+      - name: Copy source tarball
+        working-directory: build
+        run: cp sqlrestore-*.tar.xz /usr/src/packages/SOURCES/
+      - name: Build RPM
+        working-directory: build
+        run: rpmbuild -ba ../dist/unix/sqlrestore.spec
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: release_opensuse_lp153
           path: /usr/src/packages/RPMS/*/*.rpm
 
 
@@ -342,7 +342,77 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: release-fedora-32
+          name: release_fedora_32
+          path: ~/rpmbuild/RPMS/*/*.rpm
+
+
+  build_fedora_33:
+    name: Build Fedora 33
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:33
+    env:
+      RPM_BUILD_NCPUS: "2"
+    steps:
+      - uses: actions/checkout@v1.2.0
+
+      - name: Update packages
+        run: yum update --assumeyes
+
+      - name: Upgrade packages
+        run: yum upgrade --assumeyes
+
+      - name: Install Fedora dependencies
+        run: >
+            dnf install --assumeyes
+            @development-tools
+            redhat-lsb-core
+            git
+            glibc
+            gcc-c++
+            rpmdevtools
+            make
+            cmake
+            pkgconfig
+            man
+            tar
+            gettext
+            openssh
+            boost-devel
+            file-devel
+            glib2-devel
+            unixODBC-devel
+            qt5-qtbase-devel
+            qt5-qtx11extras-devel
+            qt5-qttools-devel
+            qt5-qtbase-private-devel
+            quazip-qt5-devel
+            desktop-file-utils
+            libappstream-glib
+            hicolor-icon-theme
+      - name: Create Build Environment
+        shell: bash
+        run: cmake -E make_directory build
+      - name: Configure CMake
+        shell: bash
+        working-directory: build
+        run: cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+      - name: Create source tarball
+        working-directory: build
+        run: ../dist/scripts/maketarball.sh
+      - name: Create RPM build sources directories
+        working-directory: build
+        run: mkdir -p ~/rpmbuild/SOURCES /usr/src/packages/SOURCES
+      - name: Copy source tarball
+        working-directory: build
+        run: cp sqlrestore-*.tar.xz ~/rpmbuild/SOURCES/
+      - name: Build RPM
+        working-directory: build
+        run: rpmbuild -ba ../dist/unix/sqlrestore.spec
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: release_fedora_33
           path: ~/rpmbuild/RPMS/*/*.rpm
 
 
@@ -418,7 +488,79 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: release-mageia-7
+          name: release_mageia_7
+          path: ~/rpmbuild/RPMS/*/*.rpm
+
+
+  build_mageia_8:
+    name: Build Mageia 8
+    runs-on: ubuntu-latest
+    container:
+      image: mageia:8
+    steps:
+      - uses: actions/checkout@v1.2.0
+
+      - name: Add media
+        run: urpmi.addmedia --distrib https://ftp.fau.de/mageia/distrib/8/x86_64/
+
+      - name: Update packages
+        run: urpmi.update --auto -a
+
+      - name: Configure auto update
+        run: urpmi --auto --auto-update
+
+      - name: Install Mageia dependencies
+        run: >
+            urpmi --auto --force
+            urpmi-debuginfo-install
+            git
+            tar
+            rpmdevtools
+            make
+            cmake
+            glibc
+            binutils
+            gcc-c++
+            man
+            gettext
+            lib64boost-devel
+            file-devel
+            libunixODBC-devel
+            lib64qt5core-devel
+            lib64qt5gui-devel
+            lib64qt5widgets-devel
+            lib64qt5network-devel
+            lib64qt5concurrent-devel
+            lib64qt5sql-devel
+            lib64qt5help-devel
+            libqt5test-devel
+            lib64quazip-devel
+            desktop-file-utils
+            appstream-util
+            hicolor-icon-theme
+      - name: Create Build Environment
+        shell: bash
+        run: cmake -E make_directory build
+      - name: Configure CMake
+        shell: bash
+        working-directory: build
+        run: cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+      - name: Create source tarball
+        working-directory: build
+        run: ../dist/scripts/maketarball.sh
+      - name: Create RPM build sources directories
+        working-directory: build
+        run: mkdir -p ~/rpmbuild/SOURCES /usr/src/packages/SOURCES
+      - name: Copy source tarball
+        working-directory: build
+        run: cp sqlrestore-*.tar.xz ~/rpmbuild/SOURCES/
+      - name: Build RPM
+        working-directory: build
+        run: rpmbuild -ba ../dist/unix/sqlrestore.spec
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: release_mageia_8
           path: ~/rpmbuild/RPMS/*/*.rpm
 
 
@@ -689,51 +831,7 @@ jobs:
           path: build/*.deb
 
 
-  build-macos:
-    name: Build macOS
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v1.2.0
-      - name: brew update
-        run: brew update
-      - name: brew upgrade
-        run: brew upgrade
-      - name: Install packages
-        run: >
-          brew install
-          pkgconfig
-          boost
-          libmagic
-          glib
-          qt
-          quazip
-          create-dmg
-      - name: Create Build Environment
-        shell: bash
-        run: cmake -E make_directory build
-      - name: Configure CMake
-        shell: bash
-        env:
-          PKG_CONFIG_PATH: /usr/local/lib/pkgconfig
-          Qt5_DIR: /usr/local/opt/qt5/lib/cmake
-          Qt5LinguistTools_DIR: /usr/local/opt/qt5/lib/cmake/Qt5LinguistTools
-        working-directory: build
-        run: cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DUSE_BUNDLE=ON
-      - name: Build
-        working-directory: build
-        shell: bash
-        run: cmake --build . --config $BUILD_TYPE
-      - name: Install
-        working-directory: build
-        shell: bash
-        run: make install
-      #- name: Create DMG
-      #  working-directory: build
-      #  shell: bash
-      #  run: make dmg
-
-
-  build-windows:
+  build_windows:
     name: Build Windows
     runs-on: ubuntu-latest
     container:
@@ -780,17 +878,18 @@ jobs:
     if: github.ref == 'refs/heads/master'
     needs:
       - build_source
-      - build_opensuse_lp151
       - build_opensuse_lp152
+      - build_opensuse_lp153
       - build_fedora_32
+      - build_fedora_33
       - build_mageia_7
+      - build_mageia_8
       - build_debian_buster
       - build_debian_bullseye
       - build_ubuntu_bionic
       - build_ubuntu_focal
       - build_ubuntu_groovy
-      - build-windows
-      - build-macos
+      - build_windows
     steps:
       - uses: actions/checkout@v1.2.0
       - uses: actions/download-artifact@v2
