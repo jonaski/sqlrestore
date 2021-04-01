@@ -87,14 +87,14 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 
   connect(ui_->button_select_local_path, SIGNAL(clicked()), SLOT(SelectLocalPath()));
 
-  connect(db_connector_, SIGNAL(ConnectionSuccess(QString, QString)), SLOT(ConnectionSuccess(QString, QString)));
+  connect(db_connector_, SIGNAL(ConnectionSuccess(QString,QString)), SLOT(ConnectionSuccess(QString,QString)));
   connect(db_connector_, SIGNAL(ConnectionFailure(QString)), SLOT(ConnectionFailure(QString)));
   connect(db_connector_, SIGNAL(ConnectionClosed()), SLOT(ConnectionClosed()));
 
   ui_->button_select_local_path->setIcon(IconLoader::Load("document-open-folder"));
 
   for (const QString &driver : QSqlDatabase::drivers()) {
-    if (!driver.toUpper().contains("ODBC")) continue;
+    if (!driver.contains("ODBC", Qt::CaseInsensitive)) continue;
     ui_->drivers->addItem(driver, driver);
   }
 

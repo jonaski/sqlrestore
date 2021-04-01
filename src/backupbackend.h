@@ -53,17 +53,17 @@ class BackupBackend : public QObject {
  signals:
   void StartRestoreBackup(BakFileItemPtr fileitem);
 
-  void Error(const QString &message);
+  void Error(QString message);
 
-  void RestoreHeaderAll(const QString &message);
-  void RestoreHeaderCurrent(const QString &message);
-  void RestoreStatusCurrent(const QString &message);
-  void RestoreProgressAllValue(const int);
-  void RestoreProgressAllMax(const int);
-  void RestoreProgressCurrentValue(const int);
+  void RestoreHeaderAll(QString message);
+  void RestoreHeaderCurrent(QString message);
+  void RestoreStatusCurrent(QString message);
+  void RestoreProgressAllValue(int);
+  void RestoreProgressAllMax(int);
+  void RestoreProgressCurrentValue(int);
   void RestoreSuccess();
-  void RestoreFailure(const QStringList &errors);
-  void RestoreFinished(const QString &filename, const bool success, const QStringList &errors);
+  void RestoreFailure(QStringList errors);
+  void RestoreFinished(QString filename, bool success, QStringList errors);
   void RestoreComplete();
 
  private slots:

@@ -288,14 +288,14 @@ void BakFileBackend::Scan() {
 
   int progress = 0;
   bool retrigger_scan = false;
-  for (const QString &filename : dir_files) {
+  for (const QString &filename : qAsConst(dir_files)) {
 
     if (cancel_requested_ || exit_requested_) break;
 
     ++progress;
 
     // Skip any temp file.
-    if (filename.toLower().contains(QRegularExpression(".*\\.tmp$")) || filename.toLower().contains(QRegularExpression("^\\..*"))) {
+    if (filename.contains(QRegularExpression(".*\\.tmp$", QRegularExpression::CaseInsensitiveOption)) || filename.contains(QRegularExpression("^\\..*", QRegularExpression::CaseInsensitiveOption))) {
       qLog(Error) << "Skipping temp file" << filename;
       emit LoadProgress((int)((float)progress / (float)dir_files.count() * 100.0));
       continue;
@@ -390,16 +390,16 @@ BakFileItem *BakFileBackend::ScanFile(const QString &filename) {
   bool magic_check = false;
   bool compressed = false;
   if (mime_data.isEmpty()) {
-    if (!filename.toLower().contains(QRegularExpression(".*\\.bak")) && !filename.toLower().contains(QRegularExpression(".*\\.ubk$")) && !filename.toLower().contains(QRegularExpression(".*\\.zip$"))) {
+    if (!filename.contains(QRegularExpression(".*\\.bak", QRegularExpression::CaseInsensitiveOption)) && !filename.contains(QRegularExpression(".*\\.ubk$", QRegularExpression::CaseInsensitiveOption)) && !filename.contains(QRegularExpression(".*\\.zip$", QRegularExpression::CaseInsensitiveOption))) {
       return nullptr;
     }
   }
   else {
     magic_check = true;
-    if (mime_data.contains(QRegularExpression("^Windows NTbackup archive NT.*: Microsoft SQL Server$"))) {
+    if (mime_data.contains(QRegularExpression("^Windows NTbackup archive NT.*: Microsoft SQL Server$", QRegularExpression::CaseInsensitiveOption))) {
       compressed = false;
     }
-    else if (mime_data.contains(QRegularExpression("^Zip archive data.*$"))) {
+    else if (mime_data.contains(QRegularExpression("^Zip archive data.*$", QRegularExpression::CaseInsensitiveOption))) {
       compressed = true;
     }
     else {

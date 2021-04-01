@@ -36,9 +36,6 @@
 #include "bakfilemodel.h"
 #include "bakfileitem.h"
 
-using std::placeholders::_1;
-using std::placeholders::_2;
-
 BakFileModel::BakFileModel(QObject *parent) : QAbstractListModel(parent), sort_column_(Column_Modified), sort_order_(Qt::AscendingOrder) {}
 
 QString BakFileModel::column_name(const Column column) {
@@ -115,11 +112,11 @@ void BakFileModel::sort(int column, Qt::SortOrder order) {
   BakFileItemList::iterator begin = new_items.begin();
 
   if (column == Column_Filename) {
-    std::stable_sort(begin, new_items.end(), std::bind(&BakFileModel::CompareItems, Column_Modified, order, _1, _2));
-    std::stable_sort(begin, new_items.end(), std::bind(&BakFileModel::CompareItems, Column_Filename, order, _1, _2));
+    std::stable_sort(begin, new_items.end(), std::bind(&BakFileModel::CompareItems, Column_Modified, order, std::placeholders::_1, std::placeholders::_2));
+    std::stable_sort(begin, new_items.end(), std::bind(&BakFileModel::CompareItems, Column_Filename, order, std::placeholders::_1, std::placeholders::_2));
   }
   else {
-    std::stable_sort(begin, new_items.end(), std::bind(&BakFileModel::CompareItems, column, order, _1, _2));
+    std::stable_sort(begin, new_items.end(), std::bind(&BakFileModel::CompareItems, column, order, std::placeholders::_1, std::placeholders::_2));
   }
 
   layoutAboutToBeChanged();
@@ -204,7 +201,6 @@ void BakFileModel::DeletedFiles(BakFileItemList items) {
       endRemoveRows();
       QModelIndex idx_topleft = index(item_pos, 0);
       QModelIndex idx_bottomright = index(item_pos, rowCount() - 1);
-      //qLog(Debug) << __PRETTY_FUNCTION__ << idx_topleft << idx_bottomright;
       emit dataChanged(idx_topleft, idx_bottomright);
     }
     ++i;

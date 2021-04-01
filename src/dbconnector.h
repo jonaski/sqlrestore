@@ -50,9 +50,9 @@ class DBConnector : public QObject {
   void CloseAsync();
 
  signals:
-  void Connecting(const QString &odbc_driver, const QString &server);
-  void ConnectionSuccess(const QString &odbc_driver, const QString &server);
-  void ConnectionFailure(const QString &error);
+  void Connecting(QString odbc_driver, QString server);
+  void ConnectionSuccess(QString odbc_driver, QString server);
+  void ConnectionFailure(QString error);
   void ConnectionClosed();
 
  public slots:

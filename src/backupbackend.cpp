@@ -191,7 +191,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
   connect(&r, SIGNAL(Status(QString)), SIGNAL(RestoreStatusCurrent(QString)));
   connect(&r, SIGNAL(Success()), SIGNAL(RestoreSuccess()));
   connect(&r, SIGNAL(Failure(QStringList)), SIGNAL(RestoreFailure(QStringList)));
-  connect(&r, SIGNAL(Finished(QString, bool, QStringList)), SIGNAL(RestoreFinished(QString, bool, QStringList)));
+  connect(&r, SIGNAL(Finished(QString,bool,QStringList)), SIGNAL(RestoreFinished(QString,bool,QStringList)));
   connect(&r, SIGNAL(Finished(bool)), SLOT(RestoreFinished(bool)), Qt::QueuedConnection);
 
   const QString header = tr("Restoring %1").arg(fileitem->filename());
@@ -282,7 +282,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         } BOOST_SCOPE_EXIT_END
         UpdateRestoreStatus(tr("Looking for end-of-central-directory signature in ZIP archive."));
         if (!src_file.open(QIODevice::ReadOnly)) {
-          r.failure(tr("Unable to open ZIP archive \"%1\".: Error %2").arg(zipfile).arg(src_file.errorString()));
+          r.failure(tr("Unable to open ZIP archive \"%1\".: Error %2").arg(zipfile, src_file.errorString()));
           return;
         }
         if (src_file.size() > kZipTailSize) {
@@ -292,7 +292,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         while (src_file.bytesAvailable() > 0) {
           QByteArray buf_tmp = src_file.read(kBufferChunkSize);
           if (buf_tmp.isEmpty()) {
-            r.failure(tr("Unable to read from ZIP archive \"%1\".: %2").arg(zipfile).arg(src_file.errorString()));
+            r.failure(tr("Unable to read from ZIP archive \"%1\".: %2").arg(zipfile, src_file.errorString()));
             src_file.close();
             return;
           }
@@ -301,7 +301,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         src_file.close();
 
         char *inbuf = buf.data();
-        char *inptr;
+        char *inptr = nullptr;
         bool found = false;
         for (inptr = inbuf + (buf.size() - 22) ; inptr >= inbuf ; --inptr) {
           if (*inptr == (unsigned char)0x50 && memcmp((char*) inptr, kZipEndCentralSig, 4) == 0) {
@@ -342,14 +342,14 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         }
       } BOOST_SCOPE_EXIT_END
       if (!zfile.open(QIODevice::ReadOnly)) {
-        r.failure(tr("Unable to open file \"%1\" in ZIP archive \"%2\" for reading.").arg(currentfile).arg(zipfile));
+        r.failure(tr("Unable to open file \"%1\" in ZIP archive \"%2\" for reading.").arg(currentfile, zipfile));
         archive.close();
         return;
       }
 
       QuaZipFileInfo64 zip_info;
       if (!zfile.getFileInfo(&zip_info)) {
-       r.failure(tr("Unable to get file info for \"%1\" from ZIP archive \"%2\".").arg(currentfile).arg(zipfile));
+       r.failure(tr("Unable to get file info for \"%1\" from ZIP archive \"%2\".").arg(currentfile, zipfile));
         zfile.close();
         archive.close();
        return;
@@ -363,7 +363,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
           if (zfile.size() > disk_space_free) {
             zfile.close();
             archive.close();
-            r.failure(tr("Not enough disk space on \"%1\", %2 is available, but %3 is needed to unzip %4.").arg(local_path_).arg(PrettySize(disk_space_free)).arg(PrettySize(zfile.size())).arg(currentfile));
+            r.failure(tr("Not enough disk space on \"%1\", %2 is available, but %3 is needed to unzip %4.").arg(local_path_, PrettySize(disk_space_free), PrettySize(zfile.size()), currentfile));
             return;
           }
         }
@@ -379,7 +379,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
       if (!dst_file.open(QIODevice::WriteOnly)) {
         zfile.close();
         archive.close();
-        r.failure(tr("Unable to open temporary file \"%1\" for writing.: %2").arg(tmpfile_local).arg(dst_file.errorString()));
+        r.failure(tr("Unable to open temporary file \"%1\" for writing.: %2").arg(tmpfile_local, dst_file.errorString()));
         return;
       }
 
@@ -396,7 +396,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         }
         QByteArray buf = zfile.read(kBufferChunkSize);
         if (buf.isEmpty()) {
-          r.failure(tr("Unable to read file \"%1\" in ZIP archive \"%2\" (File possibly corrupt).: %3.").arg(currentfile).arg(zipfile).arg(zfile.errorString()));
+          r.failure(tr("Unable to read file \"%1\" in ZIP archive \"%2\" (File possibly corrupt).: %3.").arg(currentfile).arg(zipfile, zfile.errorString()));
           zfile.close();
           dst_file.close();
           archive.close();
@@ -405,7 +405,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         checksum.update(buf);
         qint64 written = dst_file.write(buf.data(), buf.size());
         if (written != buf.size()) {
-          r.failure(tr("Unable to write to temporary file \"%1\".: %2").arg(tmpfile_local).arg(dst_file.errorString()));
+          r.failure(tr("Unable to write to temporary file \"%1\".: %2").arg(tmpfile_local, dst_file.errorString()));
           zfile.close();
           dst_file.close();
           archive.close();
@@ -419,11 +419,11 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
       if (total_size_written < zfile.size()) {
         zfile.close();
         archive.close();
-        r.failure(tr("Unexpected end of file while reading file \"%1\" in ZIP archive \"%2\". File is corrupt.").arg(currentfile).arg(zipfile));
+        r.failure(tr("Unexpected end of file while reading file \"%1\" in ZIP archive \"%2\". File is corrupt.").arg(currentfile, zipfile));
         return;
       }
       if (checksum.value() != zip_info.crc) {
-        r.failure(tr("CRC checksum failed for file \"%1\" in ZIP archive \"%2\". File is corrupt.").arg(currentfile).arg(zipfile));
+        r.failure(tr("CRC checksum failed for file \"%1\" in ZIP archive \"%2\". File is corrupt.").arg(currentfile, zipfile));
         zfile.close();
         archive.close();
         return;
@@ -513,7 +513,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
   }
 
   if (server_version != 0 && db_version_highest > server_version) {
-    r.failure(tr("SQL Backup \"%1\" was created on %2 (%3), which is newer than this server, this server is %4 (%5). You need yo upgrade your SQL server.").arg(fileitem->filename()).arg(ProductMajorVersionToString(db_version_highest)).arg(db_version_highest).arg(ProductMajorVersionToString(server_version)).arg(server_version));
+    r.failure(tr("SQL Backup \"%1\" was created on %2 (%3), which is newer than this server, this server is %4 (%5). You need yo upgrade your SQL server.").arg(fileitem->filename(), ProductMajorVersionToString(db_version_highest)).arg(db_version_highest).arg(ProductMajorVersionToString(server_version)).arg(server_version));
     return;
   }
 
@@ -561,12 +561,14 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
       else if (type_of_file == "LOG") {
         p = &logpath;
       }
-      *p = query.value("PhysicalName").toString();
-      int pos = p->lastIndexOf(QChar('/'));
-      if (pos > 0) *p = p->left(pos);
-      else {
-        pos = p->lastIndexOf(QChar('\\'));
+      if (p) {
+        *p = query.value("PhysicalName").toString();
+        int pos = p->lastIndexOf(QChar('/'));
         if (pos > 0) *p = p->left(pos);
+        else {
+          pos = p->lastIndexOf(QChar('\\'));
+          if (pos > 0) *p = p->left(pos);
+        }
       }
     }
   }
@@ -655,11 +657,11 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
       while (query.next()) {
         QString s = query.value(0).toString();
         QString *p = nullptr;
-        if (s.toLower().contains(QRegularExpression(".*\\.mdf"))) {
+        if (s.contains(QRegularExpression(".*\\.mdf", QRegularExpression::CaseInsensitiveOption))) {
           db_datapath = s;
           p = &db_datapath;
         }
-        else if (s.toLower().contains(QRegularExpression(".*\\.ldf"))) {
+        else if (s.contains(QRegularExpression(".*\\.ldf", QRegularExpression::CaseInsensitiveOption))) {
           db_logpath = s;
           p = &db_logpath;
         }
@@ -706,7 +708,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         if (y == 0) new_logical_dbname = dbname;
         else new_logical_dbname = dbname + QString("_").repeated(y);
         QSqlQuery query(db);
-        query.prepare(QString("ALTER DATABASE %1 MODIFY FILE (NAME = %2, NEWNAME = %3)").arg(dbname).arg(old_logical_dbname).arg(new_logical_dbname));
+        query.prepare(QString("ALTER DATABASE %1 MODIFY FILE (NAME = %2, NEWNAME = %3)").arg(dbname, old_logical_dbname, new_logical_dbname));
         if (query.exec()) {
           break;
         }
@@ -719,7 +721,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         if (y == 0) new_logical_logname = logname;
         else new_logical_logname = logname + QString("_").repeated(y);
         QSqlQuery query(db);
-        query.prepare(QString("ALTER DATABASE %1 MODIFY FILE (NAME = %2, NEWNAME = %3)").arg(dbname).arg(old_logical_logname).arg(new_logical_logname));
+        query.prepare(QString("ALTER DATABASE %1 MODIFY FILE (NAME = %2, NEWNAME = %3)").arg(dbname, old_logical_logname, new_logical_logname));
         if (query.exec()) {
           break;
         }

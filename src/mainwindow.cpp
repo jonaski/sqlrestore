@@ -104,8 +104,8 @@ MainWindow::MainWindow(Application *app, const CommandlineOptions &options, QWid
   connect(ui_->action_settings, SIGNAL(triggered()), settingsdialog_, SLOT(show()));
   connect(settingsdialog_, SIGNAL(SettingsChanged()), SLOT(ReloadSettings()));
 
-  connect(app_->db_connector(), SIGNAL(Connecting(QString, QString)), SLOT(Connecting(QString, QString)));
-  connect(app_->db_connector(), SIGNAL(ConnectionSuccess(QString, QString)), SLOT(ConnectionSuccess(QString, QString)));
+  connect(app_->db_connector(), SIGNAL(Connecting(QString,QString)), SLOT(Connecting(QString,QString)));
+  connect(app_->db_connector(), SIGNAL(ConnectionSuccess(QString,QString)), SLOT(ConnectionSuccess(QString,QString)));
   connect(app_->db_connector(), SIGNAL(ConnectionFailure(QString)), SLOT(ConnectionFailure(QString)));
 
   connect(app_->bakfile_backend(), SIGNAL(ScanInProgress()), SLOT(ScanInProgress()));
@@ -130,10 +130,10 @@ MainWindow::MainWindow(Application *app, const CommandlineOptions &options, QWid
 
   connect(app_->backup_backend(), SIGNAL(RestoreSuccess()), this, SLOT(RestoreSuccess()));
   connect(app_->backup_backend(), SIGNAL(RestoreFailure(QStringList)), this, SLOT(RestoreFailure(QStringList)));
-  connect(app_->backup_backend(), SIGNAL(RestoreFinished(QString, bool, QStringList)), this, SLOT(RestoreFinished(QString, bool, QStringList)));
+  connect(app_->backup_backend(), SIGNAL(RestoreFinished(QString,bool,QStringList)), this, SLOT(RestoreFinished(QString,bool,QStringList)));
   connect(app_->backup_backend(), SIGNAL(RestoreComplete()), this, SLOT(RestoreComplete()), Qt::QueuedConnection);
 
-  connect(ui_->file_view_container->view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(FileSelectionChanged(QItemSelection, QItemSelection)));
+  connect(ui_->file_view_container->view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(FileSelectionChanged(QItemSelection,QItemSelection)));
 
   statusbar_label_->setWordWrap(true);
   statusBar()->addWidget(statusbar_label_, maximumWidth());
@@ -484,7 +484,7 @@ void MainWindow::RestoreFinished(const QString &filename, const bool success, co
 void MainWindow::RestoreComplete() {
 
   int failed = 0;
-  for (BackupResult result : jobs_finished_) {
+  for (BackupResult result : qAsConst(jobs_finished_)) {
     if (result.success()) {
       ui_->textBrowser->append(tr("Restore of %1 was successful.").arg(result.filename()));
     }

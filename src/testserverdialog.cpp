@@ -41,7 +41,7 @@ TestServerDialog::~TestServerDialog() { delete ui_; }
 
 void TestServerDialog::Start(const QString &odbc_driver, const QString &server) {
 
-  ui_->text->setText(tr("Connecting to %1 using %2...").arg(server).arg(odbc_driver));
+  ui_->text->setText(tr("Connecting to %1 using %2...").arg(server, odbc_driver));
   ui_->icon->clear();
   ui_->icon->setMovie(spinner_.get());
   spinner_->start();
