@@ -900,10 +900,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -x
-          version=$(git describe --tags --always)
+          #version=$(git describe --tags --always)
+          VERSION=$(echo release_artifacts/**/*.tar.xz | sed -e 's/.*sqlrestore-\(.*\).tar.xz/\1/')
+          echo "Version: ${VERSION}"
           assets=()
           for asset in $(find release_artifacts -type f); do
             echo "Adding asset: ${asset}"
             assets+=("-a" "$asset")
           done
           #hub release create -p "${assets[@]}" -m "SQL Restore $version" -t "$GITHUB_SHA" "$version"
+          hub release create -p "${assets[@]}" -m "$VERSION" -t "$GITHUB_SHA" "$VERSION"
