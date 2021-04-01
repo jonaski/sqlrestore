@@ -1,6 +1,5 @@
 <RCC>
   <qresource prefix="/">
-    <file>magic</file>
     <file>magic.mgc</file>
     <file>icons/512x512/backup.png</file>
     <file>pictures/spinner.gif</file>
