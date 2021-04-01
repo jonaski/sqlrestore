@@ -12,18 +12,18 @@ include(CheckIncludeFiles)
 include(FindPkgConfig)
 include(FindPackageHandleStandardArgs)
 include(cmake/Version.cmake)
-include(cmake/Rpm.cmake)
-include(cmake/Deb.cmake)
+if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+  include(cmake/Rpm.cmake)
+  include(cmake/Deb.cmake)
+endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 list(APPEND COMPILE_OPTIONS
   $<$<COMPILE_LANGUAGE:C>:-std=c99>
   $<$<COMPILE_LANGUAGE:CXX>:-std=c++17>
-  -U__STRICT_ANSI__
   -Wall
   -Wextra
   -Wpedantic
@@ -63,10 +63,6 @@ if(${CMAKE_BUILD_TYPE} MATCHES "Release")
   add_definitions(-DNDEBUG)
   add_definitions(-DQT_NO_DEBUG_OUTPUT)
   #add_definitions(-DQT_NO_WARNING_OUTPUT)
-endif()
-
-if(${CMAKE_BUILD_TYPE} MATCHES "Debug")
-  set(DEBUG ON)
 endif()
 
 find_program(CCACHE_EXECUTABLE NAMES ccache)
@@ -117,7 +113,7 @@ else()
   endif()
 endif()
 
-set(QT_COMPONENTS Core Concurrent Widgets Network Sql)
+set(QT_COMPONENTS Core Concurrent Network Sql Gui Widgets)
 
 if(QT_MAJOR_VERSION EQUAL 5)
   set(QT_MIN_VERSION 5.9)
