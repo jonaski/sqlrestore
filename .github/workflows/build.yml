@@ -1,0 +1,286 @@
+name: build
+on: [push, pull_request]
+
+jobs:
+
+  build_source:
+    name: Create source tarball
+    runs-on: ubuntu-latest
+    container:
+      image: opensuse/tumbleweed
+    steps:
+      - name: Update packages
+        run: zypper -n --gpg-auto-import-keys ref
+      - name: Upgrade packages
+        run: zypper -n --gpg-auto-import-keys dup
+      - name: Install openSUSE dependencies
+        run: >
+            zypper -n --gpg-auto-import-keys in
+            lsb-release
+            rpm-build
+            git
+            tar
+            make
+            cmake
+            gcc
+            gcc-c++
+            gettext-tools
+            glibc-devel
+            libboost_headers-devel
+            file-devel
+            zlib-devel
+            glib2-devel
+            glib2-tools
+            libicu-devel
+            unixODBC-devel
+            qt6-core-devel
+            qt6-gui-devel
+            qt6-widgets-devel
+            qt6-concurrent-devel
+            qt6-network-devel
+            qt6-sql-devel
+            qt6-test-devel
+            qt6-base-common-devel
+            qt6-sql-unixODBC
+            qt6-linguist-devel
+            quazip-qt6-devel
+            desktop-file-utils
+            update-desktop-files
+            appstream-glib
+            hicolor-icon-theme
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Add safe git directory
+        shell: bash
+        run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
+      - name: Create Build Environment
+        shell: bash
+        run: cmake -E make_directory build
+      - name: Configure CMake
+        shell: bash
+        working-directory: build
+        run: cmake .. -DCMAKE_BUILD_TYPE="Debug" -DBUILD_WITH_QT6=ON
+      - name: Create source tarball
+        working-directory: build
+        run: ../dist/scripts/maketarball.sh
+      - uses: actions/upload-artifact@v3
+        with:
+          name: release_source
+          path: build/*.xz
+
+
+  build_opensuse_tumbleweed:
+    name: Build openSUSE Tumbleweed
+    runs-on: ubuntu-latest
+    container:
+      image: opensuse/tumbleweed
+    steps:
+      - name: Update packages
+        run: zypper -n --gpg-auto-import-keys ref
+      - name: Upgrade packages
+        run: zypper -n --gpg-auto-import-keys dup
+      - name: Install openSUSE dependencies
+        run: >
+            zypper -n --gpg-auto-import-keys in
+            lsb-release
+            rpm-build
+            git
+            tar
+            make
+            cmake
+            gcc
+            gcc-c++
+            gettext-tools
+            glibc-devel
+            libboost_headers-devel
+            file-devel
+            zlib-devel
+            glib2-devel
+            glib2-tools
+            libicu-devel
+            unixODBC-devel
+            qt6-core-devel
+            qt6-gui-devel
+            qt6-widgets-devel
+            qt6-concurrent-devel
+            qt6-network-devel
+            qt6-sql-devel
+            qt6-test-devel
+            qt6-base-common-devel
+            qt6-sql-unixODBC
+            qt6-linguist-devel
+            quazip-qt6-devel
+            desktop-file-utils
+            update-desktop-files
+            appstream-glib
+            hicolor-icon-theme
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Add safe git directory
+        shell: bash
+        run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
+      - name: Create Build Environment
+        shell: bash
+        run: cmake -E make_directory build
+      - name: Configure CMake
+        shell: bash
+        working-directory: build
+        run: cmake .. -DCMAKE_BUILD_TYPE="Debug" -DBUILD_WITH_QT6=ON
+      - name: Create source tarball
+        working-directory: build
+        run: ../dist/scripts/maketarball.sh
+      - name: Create RPM build sources directories
+        run: mkdir -p ~/rpmbuild/SOURCES /usr/src/packages/SOURCES
+      - name: Copy source tarball
+        working-directory: build
+        run: cp sqlrestore-*.tar.xz /usr/src/packages/SOURCES/
+      - name: Build RPM
+        working-directory: build
+        run: rpmbuild -ba ../dist/unix/sqlrestore.spec
+
+
+  build_fedora_36:
+    name: Build Fedora 36
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:36
+    env:
+      RPM_BUILD_NCPUS: "2"
+    steps:
+      - name: Update packages
+        run: yum update --assumeyes
+      - name: Upgrade packages
+        run: yum upgrade --assumeyes
+      - name: Install Fedora dependencies
+        run: >
+            dnf install -y
+            @development-tools
+            redhat-lsb-core
+            git
+            glibc
+            gcc-c++
+            rpmdevtools
+            make
+            cmake
+            pkgconfig
+            man
+            tar
+            gettext
+            openssh
+            boost-devel
+            file-devel
+            glib2-devel
+            libicu-devel
+            unixODBC-devel
+            qt6-qtbase-devel
+            qt6-qttools-devel
+            quazip-qt6-devel
+            desktop-file-utils
+            libappstream-glib
+            hicolor-icon-theme
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Add safe git directory
+        shell: bash
+        run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
+      - name: Create Build Environment
+        shell: bash
+        run: cmake -E make_directory build
+      - name: Configure CMake
+        shell: bash
+        working-directory: build
+        run: cmake .. -DCMAKE_BUILD_TYPE="Debug" -DBUILD_WITH_QT6=ON
+      - name: Create source tarball
+        working-directory: build
+        run: ../dist/scripts/maketarball.sh
+      - name: Create RPM build sources directories
+        working-directory: build
+        run: mkdir -p ~/rpmbuild/SOURCES /usr/src/packages/SOURCES
+      - name: Copy source tarball
+        working-directory: build
+        run: cp sqlrestore-*.tar.xz ~/rpmbuild/SOURCES/
+      - name: Build RPM
+        working-directory: build
+        run: rpmbuild -ba ../dist/unix/sqlrestore.spec
+      - uses: actions/upload-artifact@v3
+        with:
+          name: release_fedora_36
+          path: ~/rpmbuild/RPMS/*/*.rpm
+
+
+  build_windows:
+    name: Build Windows
+    runs-on: ubuntu-latest
+    container:
+      image: jonaski/mxe-qt-x86_64-w64-mingw32.static
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Add safe git directory
+        shell: bash
+        run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
+      - name: Create Build Environment
+        shell: bash
+        run: cmake -E make_directory build
+      - name: Link MXE directory
+        shell: bash
+        run: ln -s /usr/src/mxe-qt ~/mxe-static
+      - name: Run CMake
+        shell: bash
+        env:
+          PKG_CONFIG_PATH: /usr/src/mxe-qt/usr/x86_64-w64-mingw32.static/lib/pkgconfig
+        working-directory: build
+        run: >
+          /usr/src/mxe-qt/usr/bin/x86_64-w64-mingw32.static-cmake
+          ..
+          -DCMAKE_BUILD_TYPE="Release"
+          -DCMAKE_TOOLCHAIN_FILE="../cmake/Toolchain-mingw32-static.cmake"
+          -DCMAKE_PREFIX_PATH="/usr/src/mxe-qt/usr/x86_64-w64-mingw32.static/qt6/lib/cmake"
+          -DBUILD_WITH_QT6=ON
+          -DENABLE_WIN32_CONSOLE=OFF
+      - name: Run Make
+        working-directory: build
+        run: make -j2
+      - name: Strip executables
+        working-directory: build
+        run: /usr/src/mxe-qt/usr/bin/x86_64-w64-mingw32.static-strip *.exe
+      - uses: actions/upload-artifact@v3
+        with:
+          name: release-windows
+          path: build/*.exe
+
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/ci'
+    needs:
+      - build_source
+      - build_fedora_36
+      - build_windows
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          path: releases
+      - name: Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -x
+          VERSION=$(ls -1 releases/*/*.tar.xz | head -n1 | sed -e 's/.*sqlrestore-\(.*\).tar.xz/\1/')
+          echo "Version: ${VERSION}"
+          echo "${VERSION}" | grep '[0-9]\+\.[0-9]\+\.[0-9]\+.[0-9]\+\..*' >/dev/null 2>&1 || true
+          if [ $? -eq 0 ]; then
+            hub release delete "pre-release" || true
+            files=()
+            for file in $(find releases -type f); do
+              echo "Adding file: ${file}"
+              files+=("-a" "${file}")
+            done
+            hub release create -p -t "$GITHUB_SHA" -m "SQL Restore ${VERSION}" "${files[@]}" "pre-release"
+          fi

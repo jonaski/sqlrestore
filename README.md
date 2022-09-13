@@ -1,4 +1,4 @@
-:file_cabinet: MSSQL Backup Batch Restore Utility [![C/C++ CI](https://github.com/jonaski/sqlrestore/workflows/C/C++%20CI/badge.svg)](https://github.com/jonaski/sqlrestore/actions)
+:file_cabinet: MSSQL Backup Batch Restore Utility [![Build](https://github.com/jonaski/sqlrestore/workflows/build/badge.svg)](https://github.com/jonaski/sqlrestore/actions)
 ========================
 
 SQL Restore is a batch restore program for MSSQL backups written in C++11.

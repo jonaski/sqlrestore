@@ -43,7 +43,7 @@ if(INCLUDE_GIT_REVISION AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
   )
   # Get the latest abbreviated commit hash of the working branch
   execute_process(
-    COMMAND ${GIT_EXECUTABLE} describe --tags --always
+    COMMAND ${GIT_EXECUTABLE} describe --long --tags --always --exclude "pre-release"
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     RESULT_VARIABLE GIT_CMD_RESULT_REVISION
     OUTPUT_VARIABLE GIT_REVISION
