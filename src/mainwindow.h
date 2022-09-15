@@ -101,7 +101,6 @@ class MainWindow : public QMainWindow {
 
   BakFileModel *bak_file_model_;
   BakFileFilter *bakfile_sort_model_;
-  QListView *bak_file_view_;
 
   std::unique_ptr<QMovie> spinner_;
   BackupBackend *backup_backend_;
