@@ -30,7 +30,7 @@
 #include "commandlineoptions.h"
 #include "logging.h"
 
-CommandlineOptions::CommandlineOptions() {}
+CommandlineOptions::CommandlineOptions() : nothing_(false) {}
 
 bool CommandlineOptions::Parse() {
 
