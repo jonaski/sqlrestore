@@ -119,7 +119,7 @@ void BakFileModel::sort(int column, Qt::SortOrder order) {
     std::stable_sort(begin, new_items.end(), std::bind(&BakFileModel::CompareItems, column, order, std::placeholders::_1, std::placeholders::_2));
   }
 
-  layoutAboutToBeChanged();
+  emit layoutAboutToBeChanged();
 
   BakFileItemList old_items = items_;
   items_ = new_items;
@@ -134,7 +134,7 @@ void BakFileModel::sort(int column, Qt::SortOrder order) {
     changePersistentIndex(idx, index(new_rows[item], idx.column(), idx.parent()));
   }
 
-  layoutChanged();
+  emit layoutChanged();
 
 }
 
