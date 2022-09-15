@@ -64,10 +64,10 @@ class QSearchFieldPrivate : public QObject {
 QSearchField::QSearchField(QWidget *parent) : QWidget(parent) {
 
   QLineEdit *lineEdit = new QLineEdit(this);
-  connect(lineEdit, SIGNAL(textChanged(QString)), this, SIGNAL(textChanged(QString)));
-  connect(lineEdit, SIGNAL(editingFinished()), this, SIGNAL(editingFinished()));
-  connect(lineEdit, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
-  connect(lineEdit, SIGNAL(textChanged(QString)), this, SLOT(setText(QString)));
+  connect(lineEdit, &QLineEdit::textChanged, this, &QSearchField::textChanged);
+  connect(lineEdit, &QLineEdit::editingFinished, this, &QSearchField::editingFinished);
+  connect(lineEdit, &QLineEdit::returnPressed, this, &QSearchField::returnPressed);
+  connect(lineEdit, &QLineEdit::textChanged, this, &QSearchField::setText);
 
   QToolButton *clearbutton = new QToolButton(this);
   QIcon clearIcon(IconLoader::Load("edit-clear-locationbar-ltr"));
@@ -77,7 +77,7 @@ QSearchField::QSearchField(QWidget *parent) : QWidget(parent) {
   clearbutton->setStyleSheet("border: none; padding: 0px;");
   clearbutton->resize(clearbutton->sizeHint());
 
-  connect(clearbutton, SIGNAL(clicked()), this, SLOT(clear()));
+  connect(clearbutton, &QAbstractButton::clicked, this, &QSearchField::clear);
 
   pimpl = new QSearchFieldPrivate(this, lineEdit, clearbutton);
 

@@ -38,7 +38,7 @@ class BakFileView : public QTreeView {
   void setModel(QAbstractItemModel *model) override;
   void Init();
   
- private slots:
+ public slots:
   void SelectAll();
   void UnSelectAll();
 

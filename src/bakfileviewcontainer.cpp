@@ -50,8 +50,8 @@ BakFileViewContainer::BakFileViewContainer(QWidget *parent)
 
   filter_timer_->setSingleShot(true);
   filter_timer_->setInterval(kFilterDelayMs);
-  connect(filter_timer_, SIGNAL(timeout()), this, SLOT(UpdateFilter()));
-  connect(ui_->filter, SIGNAL(textChanged(QString)), SLOT(MaybeUpdateFilter()));
+  connect(filter_timer_, &QTimer::timeout, this, &BakFileViewContainer::UpdateFilter);
+  connect(ui_->filter, &QSearchField::textChanged, this, &BakFileViewContainer::MaybeUpdateFilter);
   ui_->filter->installEventFilter(this);
 
 }

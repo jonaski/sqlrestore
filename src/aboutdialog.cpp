@@ -122,8 +122,8 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), dopefish_(new QMovi
 
   ui_.buttonBox->button(QDialogButtonBox::Close)->setShortcut(QKeySequence::Close);
 
-  connect(ui_.buttonBox, SIGNAL(accepted()), SLOT(Close()));
-  connect(ui_.buttonBox, SIGNAL(rejected()), SLOT(Close()));
+  connect(ui_.buttonBox, &QDialogButtonBox::accepted, this, &AboutDialog::Close);
+  connect(ui_.buttonBox, &QDialogButtonBox::rejected, this, &AboutDialog::Close);
 
 }
 

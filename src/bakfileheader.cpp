@@ -38,7 +38,7 @@ BakFileHeader::BakFileHeader(Qt::Orientation orientation, QWidget *parent)
   setSectionResizeMode(QHeaderView::Interactive);
   setSortIndicator(BakFileModel::Column_Modified, Qt::DescendingOrder);
 
-  connect(this, SIGNAL(sectionResized(int,int,int)), SLOT(SectionResized(int,int,int)));
+  connect(this, &QHeaderView::sectionResized, this, &BakFileHeader::SectionResized);
 
 }
 

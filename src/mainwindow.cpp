@@ -97,43 +97,43 @@ MainWindow::MainWindow(Application *app, const CommandlineOptions &options, QWid
   ui_->file_view_container->view()->setModel(bakfile_sort_model_);
   ui_->file_view_container->view()->Init();
 
-  connect(ui_->action_exit, SIGNAL(triggered()), SLOT(Exit()));
-  connect(ui_->action_about, SIGNAL(triggered()), about_, SLOT(show()));
-  connect(ui_->action_about_qt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+  connect(ui_->action_exit, &QAction::triggered, this, &MainWindow::Exit);
+  connect(ui_->action_about, &QAction::triggered, about_, &QWidget::show);
+  connect(ui_->action_about_qt, &QAction::triggered, qApp, &QApplication::aboutQt);
 
-  connect(ui_->action_settings, SIGNAL(triggered()), settingsdialog_, SLOT(show()));
-  connect(settingsdialog_, SIGNAL(SettingsChanged()), SLOT(ReloadSettings()));
+  connect(ui_->action_settings, &QAction::triggered, settingsdialog_, &QWidget::show);
+  connect(settingsdialog_, &SettingsDialog::SettingsChanged, this, &MainWindow::ReloadSettings);
 
-  connect(app_->db_connector(), SIGNAL(Connecting(QString,QString)), SLOT(Connecting(QString,QString)));
-  connect(app_->db_connector(), SIGNAL(ConnectionSuccess(QString,QString)), SLOT(ConnectionSuccess(QString,QString)));
-  connect(app_->db_connector(), SIGNAL(ConnectionFailure(QString)), SLOT(ConnectionFailure(QString)));
+  connect(app_->db_connector(), &DBConnector::Connecting, this, &MainWindow::Connecting);
+  connect(app_->db_connector(), &DBConnector::ConnectionSuccess, this, &MainWindow::ConnectionSuccess);
+  connect(app_->db_connector(), &DBConnector::ConnectionFailure, this, &MainWindow::ConnectionFailure);
 
-  connect(app_->bakfile_backend(), SIGNAL(ScanInProgress()), SLOT(ScanInProgress()));
-  connect(app_->bakfile_backend(), SIGNAL(LoadProgress(int)), SLOT(FileLoadProgress(int)));
-  connect(app_->bakfile_backend(), SIGNAL(LoadError(QString)), SLOT(FileLoadError(QString)));
+  connect(app_->bakfile_backend(), &BakFileBackend::ScanInProgress, this, &MainWindow::ScanInProgress);
+  connect(app_->bakfile_backend(), &BakFileBackend::LoadProgress, this, &MainWindow::FileLoadProgress);
+  connect(app_->bakfile_backend(), &BakFileBackend::LoadError, this, &MainWindow::FileLoadError);
 
-  connect(app_->bakfile_backend(), SIGNAL(AddedFiles(BakFileItemList)), bak_file_model_, SLOT(AddedFiles(BakFileItemList)));
-  connect(app_->bakfile_backend(), SIGNAL(UpdatedFiles(BakFileItemList)), bak_file_model_, SLOT(UpdatedFiles(BakFileItemList)));
-  connect(app_->bakfile_backend(), SIGNAL(DeletedFiles(BakFileItemList)), bak_file_model_, SLOT(DeletedFiles(BakFileItemList)));
+  connect(app_->bakfile_backend(), &BakFileBackend::AddedFiles, bak_file_model_, &BakFileModel::AddedFiles);
+  connect(app_->bakfile_backend(), &BakFileBackend::UpdatedFiles, bak_file_model_, &BakFileModel::UpdatedFiles);
+  connect(app_->bakfile_backend(), &BakFileBackend::DeletedFiles, bak_file_model_, &BakFileModel::DeletedFiles);
 
-  connect(this, SIGNAL(QueueRestores(BakFileItemList)), app_->backup_backend(), SLOT(QueueRestores(BakFileItemList)));
+  connect(this, &MainWindow::QueueRestores, app_->backup_backend(), &BackupBackend::QueueRestores);
 
-  connect(app_->backup_backend(), SIGNAL(RestoreHeaderAll(QString)), ui_->header_all, SLOT(setText(QString)));
+  connect(app_->backup_backend(), &BackupBackend::RestoreHeaderAll, ui_->header_all, &QLabel::setText);
 
-  connect(app_->backup_backend(), SIGNAL(RestoreHeaderCurrent(QString)), ui_->header_current, SLOT(setText(QString)));
-  connect(app_->backup_backend(), SIGNAL(RestoreStatusCurrent(QString)), ui_->status_current, SLOT(setText(QString)));
+  connect(app_->backup_backend(), &BackupBackend::RestoreHeaderCurrent, ui_->header_current, &QLabel::setText);
+  connect(app_->backup_backend(), &BackupBackend::RestoreStatusCurrent, ui_->status_current, &QLabel::setText);
 
-  connect(app_->backup_backend(), SIGNAL(RestoreProgressAllValue(int)), ui_->progressbar_all, SLOT(setValue(int)));
-  connect(app_->backup_backend(), SIGNAL(RestoreProgressAllMax(int)), ui_->progressbar_all, SLOT(setMaximum(int)));
+  connect(app_->backup_backend(), &BackupBackend::RestoreProgressAllValue, ui_->progressbar_all, &QProgressBar::setValue);
+  connect(app_->backup_backend(), &BackupBackend::RestoreProgressAllMax, ui_->progressbar_all, &QProgressBar::setMaximum);
 
-  connect(app_->backup_backend(), SIGNAL(RestoreProgressCurrentValue(int)), ui_->progressbar_current, SLOT(setValue(int)));
+  connect(app_->backup_backend(), &BackupBackend::RestoreProgressCurrentValue, ui_->progressbar_current, &QProgressBar::setValue);
 
-  connect(app_->backup_backend(), SIGNAL(RestoreSuccess()), this, SLOT(RestoreSuccess()));
-  connect(app_->backup_backend(), SIGNAL(RestoreFailure(QStringList)), this, SLOT(RestoreFailure(QStringList)));
-  connect(app_->backup_backend(), SIGNAL(RestoreFinished(QString,bool,QStringList)), this, SLOT(RestoreFinished(QString,bool,QStringList)));
-  connect(app_->backup_backend(), SIGNAL(RestoreComplete()), this, SLOT(RestoreComplete()), Qt::QueuedConnection);
+  connect(app_->backup_backend(), &BackupBackend::RestoreSuccess, this, &MainWindow::RestoreSuccess);
+  connect(app_->backup_backend(), &BackupBackend::RestoreFailure, this, &MainWindow::RestoreFailure);
+  connect(app_->backup_backend(), &BackupBackend::RestoreFinished, this, &MainWindow::RestoreFinished);
+  connect(app_->backup_backend(), &BackupBackend::RestoreComplete, this, &MainWindow::RestoreComplete, Qt::QueuedConnection);
 
-  connect(ui_->file_view_container->view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(FileSelectionChanged(QItemSelection,QItemSelection)));
+  connect(ui_->file_view_container->view()->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MainWindow::FileSelectionChanged);
 
   statusbar_label_->setWordWrap(true);
   statusBar()->addWidget(statusbar_label_, maximumWidth());
@@ -147,12 +147,12 @@ MainWindow::MainWindow(Application *app, const CommandlineOptions &options, QWid
   ui_->button_exit->setIcon(IconLoader::Load("application-exit"));
   ui_->button_cancel->setIcon(IconLoader::Load("button-cancel"));
 
-  connect(ui_->button_restore, SIGNAL(clicked()), SLOT(Restore()));
-  connect(ui_->button_back, SIGNAL(clicked()), SLOT(Reset()));
-  connect(ui_->button_cancel, SIGNAL(clicked()), SLOT(Cancel()));
-  connect(ui_->button_exit, SIGNAL(clicked()), SLOT(Exit()));
-  connect(ui_->button_select_all, SIGNAL(clicked()), ui_->file_view_container->view(), SLOT(SelectAll()));
-  connect(ui_->button_unselect_all, SIGNAL(clicked()), ui_->file_view_container->view(), SLOT(UnSelectAll()));
+  connect(ui_->button_restore, &QAbstractButton::clicked, this, &MainWindow::Restore);
+  connect(ui_->button_back, &QAbstractButton::clicked, this, &MainWindow::Reset);
+  connect(ui_->button_cancel, &QAbstractButton::clicked, this, &MainWindow::Cancel);
+  connect(ui_->button_exit, &QAbstractButton::clicked, this, &MainWindow::Exit);
+  connect(ui_->button_select_all, &QPushButton::clicked, ui_->file_view_container->view(), &BakFileView::SelectAll);
+  connect(ui_->button_unselect_all, &QPushButton::clicked, ui_->file_view_container->view(), &BakFileView::UnSelectAll);
 
   Reset();
   ReloadSettings();

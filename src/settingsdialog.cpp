@@ -81,15 +81,15 @@ SettingsDialog::SettingsDialog(QWidget *parent)
 
   //db_connector_->moveToThread(db_connector->thread());
 
-  connect(ui_->buttonBox, SIGNAL(accepted()), SLOT(SaveAndClose()));
-  connect(ui_->buttonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(Clicked(QAbstractButton*)));
-  connect(ui_->button_test, SIGNAL(clicked()), SLOT(TestServer()));
+  connect(ui_->buttonBox, &QDialogButtonBox::accepted, this, &SettingsDialog::SaveAndClose);
+  connect(ui_->buttonBox, &QDialogButtonBox::clicked, this, &SettingsDialog::Clicked);
+  connect(ui_->button_test, &QAbstractButton::clicked, this, &SettingsDialog::TestServer);
 
-  connect(ui_->button_select_local_path, SIGNAL(clicked()), SLOT(SelectLocalPath()));
+  connect(ui_->button_select_local_path, &QAbstractButton::clicked, this, &SettingsDialog::SelectLocalPath);
 
-  connect(db_connector_, SIGNAL(ConnectionSuccess(QString,QString)), SLOT(ConnectionSuccess(QString,QString)));
-  connect(db_connector_, SIGNAL(ConnectionFailure(QString)), SLOT(ConnectionFailure(QString)));
-  connect(db_connector_, SIGNAL(ConnectionClosed()), SLOT(ConnectionClosed()));
+  connect(db_connector_, &DBConnector::ConnectionSuccess, this, &SettingsDialog::ConnectionSuccess);
+  connect(db_connector_, &DBConnector::ConnectionFailure, this, &SettingsDialog::ConnectionFailure);
+  connect(db_connector_, &DBConnector::ConnectionClosed, this, &SettingsDialog::ConnectionClosed);
 
   ui_->button_select_local_path->setIcon(IconLoader::Load("document-open-folder"));
 
@@ -285,7 +285,7 @@ void SettingsDialog::TestServer() {
 #endif
   QFutureWatcher<DBConnectResult> *watcher = new QFutureWatcher<DBConnectResult>(this);
   watcher->setFuture(future);
-  connect(watcher, SIGNAL(finished()), SLOT(ConnectFinished()));
+  connect(watcher, &QFutureWatcherBase::finished, this, &SettingsDialog::ConnectFinished);
 
 }
 

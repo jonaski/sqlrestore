@@ -60,7 +60,7 @@ class BakFileModel : public QAbstractListModel {
   Qt::ItemFlags flags(const QModelIndex &index) const override;
   static bool CompareItems(const int column, const Qt::SortOrder order, std::shared_ptr<BakFileItem> _a, std::shared_ptr<BakFileItem> _b);
 
- private slots:
+ public slots:
   void AddedFiles(BakFileItemList);
   void UpdatedFiles(BakFileItemList);
   void DeletedFiles(BakFileItemList);

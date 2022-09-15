@@ -61,8 +61,8 @@ BakFileBackend::BakFileBackend(QObject *parent) :
   timer_scan_->setInterval(5000);
   timer_scan_->setSingleShot(true);
 
-  connect(watcher_, SIGNAL(directoryChanged(QString)), SLOT(DirectoryChanged(QString)));
-  connect(timer_scan_, SIGNAL(timeout()), SLOT(Scan()));
+  connect(watcher_, &QFileSystemWatcher::directoryChanged, this, &BakFileBackend::DirectoryChanged);
+  connect(timer_scan_, &QTimer::timeout, this, &BakFileBackend::Scan);
   
   LoadMagic(); // This needs to be done in the main thread.
 

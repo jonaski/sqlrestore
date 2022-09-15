@@ -67,12 +67,12 @@ class BackupBackend : public QObject {
   void RestoreComplete();
 
  private slots:
-  void QueueRestores(BakFileItemList bakfilelist);
   void RestoreStarted();
-  void RestoreFinished(const bool success);
+  void _RestoreFinished(const bool success);
   void RestoreBackup(BakFileItemPtr fileitem);
 
  public slots:
+  void QueueRestores(BakFileItemList bakfilelist);
   void CancelRestore() { cancel_requested_ = true; }
 
  private:

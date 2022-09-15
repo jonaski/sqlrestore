@@ -42,8 +42,8 @@ ScopedResult::~ScopedResult() {
     qLog(Error) << "Failure";
     emit Failure(errors_);
   }
-  emit Finished(success_);
-  emit Finished(filename_, success_, errors_);
+  emit Finished1(success_);
+  emit Finished2(filename_, success_, errors_);
 
 }
 

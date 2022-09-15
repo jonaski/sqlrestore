@@ -41,8 +41,8 @@ class ScopedResult : public QObject, boost::noncopyable {
 
  signals:
   void Started();
-  void Finished(bool success);
-  void Finished(QString filename, bool success, QStringList errors);
+  void Finished1(bool success);
+  void Finished2(QString filename, bool success, QStringList errors);
   void Status(QString message);
   void Success();
   void Failure(QString error);

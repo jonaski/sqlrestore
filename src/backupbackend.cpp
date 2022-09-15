@@ -72,7 +72,7 @@ BackupBackend::BackupBackend(QObject *parent) :
   jobs_current_(0),
   cancel_requested_(false) {
 
-  connect(this, SIGNAL(StartRestoreBackup(BakFileItemPtr)), SLOT(RestoreBackup(BakFileItemPtr)));
+  connect(this, &BackupBackend::StartRestoreBackup, this, &BackupBackend::RestoreBackup);
 
 }
 
@@ -188,11 +188,11 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
   RestoreStarted();
 
   ScopedResult r(fileitem->filename());
-  connect(&r, SIGNAL(Status(QString)), SIGNAL(RestoreStatusCurrent(QString)));
-  connect(&r, SIGNAL(Success()), SIGNAL(RestoreSuccess()));
-  connect(&r, SIGNAL(Failure(QStringList)), SIGNAL(RestoreFailure(QStringList)));
-  connect(&r, SIGNAL(Finished(QString,bool,QStringList)), SIGNAL(RestoreFinished(QString,bool,QStringList)));
-  connect(&r, SIGNAL(Finished(bool)), SLOT(RestoreFinished(bool)), Qt::QueuedConnection);
+  connect(&r, &ScopedResult::Status, this, &BackupBackend::RestoreStatusCurrent);
+  connect(&r, &ScopedResult::Success, this, &BackupBackend::RestoreSuccess);
+  connect(&r, qOverload<QStringList>(&ScopedResult::Failure), this, &BackupBackend::RestoreFailure);
+  connect(&r, &ScopedResult::Finished2, this, &BackupBackend::RestoreFinished);
+  connect(&r, &ScopedResult::Finished1, this, &BackupBackend::_RestoreFinished, Qt::QueuedConnection);
 
   const QString header = tr("Restoring %1").arg(fileitem->filename());
   emit RestoreHeaderCurrent(header);
@@ -761,7 +761,7 @@ void BackupBackend::RestoreStarted() {
 
 }
 
-void BackupBackend::RestoreFinished(const bool) {
+void BackupBackend::_RestoreFinished(const bool) {
 
   --jobs_remaining_;
   ++jobs_complete_;
