@@ -78,7 +78,7 @@ BackupBackend::BackupBackend(QObject *parent) :
 
 }
 
-BackupBackend::~BackupBackend() {}
+BackupBackend::~BackupBackend() = default;
 
 void BackupBackend::ReloadSettings() {
 

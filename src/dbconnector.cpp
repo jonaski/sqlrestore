@@ -55,7 +55,7 @@ DBConnector::DBConnector(QObject *parent) :
 
 }
 
-DBConnector::~DBConnector() {}
+DBConnector::~DBConnector() = default;
 
 void DBConnector::ReloadSettings() {
 
