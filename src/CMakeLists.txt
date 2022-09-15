@@ -109,7 +109,7 @@ if (UNIX AND _Qt5Core_PRIVATE_DIRS_EXIST AND _Qt5Sql_PRIVATE_DIRS_EXIST AND Qt5S
 endif()
 
 if (WIN32)
-  target_link_libraries(sqlrestore_lib PRIVATE odbccp32 regex shlwapi)
+  target_link_libraries(sqlrestore_lib PRIVATE odbccp32 regex shlwapi bz2 harfbuzz freetype)
 endif()
 
 
