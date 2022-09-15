@@ -20,6 +20,7 @@
 #include <QtGlobal>
 
 #include <memory>
+#include <chrono>
 #include <magic.h>
 #include <boost/scope_exit.hpp>
 #include <quazip.h>
@@ -48,6 +49,8 @@
 #include "bakfileitem.h"
 #include "settingsdialog.h"
 
+using namespace std::chrono_literals;
+
 BakFileBackend::BakFileBackend(QObject *parent) :
   QObject(parent),
   watcher_(new QFileSystemWatcher(this)),
@@ -58,7 +61,7 @@ BakFileBackend::BakFileBackend(QObject *parent) :
   magic_(nullptr)
   {
 
-  timer_scan_->setInterval(5000);
+  timer_scan_->setInterval(5s);
   timer_scan_->setSingleShot(true);
 
   connect(watcher_, &QFileSystemWatcher::directoryChanged, this, &BakFileBackend::DirectoryChanged);
