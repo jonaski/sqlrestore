@@ -22,7 +22,7 @@
 
 #include "bakfileitem.h"
 
-BakFileItem::BakFileItem() : compressed_(false) {}
+BakFileItem::BakFileItem() : file_size_(0), compressed_(false) {}
 BakFileItem::BakFileItem(const QString &filename,
               const quint64 file_size,
               const QDateTime &modified,
