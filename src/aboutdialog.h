@@ -49,7 +49,7 @@ class AboutDialog : public QDialog {
   void Close();
 
  private:
-  Ui::AboutDialog ui_;
+  Ui::AboutDialog ui_{};
   std::unique_ptr<QMovie> dopefish_;
 };
 
