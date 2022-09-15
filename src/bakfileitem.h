@@ -33,7 +33,7 @@ class BakFileItem : public std::enable_shared_from_this<BakFileItem> {
 
  public:
   explicit BakFileItem();
-  explicit BakFileItem(const QString &filename, const quint64 &file_size, const QDateTime &modified, const bool compressed, const QString &file_type);
+  explicit BakFileItem(const QString &filename, const quint64 file_size, const QDateTime &modified, const bool compressed, const QString &file_type);
   ~BakFileItem();
 
   QString filename() const { return filename_; }

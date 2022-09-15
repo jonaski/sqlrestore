@@ -24,7 +24,7 @@
 
 BakFileItem::BakFileItem() : compressed_(false) {}
 BakFileItem::BakFileItem(const QString &filename,
-              const quint64 &file_size,
+              const quint64 file_size,
               const QDateTime &modified,
               const bool compressed,
               const QString &file_type) :
