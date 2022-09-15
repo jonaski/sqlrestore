@@ -120,7 +120,7 @@ void BakFileBackend::LoadMagic() {
 
 }
 
-QString BakFileBackend::WriteMagicToTemp() {
+QString BakFileBackend::WriteMagicToTemp() const {
     
   // Open source magic file
   QFile src_file(":magic.mgc");

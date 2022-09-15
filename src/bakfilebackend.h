@@ -44,7 +44,7 @@ class BakFileBackend : public QObject {
 
  private:
   void LoadMagic();
-  QString WriteMagicToTemp();
+  QString WriteMagicToTemp() const;
   BakFileItem *ScanFile(const QString &filename);
 
  private slots:
