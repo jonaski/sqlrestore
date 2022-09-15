@@ -398,7 +398,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         }
         QByteArray buf = zfile.read(kBufferChunkSize);
         if (buf.isEmpty()) {
-          r.failure(tr("Unable to read file \"%1\" in ZIP archive \"%2\" (File possibly corrupt).: %3.").arg(currentfile).arg(zipfile, zfile.errorString()));
+          r.failure(tr("Unable to read file \"%1\" in ZIP archive \"%2\" (File possibly corrupt).: %3.").arg(currentfile, zipfile, zfile.errorString()));
           zfile.close();
           dst_file.close();
           archive.close();
