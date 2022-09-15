@@ -56,7 +56,9 @@
 #include "settingsdialog.h"
 #include "bakfileitem.h"
 
-using namespace Utilities;
+using Utilities::Seed;
+using Utilities::GetRandomStringWithCharsAndNumbers;
+using Utilities::PrettySize;
 
 const int BackupBackend::kBufferChunkSize = 8192;
 const int BackupBackend::kZipTailSize = 8192;
