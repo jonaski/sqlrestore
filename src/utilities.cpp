@@ -17,10 +17,11 @@
 
  */
 
+#include <QtGlobal>
+
 #include <cstdlib>
 #include <ctime>
 
-#include <QtGlobal>
 #include <QList>
 #include <QByteArray>
 #include <QString>

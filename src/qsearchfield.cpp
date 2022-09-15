@@ -167,8 +167,7 @@ void QSearchField::resizeEvent(QResizeEvent *resizeEvent) {
 bool QSearchField::eventFilter(QObject *o, QEvent *e) {
 
   if (pimpl && pimpl->lineedit_ && o == pimpl->lineedit_) {
-    // Forward some lineEdit events to QSearchField (only those we need for
-    // now, but some might be added later if needed)
+    // Forward some lineEdit events to QSearchField (only those we need for now, but some might be added later if needed)
     switch (e->type()) {
       case QEvent::FocusIn:
       case QEvent::FocusOut:

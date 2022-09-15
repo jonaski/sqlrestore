@@ -351,7 +351,7 @@ void SettingsDialog::ComboBoxLoadFromSettings(const QSettings &s, QComboBox *com
 void SettingsDialog::SelectLocalPath() {
 
   QString current_path;
-  if ( !ui_->local_path->text().isEmpty() && QFileInfo(ui_->local_path->text()).exists() ) {
+  if (!ui_->local_path->text().isEmpty() && QFile::exists(ui_->local_path->text())) {
     current_path = ui_->local_path->text();
   }
   else {
