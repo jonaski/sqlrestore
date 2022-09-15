@@ -59,7 +59,7 @@ void Seed() {
 
 }
 
-QString PrettySize(const quint64 bytes) {
+QString PrettySize(const qint64 bytes) {
 
   QString ret;
 
@@ -109,11 +109,11 @@ QString WordyTime(quint64 seconds) {
 QString GetRandomString(const int len, const QString &UseCharacters) {
 
    QString randstr;
-   for(int i = 0 ; i < len ; ++i) {
+   for (int i = 0; i < len; ++i) {
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
-     const int index = QRandomGenerator::global()->bounded(0, UseCharacters.length());
+     const qint64 index = QRandomGenerator::global()->bounded(0, UseCharacters.length());
 #else
-     const int index = qrand() % UseCharacters.length();
+     const qint64 index = qrand() % UseCharacters.length();
 #endif
      QChar nextchar = UseCharacters.at(index);
      randstr.append(nextchar);

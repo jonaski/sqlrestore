@@ -37,7 +37,7 @@ QString GetRandomString(const int len, const QString &UseCharacters);
 QString GetRandomStringWithChars(const int len);
 QString GetRandomStringWithCharsAndNumbers(const int len);
 QString CryptographicRandomString(const int len);
-QString PrettySize(const quint64 bytes);
+QString PrettySize(const qint64 bytes);
 QString PrettyTime(int seconds);
 QString WordyTime(quint64 seconds);
 
