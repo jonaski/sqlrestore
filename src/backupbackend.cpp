@@ -304,7 +304,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
         char *inptr = nullptr;
         bool found = false;
         for (inptr = inbuf + (buf.size() - 22) ; inptr >= inbuf ; --inptr) {
-          if (*inptr == (unsigned char)0x50 && memcmp((char*) inptr, kZipEndCentralSig, 4) == 0) {
+          if (*inptr == static_cast<unsigned char>(0x50) && memcmp(inptr, kZipEndCentralSig, 4) == 0) {
             found = true;
             break;
           }
@@ -412,7 +412,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
           return;
         }
         total_size_written += written;
-        emit RestoreProgressCurrentValue((int)((float)total_size_written / (float)zfile.size() * 100.0));
+        emit RestoreProgressCurrentValue(static_cast<int>(static_cast<float>(total_size_written) / static_cast<float>(zfile.size()) * 100.0));
       }
       dst_file.flush();
       dst_file.close();
@@ -738,7 +738,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
       }
     }
 
-    emit RestoreProgressCurrentValue((int)((float)progress / (float)dbnames.count() * 100.0));
+    emit RestoreProgressCurrentValue(static_cast<int>(static_cast<float>(progress) / static_cast<float>(dbnames.count()) * 100.0));
 
   }
 

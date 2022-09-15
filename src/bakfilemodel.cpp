@@ -56,7 +56,7 @@ QVariant BakFileModel::headerData(int section, Qt::Orientation, int role) const 
 
   if (role != Qt::DisplayRole && role != Qt::ToolTipRole) return QVariant();
 
-  const QString name = column_name((BakFileModel::Column)section);
+  const QString name = column_name(static_cast<BakFileModel::Column>(section));
   if (!name.isEmpty()) return name;
 
   return QVariant();

@@ -297,7 +297,7 @@ void BakFileBackend::Scan() {
     // Skip any temp file.
     if (filename.contains(QRegularExpression(".*\\.tmp$", QRegularExpression::CaseInsensitiveOption)) || filename.contains(QRegularExpression("^\\..*", QRegularExpression::CaseInsensitiveOption))) {
       qLog(Error) << "Skipping temp file" << filename;
-      emit LoadProgress((int)((float)progress / (float)dir_files.count() * 100.0));
+      emit LoadProgress(static_cast<int>(static_cast<float>(progress) / static_cast<float>(dir_files.count()) * 100.0));
       continue;
     }
 
@@ -316,7 +316,7 @@ void BakFileBackend::Scan() {
 
     BakFileItemPtr new_fileitem(ScanFile(filename));
     if (!new_fileitem || !new_fileitem->is_valid()) { // Excludes invalid files.
-      emit LoadProgress((int)((float)progress / (float)dir_files.count() * 100.0));
+      emit LoadProgress(static_cast<int>(static_cast<float>(progress) / static_cast<float>(dir_files.count()) * 100.0));
       continue;
     }
 
@@ -343,7 +343,7 @@ void BakFileBackend::Scan() {
       else
         added_files << new_fileitem;
     }
-    emit LoadProgress((int)((float)progress / (float)dir_files.count() * 100.0));
+    emit LoadProgress(static_cast<int>(static_cast<float>(progress) / static_cast<float>(dir_files.count()) * 100.0));
   }
 
   QMap<QString, BakFileItemPtr>::iterator i = files_.begin();

@@ -48,7 +48,7 @@ void BakFileHeader::Init() {
   std::fill(column_widths_.begin(), column_widths_.end(), 1.0 / count());
 
   for (int i = 0; i < count(); ++i) {
-    column_widths_[i] = ColumnWidthType(sectionSize(i)) / width();
+    column_widths_[i] = static_cast<ColumnWidthType>(sectionSize(i)) / width();
   }
 
   NormaliseWidths();
@@ -136,7 +136,7 @@ void BakFileHeader::SectionResized(const int logical, const int, const int new_s
 
   if (in_mouse_move_event_) {
 
-    column_widths_[logical] = ColumnWidthType(new_size) / width();
+    column_widths_[logical] = static_cast<ColumnWidthType>(new_size) / width();
 
     int visual = visualIndex(logical);
     QList<int> logical_sections_to_resize;
