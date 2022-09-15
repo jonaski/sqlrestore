@@ -36,4 +36,4 @@ void RegisterMetaTypes() {
   qRegisterMetaType<ScopedResult*>("ScopedResult*");
 }
 
-}
+}  // namespace SQLRestore_Metatypes
