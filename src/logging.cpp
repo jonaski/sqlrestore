@@ -1,5 +1,6 @@
 /*
    Copyright 2011, David Sansome <me@davidsansome.com>
+   Copyright 2018-2021, Jonas Kvinge <jonas@jkvinge.net>
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,9 +24,10 @@
 #include <cstring>
 #include <iostream>
 #include <memory>
-#include <cxxabi.h>
+#ifndef _MSC_VER
+#  include <cxxabi.h>
+#endif
 #include <glib.h>
-
 #ifdef HAVE_BACKTRACE
 #  include <execinfo.h>
 #endif
@@ -49,17 +51,17 @@
 namespace logging {
 
 static Level sDefaultLevel = Level_Debug;
-static QMap<QString, Level>* sClassLevels = nullptr;
+static QMap<QString, Level> *sClassLevels = nullptr;
 static QIODevice *sNullDevice = nullptr;
 
 const char *kDefaultLogLevels = "*:3";
 
 static const char *kMessageHandlerMagic = "__logging_message__";
-static const int kMessageHandlerMagicLength = strlen(kMessageHandlerMagic);
+static const size_t kMessageHandlerMagicLength = strlen(kMessageHandlerMagic);
 static QtMessageHandler sOriginalMessageHandler = nullptr;
 
 template <class T>
-static T CreateLogger(Level level, const QString& class_name, int line, const char* category);
+static T CreateLogger(Level level, const QString &class_name, int line, const char *category);
 
 void GLog(const char *domain, int level, const char *message, void*) {
 
@@ -90,14 +92,14 @@ class DebugBase : public QDebug {
  public:
   DebugBase() : QDebug(sNullDevice) {}
   explicit DebugBase(QtMsgType t) : QDebug(t) {}
-  T& space() { return static_cast<T&>(QDebug::space()); }
-  T& noSpace() { return static_cast<T&>(QDebug::nospace()); }
+  T &space() { return static_cast<T&>(QDebug::space()); }
+  T &nospace() { return static_cast<T&>(QDebug::nospace()); }
 };
 
 // Debug message will be stored in a buffer.
 class BufferedDebug : public DebugBase<BufferedDebug> {
  public:
-  BufferedDebug() {}
+  BufferedDebug() = default;
   explicit BufferedDebug(QtMsgType) : buf_(new QBuffer, later_deleter) {
     buf_->open(QIODevice::WriteOnly);
 
@@ -108,7 +110,7 @@ class BufferedDebug : public DebugBase<BufferedDebug> {
 
   // Delete function for the buffer. Since a base class is holding a reference to the raw pointer,
   // it shouldn't be deleted until after the deletion of this object is complete.
-  static void later_deleter(QBuffer* b) { b->deleteLater(); }
+  static void later_deleter(QBuffer *b) { b->deleteLater(); }
 
   std::shared_ptr<QBuffer> buf_;
 };
@@ -116,14 +118,15 @@ class BufferedDebug : public DebugBase<BufferedDebug> {
 // Debug message will be logged immediately.
 class LoggedDebug : public DebugBase<LoggedDebug> {
  public:
-  LoggedDebug() {}
+  LoggedDebug() = default;
   explicit LoggedDebug(QtMsgType t) : DebugBase(t) { nospace() << kMessageHandlerMagic; }
 };
 
 static void MessageHandler(QtMsgType type, const QMessageLogContext&, const QString &message) {
 
-  if (strncmp(kMessageHandlerMagic, message.toLocal8Bit().data(), kMessageHandlerMagicLength) == 0) {
-    fprintf(stderr, "%s\n", message.toLocal8Bit().data() + kMessageHandlerMagicLength);
+  if (message.startsWith(kMessageHandlerMagic)) {
+    fprintf(type == QtCriticalMsg || type == QtFatalMsg ? stderr : stdout, "%s\n", message.toUtf8().data() + kMessageHandlerMagicLength);
+    fflush(type == QtCriticalMsg || type == QtFatalMsg ? stderr : stdout);
     return;
   }
 
@@ -142,12 +145,14 @@ static void MessageHandler(QtMsgType type, const QMessageLogContext&, const QStr
       break;
   }
 
-  for (const QString& line : message.split('\n')) {
+  QStringList messages = message.split('\n');
+  for (const QString &line : messages) {
     BufferedDebug d = CreateLogger<BufferedDebug>(level, "unknown", -1, nullptr);
     d << line.toLocal8Bit().constData();
     if (d.buf_) {
       d.buf_->close();
-      fprintf(stderr, "%s\n", d.buf_->buffer().data());
+      fprintf(type == QtCriticalMsg || type == QtFatalMsg ? stderr : stdout, "%s\n", d.buf_->buffer().data());
+      fflush(type == QtCriticalMsg || type == QtFatalMsg ? stderr : stdout);
     }
   }
 
@@ -170,13 +175,14 @@ void Init() {
   if (!sOriginalMessageHandler) {
     sOriginalMessageHandler = qInstallMessageHandler(MessageHandler);
   }
+
 }
 
 void SetLevels(const QString &levels) {
 
   if (!sClassLevels) return;
 
-  for (const QString& item : levels.split(',')) {
+  for (const QString &item : levels.split(',')) {
     const QStringList class_level = item.split(':');
 
     QString class_name;
@@ -209,9 +215,9 @@ static QString ParsePrettyFunction(const char *pretty_function) {
 
   // Get the class name out of the function name.
   QString class_name = pretty_function;
-  const int paren = class_name.indexOf('(');
+  const qint64 paren = class_name.indexOf('(');
   if (paren != -1) {
-    const int colons = class_name.lastIndexOf("::", paren);
+    const qint64 colons = class_name.lastIndexOf("::", paren);
     if (colons != -1) {
       class_name = class_name.left(colons);
     }
@@ -220,16 +226,17 @@ static QString ParsePrettyFunction(const char *pretty_function) {
     }
   }
 
-  const int space = class_name.lastIndexOf(' ');
+  const qint64 space = class_name.lastIndexOf(' ');
   if (space != -1) {
-    class_name = class_name.mid(space+1);
+    class_name = class_name.mid(space + 1);
   }
 
   return class_name;
+
 }
 
 template <class T>
-static T CreateLogger(Level level, const QString &class_name, int line, const char* category) {
+static T CreateLogger(Level level, const QString &class_name, int line, const char *category) {
 
   // Map the level to a string
   const char *level_name = nullptr;
@@ -266,19 +273,18 @@ static T CreateLogger(Level level, const QString &class_name, int line, const ch
   }
 
   T ret(type);
-  ret.nospace() << QDateTime::currentDateTime().toString("hh:mm:ss.zzz").toLatin1().constData()
-                << level_name
-                << function_line.leftJustified(32).toLatin1().constData();
+  ret.nospace() << QDateTime::currentDateTime().toString("hh:mm:ss.zzz").toLatin1().constData() << level_name << function_line.leftJustified(32).toLatin1().constData();
 
   return ret.space();
+
 }
 
+#ifdef Q_OS_UNIX
 QString CXXDemangle(const QString &mangled_function);
-
 QString CXXDemangle(const QString &mangled_function) {
 
   int status = 0;
-  char* demangled_function = abi::__cxa_demangle(mangled_function.toLatin1().constData(), nullptr, nullptr, &status);
+  char *demangled_function = abi::__cxa_demangle(mangled_function.toLatin1().constData(), nullptr, nullptr, &status);
   if (status == 0) {
     QString ret = QString::fromLatin1(demangled_function);
     free(demangled_function);
@@ -287,23 +293,10 @@ QString CXXDemangle(const QString &mangled_function) {
   return mangled_function;  // Probably not a C++ function.
 
 }
+#endif  // Q_OS_UNIX
 
-QString DarwinDemangle(const QString &symbol);
-
-QString DarwinDemangle(const QString &symbol) {
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
-  QStringList split = symbol.split(' ', Qt::SkipEmptyParts);
-#else
-  QStringList split = symbol.split(' ', QString::SkipEmptyParts);
-#endif
-  QString mangled_function = split[3];
-  return CXXDemangle(mangled_function);
-
-}
-
+#ifdef Q_OS_LINUX
 QString LinuxDemangle(const QString &symbol);
-
 QString LinuxDemangle(const QString &symbol) {
 
   QRegularExpression regex("\\(([^+]+)");
@@ -315,10 +308,26 @@ QString LinuxDemangle(const QString &symbol) {
   return CXXDemangle(mangled_function);
 
 }
+#endif  // Q_OS_LINUX
+
+#ifdef Q_OS_MACOS
+QString DarwinDemangle(const QString &symbol);
+QString DarwinDemangle(const QString &symbol) {
+
+#if QT_VERSION >= QT_VERSION_CHECK(5, 14, 0)
+  QStringList split = symbol.split(' ', Qt::SkipEmptyParts);
+#else
+  QStringList split = symbol.split(' ', QString::SkipEmptyParts);
+#endif
+  QString mangled_function = split[3];
+  return CXXDemangle(mangled_function);
+
+}
+#endif  // Q_OS_MACOS
 
 QString DemangleSymbol(const QString &symbol);
-
 QString DemangleSymbol(const QString &symbol) {
+
 #ifdef Q_OS_MACOS
   return DarwinDemangle(symbol);
 #elif defined(Q_OS_LINUX)
@@ -326,13 +335,15 @@ QString DemangleSymbol(const QString &symbol) {
 #else
   return symbol;
 #endif
+
 }
 
 void DumpStackTrace() {
+
 #ifdef HAVE_BACKTRACE
-  void* callstack[128];
+  void *callstack[128];
   int callstack_size = backtrace(reinterpret_cast<void**>(&callstack), sizeof(callstack));
-  char** symbols = backtrace_symbols(reinterpret_cast<void**>(&callstack), callstack_size);
+  char **symbols = backtrace_symbols(reinterpret_cast<void**>(&callstack), callstack_size);
   // Start from 1 to skip ourself.
   for (int i = 1; i < callstack_size; ++i) {
     std::cerr << DemangleSymbol(QString::fromLatin1(symbols[i])).toStdString() << std::endl;
@@ -341,28 +352,27 @@ void DumpStackTrace() {
 #else
   qLog(Debug) << "FIXME: Implement printing stack traces on this platform";
 #endif
+
 }
 
-// These are the functions that create loggers for the rest of Clementine.
-// It's okay that the LoggedDebug instance is copied to a QDebug in these. It
-// doesn't override any behavior that should be needed after return.
+// These are the functions that create loggers.
+// It's okay that the LoggedDebug instance is copied to a QDebug in these. It doesn't override any behavior that should be needed after return.
 #define qCreateLogger(line, pretty_function, category, level) logging::CreateLogger<LoggedDebug>(logging::Level_##level, logging::ParsePrettyFunction(pretty_function), line, category)
 
-QDebug CreateLoggerFatal(int line, const char *pretty_function, const char* category) { return qCreateLogger(line, pretty_function, category, Fatal); }
-QDebug CreateLoggerError(int line, const char *pretty_function, const char* category) { return qCreateLogger(line, pretty_function, category, Error); }
+QDebug CreateLoggerInfo(int line, const char *pretty_function, const char *category) { return qCreateLogger(line, pretty_function, category, Info); }
+QDebug CreateLoggerFatal(int line, const char *pretty_function, const char *category) { return qCreateLogger(line, pretty_function, category, Fatal); }
+QDebug CreateLoggerError(int line, const char *pretty_function, const char *category) { return qCreateLogger(line, pretty_function, category, Error); }
 
 #ifdef QT_NO_WARNING_OUTPUT
   QNoDebug CreateLoggerWarning(int, const char*, const char*) { return QNoDebug(); }
 #else
-  QDebug CreateLoggerWarning(int line, const char *pretty_function, const char* category) { return qCreateLogger(line, pretty_function, category, Warning); }
+  QDebug CreateLoggerWarning(int line, const char *pretty_function, const char *category) { return qCreateLogger(line, pretty_function, category, Warning); }
 #endif // QT_NO_WARNING_OUTPUT
 
 #ifdef QT_NO_DEBUG_OUTPUT
-  QNoDebug CreateLoggerInfo(int, const char*, const char*) { return QNoDebug(); }
   QNoDebug CreateLoggerDebug(int, const char*, const char*) { return QNoDebug(); }
 #else
-  QDebug CreateLoggerInfo(int line, const char *pretty_function, const char* category) { return qCreateLogger(line, pretty_function, category, Info); }
-  QDebug CreateLoggerDebug(int line, const char *pretty_function, const char* category) { return qCreateLogger(line, pretty_function, category, Debug); }
+  QDebug CreateLoggerDebug(int line, const char *pretty_function, const char *category) { return qCreateLogger(line, pretty_function, category, Debug); }
 #endif // QT_NO_DEBUG_OUTPUT
 
 }  // namespace logging
@@ -370,7 +380,7 @@ QDebug CreateLoggerError(int line, const char *pretty_function, const char* cate
 namespace {
 
 template <typename T>
-QString print_duration(T duration, const std::string& unit) {
+QString print_duration(T duration, const std::string &unit) {
   return QString("%1%2").arg(duration.count()).arg(unit.c_str());
 }
 
