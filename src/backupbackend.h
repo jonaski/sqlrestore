@@ -48,7 +48,7 @@ class BackupBackend : public QObject {
   void FlushQueue();
   void DeleteQueue();
   void UpdateRestoreStatus(const QString &message);
-  bool RestoreCheckCancel(ScopedResult *r);
+  bool RestoreCheckCancel(ScopedResult *r) const;
 
  signals:
   void StartRestoreBackup(BakFileItemPtr fileitem);

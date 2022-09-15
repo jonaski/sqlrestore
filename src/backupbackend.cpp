@@ -781,7 +781,7 @@ void BackupBackend::_RestoreFinished(const bool) {
 
 }
 
-bool BackupBackend::RestoreCheckCancel(ScopedResult *r) {
+bool BackupBackend::RestoreCheckCancel(ScopedResult *r) const {
 
   if (cancel_requested_) {
     r->failure(tr("Restore cancelled."));
