@@ -77,7 +77,7 @@ QSearchField::QSearchField(QWidget *parent) : QWidget(parent) {
   clearbutton->setStyleSheet("border: none; padding: 0px;");
   clearbutton->resize(clearbutton->sizeHint());
 
-  connect(clearbutton, &QAbstractButton::clicked, this, &QSearchField::clear);
+  connect(clearbutton, &QToolButton::clicked, this, &QSearchField::clear);
 
   pimpl = new QSearchFieldPrivate(this, lineEdit, clearbutton);
 
