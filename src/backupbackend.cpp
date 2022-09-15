@@ -565,7 +565,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
       }
       if (p) {
         *p = query.value("PhysicalName").toString();
-        int pos = p->lastIndexOf(QChar('/'));
+        qint64 pos = p->lastIndexOf(QChar('/'));
         if (pos > 0) *p = p->left(pos);
         else {
           pos = p->lastIndexOf(QChar('\\'));
@@ -668,7 +668,7 @@ void BackupBackend::RestoreBackup(BakFileItemPtr fileitem) {
           p = &db_logpath;
         }
         if (p) {
-          int pos = p->lastIndexOf(QChar('/'));
+          qint64 pos = p->lastIndexOf(QChar('/'));
           if (pos > 0) *p = p->left(pos);
           else {
             pos = p->lastIndexOf(QChar('\\'));
