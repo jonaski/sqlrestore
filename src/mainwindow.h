@@ -52,10 +52,10 @@ class MainWindow : public QMainWindow {
   Q_OBJECT
 
  public:
-  explicit MainWindow(Application *app, const CommandlineOptions &options, QWidget *parent = nullptr);
+  explicit MainWindow(Application *app, const CommandlineOptions options, QWidget *parent = nullptr);
   ~MainWindow();
 
-  void CommandlineOptionsReceived(const CommandlineOptions &options);
+  void CommandlineOptionsReceived(const CommandlineOptions options);
 
  private:
   void LoadGeometry();

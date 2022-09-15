@@ -60,7 +60,7 @@
 
 const char *MainWindow::kSettingsGroup = "MainWindow";
 
-MainWindow::MainWindow(Application *app, const CommandlineOptions &options, QWidget *parent) :
+MainWindow::MainWindow(Application *app, const CommandlineOptions options, QWidget *parent) :
   QMainWindow(parent),
   ui_(new Ui_MainWindow),
   app_(app),
@@ -207,7 +207,7 @@ void MainWindow::CommandlineOptionsReceived(const quint32, const QByteArray &str
 
 }
 
-void MainWindow::CommandlineOptionsReceived(const CommandlineOptions&) {}
+void MainWindow::CommandlineOptionsReceived(const CommandlineOptions) {}
 
 void MainWindow::LoadGeometry() {
 
