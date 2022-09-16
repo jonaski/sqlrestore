@@ -263,24 +263,47 @@ jobs:
       - build_fedora_36
       - build_windows
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set is_pre_release
+        run: echo "is_pre_release=$(grep 'set(INCLUDE_GIT_REVISION ON)' cmake/Version.cmake >/dev/null 2>&1 && echo 1 || echo 0)" >> $GITHUB_ENV
+
+      - name: Set version
+        if: env.is_pre_release == '1'
+        run: echo "version=$(git describe --long --tags --always --exclude pre-release)" >> $GITHUB_ENV
+
+      - name: Have have_pre_release
+        if: env.is_pre_release == '1'
+        run: echo "have_pre_release=$(git tag -l | grep pre-release >/dev/null 2>&1 && echo 1 || echo 0)" >> $GITHUB_ENV
+
+      - name: Delete previous pre-release
+        if: env.is_pre_release == '1' && env.have_pre_release == '1' && env.version != ''
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          hub release delete "pre-release"
+          git tag -d "pre-release"
+          git push --delete origin "pre-release"
+
+      - name: Download artifacts
+        if: env.is_pre_release == '1' && env.version != ''
+        uses: actions/download-artifact@v3
         with:
           path: releases
+
       - name: Create Release
+        if: env.is_pre_release == '1' && env.version != ''
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -x
-          VERSION=$(ls -1 releases/*/*.tar.xz | head -n1 | sed -e 's/.*sqlrestore-\(.*\).tar.xz/\1/')
-          echo "Version: ${VERSION}"
-          echo "${VERSION}" | grep '[0-9]\+\.[0-9]\+\.[0-9]\+.[0-9]\+\..*' >/dev/null 2>&1 || true
-          if [ $? -eq 0 ]; then
-            hub release delete "pre-release" || true
-            files=()
-            for file in $(find releases -type f); do
-              echo "Adding file: ${file}"
-              files+=("-a" "${file}")
-            done
-            hub release create -p -t "$GITHUB_SHA" -m "SQL Restore ${VERSION}" "${files[@]}" "pre-release"
-          fi
+          echo "Version: ${{env.version}}"
+          files=()
+          for file in $(find releases -type f); do
+            echo "Adding file: ${file}"
+            files+=("-a" "${file}")
+          done
+          hub release create -p -t "$GITHUB_SHA" -m "SQL Restore ${{env.version}}" "${files[@]}" "pre-release"
